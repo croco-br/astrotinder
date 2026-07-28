@@ -78,6 +78,7 @@ function renderVisual(data, container, method) {
                 <h2 class="subtitle">${label}${helpIcon(method)}</h2>
                 <div id="wheel-container" style="max-width: 540px; margin: 0 auto;"></div>
                 <div id="details-container"></div>
+                <div id="interpretation-container"></div>
                 ${methodModal(method)}
             </div>`;
 
@@ -96,6 +97,9 @@ function renderVisual(data, container, method) {
         } else if (method === 'sephiroth') {
             renderTreeOfLife(chart, wheelContainer);
             renderSephirothDetails(chart, detailsContainer);
+        }
+        if (data.interpretation) {
+            renderInterpretation(data.interpretation, document.getElementById('interpretation-container'));
         }
         return;
     }
@@ -176,7 +180,11 @@ function renderAgathadaimonView(data, container) {
                 <tbody>${rowsHtml}</tbody>
             </table>
             ${methodModal('agathadaimon')}
+            <div id="interpretation-container"></div>
         </div>`;
+    if (data.interpretation) {
+        renderInterpretation(data.interpretation, document.getElementById('interpretation-container'));
+    }
 }
 
 function escapeHtml(s) {
@@ -311,5 +319,135 @@ function renderRawJSON(data, container, method) {
         <div class="box">
             <h2 class="subtitle">${label}</h2>
             <pre style="background:#f5f5f5;padding:1rem;border-radius:4px;overflow-x:auto;max-height:600px;font-size:0.8rem;">${pretty}</pre>
+        </div>`;
+}
+
+/* ============================================================
+ *  Interpretação completa (composta no backend a partir do glossário)
+ * ============================================================ */
+
+function degreeLabelInterp(pos) {
+    if (pos == null) return '';
+    const d = Math.floor(pos);
+    const m = Math.round((pos % 1) * 60);
+    return `${d}° ${m}'`;
+}
+
+function retroTagInterp(p) {
+    return p.retrograde ? ' <span class="tag is-light" title="Retrógrado">R</span>' : '';
+}
+
+function pointInterpCard(p) {
+    const glyph = p.glyph ? `<span style="font-size:26px;margin-right:.4rem">${p.glyph}</span>` : '';
+    const header = `${glyph}<strong>${escapeHtml(p.name)}</strong> em ` +
+        `<span style="font-size:20px;margin:0 .2rem">${p.sign_glyph || ''}</span>` +
+        `<strong>${escapeHtml(p.sign_name)}</strong> ` +
+        `<small class="has-text-grey">(${degreeLabelInterp(p.position)})</small>` +
+        retroTagInterp(p);
+
+    const signMeta = [p.sign_element, p.sign_quality, 'Regente: ' + p.sign_ruler]
+        .filter(Boolean).join(' · ');
+
+    let methodBlock = '';
+    if (p.method_label) {
+        methodBlock = `
+            <div class="has-text-centered">
+                <span class="tag is-primary is-light">${escapeHtml(p.method_label)}</span>
+                <p class="is-size-7" style="margin-top:.3rem">${p.method_text}</p>
+            </div>`;
+    }
+
+    return `
+        <div class="box">
+            <h3 class="title is-5 has-text-centered">${header}</h3>
+            <hr>
+            <div class="columns is-multiline has-text-centered">
+                <div class="column">
+                    <p class="subtitle is-7 has-text-grey">O Planeta</p>
+                    <p class="title is-6">${escapeHtml(p.title)}</p>
+                    <p class="is-size-7">${p.planet_description}</p>
+                </div>
+                <div class="column">
+                    <p class="subtitle is-7 has-text-grey">O Signo</p>
+                    <p class="title is-6">${escapeHtml(p.sign_name)}</p>
+                    <p class="is-size-7 has-text-grey" style="margin-bottom:.3rem">${escapeHtml(signMeta)}</p>
+                    <p class="is-size-7">${p.sign_description}</p>
+                </div>
+            </div>
+            <div class="content has-text-centered">
+                <p class="tag is-warning is-light">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
+                <p class="is-size-6" style="margin-top:.4rem">${p.combination}</p>
+            </div>
+            ${methodBlock ? '<hr>' + methodBlock : ''}
+        </div>`;
+}
+
+function aspectInterpRow(a) {
+    const pa = POINT_PT[a.a] || a.a;
+    const pb = POINT_PT[a.b] || a.b;
+    const ga = POINT_GLYPH[a.a] || '·';
+    const gb = POINT_GLYPH[a.b] || '·';
+    const tag = a.harmony === 'harmónico'
+        ? `<span class="tag is-link is-light">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`
+        : `<span class="tag is-warning is-light">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`;
+    return `
+        <div class="box">
+            <div class="columns is-vcentered has-text-centered is-mobile">
+                <div class="column is-3"><strong>${ga} ${escapeHtml(pa)}</strong></div>
+                <div class="column is-3">${tag}<br><small class="has-text-grey">${a.aspect_name} · orbe ${a.orb}°</small></div>
+                <div class="column is-3"><strong>${gb} ${escapeHtml(pb)}</strong></div>
+                <div class="column is-3"><p class="is-size-7">${a.description}</p></div>
+            </div>
+        </div>`;
+}
+
+function agathadaimonInterpBlock(sec) {
+    const rows = sec.letters.map(l => `
+        <tr>
+            <td class="has-text-centered"><strong>${escapeHtml(l.point)}</strong></td>
+            <td class="has-text-centered"><span class="tag is-primary is-light">${escapeHtml(l.letter)}</span></td>
+            <td class="title is-5 has-text-centered">${escapeHtml(l.hebrew || '')}</td>
+            <td class="is-size-7 has-text-centered">${escapeHtml(l.description || '—')}</td>
+        </tr>`).join('');
+    return `
+        <div class="box">
+            <h3 class="title is-5 has-text-centered">Nome do Anjo da Guarda</h3>
+            <div class="has-text-centered my-4">
+                <p class="title is-2 has-text-primary">${escapeHtml(sec.name)}</p>
+                ${sec.hebrew_letter ? `<p class="title is-3 has-text-grey">${escapeHtml(sec.hebrew_letter)}</p>` : ''}
+                ${sec.suffix ? `<p class="is-size-7 has-text-grey">Sufixo: <strong>${escapeHtml(sec.suffix)}</strong> — ${escapeHtml(sec.suffix_meaning || '')}</p>` : ''}
+            </div>
+            <table class="table is-fullwidth is-narrow is-striped">
+                <thead><tr><th class="has-text-centered">Ponto</th><th class="has-text-centered">Letra</th><th class="has-text-centered">Hebraico</th><th class="has-text-centered">Descrição</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+}
+
+function renderInterpretation(interp, target) {
+    if (!interp) { target.innerHTML = ''; return; }
+
+    const pointsHtml = (interp.points || []).map(pointInterpCard).join('');
+
+    const aspectsHtml = (interp.aspects && interp.aspects.length)
+        ? `<h3 class="title is-5 has-text-centered">Aspectos do Mapa</h3>` +
+          interp.aspects.map(aspectInterpRow).join('')
+        : '<p class="has-text-centered has-text-grey">Nenhum aspecto detetado.</p>';
+
+    let daimonHtml = '';
+    if (interp.agathadaimon) {
+        daimonHtml = agathadaimonInterpBlock(interp.agathadaimon);
+    }
+
+    target.innerHTML = `
+        <div class="mt-6">
+            <h2 class="title is-4 has-text-centered">Interpretação Completa</h2>
+            <div class="box">
+                <div class="content has-text-justified">${interp.method_intro}</div>
+            </div>
+            <h3 class="title is-5 has-text-centered">Os Pontos do Mapa</h3>
+            ${pointsHtml}
+            ${daimonHtml}
+            ${aspectsHtml}
         </div>`;
 }

@@ -9,14 +9,20 @@
     <link rel="stylesheet" href="{{ url_for('static', path='font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <script src="{{ url_for('static', path='js/natal.js') }}?v=22" defer></script>
     <script src="{{ url_for('static', path='js/sephiroth.js') }}?v=19" defer></script>
-    <script src="{{ url_for('static', path='js/index.js') }}?v=22" defer></script>
+    <script src="{{ url_for('static', path='js/index.js') }}?v=23" defer></script>
 </head>
 
 <body>
     <section class="section">
         <div class="container">
             <div class="box">
-                <h1 class="title has-text-centered">Mapa Astral</h1>
+                <div class="tabs is-centered is-boxed mb-0">
+                <ul>
+                    <li class="is-active"><a href="/">Calcular</a></li>
+                    <li><a href="/glossary">Glossário</a></li>
+                </ul>
+            </div>
+            <h1 class="title has-text-centered mt-4">Mapa Astral</h1>
                 <form onsubmit="calculate(); return false;">
                     <fieldset>
                         <legend class="subtitle has-text-centered mb-4">Informações Pessoais</legend>

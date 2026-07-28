@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glossário — Mapa Astral</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <script>
+        // Server-injected glossary data (single source of truth: app/glossary.py).
+        window.GLOSSARY = {{ glossary | tojson }};
+    </script>
+    <script src="{{ url_for('static', path='js/glossary.js') }}?v=3" defer></script>
+</head>
+
+<body>
+    <section class="section">
+        <div class="container">
+            <div class="box">
+                <div class="tabs is-centered is-boxed mb-0">
+                    <ul>
+                        <li><a href="/">Calcular</a></li>
+                        <li class="is-active"><a href="/glossary">Glossário</a></li>
+                    </ul>
+                </div>
+                <h1 class="title has-text-centered mt-4">Glossário Esotérico</h1>
+                <p class="subtitle is-6 has-text-centered has-text-grey">
+                    Conceitos de astrologia, Cabala, Tarot hermético e anjos do Shem HaMephorash.
+                </p>
+
+                <!-- search -->
+                <div class="field has-addons has-addons-centered mt-5">
+                    <div class="control has-icons-left is-expanded" style="max-width: 520px;">
+                        <input class="input" type="text" id="glossary-search"
+                               placeholder="Filtrar (ex.: Vehuiah, Tiferet, Sol em Áries…)" oninput="filterGlossary()">
+                        <span class="icon is-small is-left"><i class="fa fa-search"></i></span>
+                    </div>
+                    <div class="control">
+                        <button class="button" onclick="clearGlossarySearch()"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section pt-0">
+        <div class="container">
+            <div class="columns">
+                <!-- sidebar -->
+                <aside class="column is-3">
+                    <div class="box" style="position: sticky; top: 1rem;">
+                        <p class="menu-label">Seções</p>
+                        <ul class="menu-list" id="glossary-nav">
+                            <li><a class="is-active" onclick="showSection('planets', this)">Planetas</a></li>
+                            <li><a onclick="showSection('signs', this)">Signos</a></li>
+                            <li><a onclick="showSection('combinations', this)">Planeta + Signo</a></li>
+                            <li><a onclick="showSection('aspects', this)">Aspectos</a></li>
+                            <li><a onclick="showSection('kabbalah', this)">Cabala & Sephiroth</a></li>
+                            <li><a onclick="showSection('tarot', this)">Tarot Hermético (24)</a></li>
+                            <li><a onclick="showSection('angels', this)">72 Anjos</a></li>
+                            <li><a onclick="showSection('agathadaimon', this)">Agathadaimon</a></li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- content -->
+                <div class="column is-9">
+                    <div id="glossary-content"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

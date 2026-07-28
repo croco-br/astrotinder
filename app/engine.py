@@ -6,6 +6,7 @@ from app.agathadaimon import enrich_agathadaimon
 from app.angels import enrich_angels
 from app.geocoder import resolve_location
 from app.hermetic import enrich_hermetic
+from app.interpretation import compose
 from app.schema import Birth, Chart, PointData, CANONICAL_POINTS
 from app.sephiroth import decan_index, sephirah_by_decan, sephirah_traditional
 
@@ -115,14 +116,23 @@ def calculate_chart(birth_date, birth_time, city, name=None, method="traditional
     chart = build_chart_from_subject(subject, birth, name=name)
 
     if method == "traditional":
-        return {"chart": chart.to_dict()}
+        chart_dict = chart.to_dict()
+        return {"chart": chart_dict, "interpretation": compose(chart_dict, method)}
     if method == "hermetic":
-        return {"chart": enrich_hermetic(chart).to_dict()}
+        chart_dict = enrich_hermetic(chart).to_dict()
+        return {"chart": chart_dict, "interpretation": compose(chart_dict, method)}
     if method == "angels":
-        return {"chart": enrich_angels(chart).to_dict()}
+        chart_dict = enrich_angels(chart).to_dict()
+        return {"chart": chart_dict, "interpretation": compose(chart_dict, method)}
     if method == "sephiroth":
-        return {"chart": chart.to_dict()}  # sephirah fields already in PointData
+        chart_dict = chart.to_dict()  # sephirah fields already in PointData
+        return {"chart": chart_dict, "interpretation": compose(chart_dict, method)}
     if method == "agathadaimon":
         daimon = enrich_agathadaimon(chart)
-        return {"chart": chart.to_dict(), "daimon": daimon}
+        chart_dict = chart.to_dict()
+        return {
+            "chart": chart_dict,
+            "daimon": daimon,
+            "interpretation": compose(chart_dict, method, daimon=daimon),
+        }
     raise ValueError(f"Unknown method: {method!r}")
