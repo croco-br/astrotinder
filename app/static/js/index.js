@@ -35,8 +35,8 @@ async function calculate() {
         method: document.getElementById('method').value,
     };
 
-    button.classList.add('is-loading');
-    container.innerHTML = '<progress class="progress is-small is-primary" max="100">calculando…</progress>';
+    button.classList.add('opacity-60', 'pointer-events-none');
+    container.innerHTML = '<div class="flex justify-center py-6"><div class="spinner" role="status" aria-label="calculando…"></div></div>';
 
     try {
         const res = await fetch('/calculate', {
@@ -57,11 +57,11 @@ async function calculate() {
         }
     } catch (err) {
         container.innerHTML = `
-            <div class="notification is-danger is-light">
+            <div class="alert-error">
                 <strong>Erro:</strong> ${err.message}
             </div>`;
     } finally {
-        button.classList.remove('is-loading');
+        button.classList.remove('opacity-60', 'pointer-events-none');
     }
 }
 
@@ -74,9 +74,9 @@ function renderVisual(data, container, method) {
     // Visual methods with a wheel + detail table: render inline, no toggle.
     if (method === 'traditional' || method === 'hermetic' || method === 'angels' || method === 'sephiroth') {
         container.innerHTML = `
-            <div class="box">
-                <h2 class="subtitle">${label}${helpIcon(method)}</h2>
-                <div id="wheel-container" style="max-width: 540px; margin: 0 auto;"></div>
+            <div class="card">
+                <h2 class="h-subtitle">${label}${helpIcon(method)}</h2>
+                <div id="wheel-container" class="mx-auto max-w-[540px]"></div>
                 <div id="details-container"></div>
                 <div id="interpretation-container"></div>
                 ${methodModal(method)}
@@ -110,9 +110,9 @@ function renderVisual(data, container, method) {
     }
 
     container.innerHTML = `
-        <div class="box">
-            <h2 class="subtitle">${label}</h2>
-            <div id="wheel-container" style="max-width: 540px; margin: 0 auto;"></div>
+        <div class="card">
+            <h2 class="h-subtitle">${label}</h2>
+            <div id="wheel-container" class="mx-auto max-w-[540px]"></div>
             <div id="details-container"></div>
         </div>`;
 
@@ -125,7 +125,7 @@ function toggleDetails() {
     const detailsContainer = document.getElementById('details-container');
     const wheelContainer = document.getElementById('wheel-container');
 
-    if (detailsContainer.classList.contains('is-hidden')) {
+    if (detailsContainer.classList.contains('hidden')) {
         const chart = JSON.parse(wheelContainer.dataset.chart);
         const method = wheelContainer.dataset.method;
         if (method === 'hermetic') {
@@ -136,9 +136,9 @@ function toggleDetails() {
             const aspects = JSON.parse(wheelContainer.dataset.aspects || '[]');
             renderDetails(chart, detailsContainer, aspects);
         }
-        detailsContainer.classList.remove('is-hidden');
+        detailsContainer.classList.remove('hidden');
     } else {
-        detailsContainer.classList.add('is-hidden');
+        detailsContainer.classList.add('hidden');
     }
 }
 
@@ -158,25 +158,25 @@ function renderAgathadaimonView(data, container) {
     const letters = daimon.letters || [];
     const rowsHtml = letters.map(l => `
         <tr>
-            <td class="has-text-centered"><strong>${escapeHtml(l.point)}</strong></td>
-            <td class="has-text-centered"><span class="tag is-primary is-light is-medium">${escapeHtml(l.letter)}</span></td>
-            <td class="title is-5 has-text-centered">${escapeHtml(l.hebrew || '')}</td>
-            <td class="is-size-7 has-text-centered">${escapeHtml(l.description || '—')}</td>
+            <td><strong>${escapeHtml(l.point)}</strong></td>
+            <td><span class="tag tag-primary text-sm">${escapeHtml(l.letter)}</span></td>
+            <td class="text-xl font-semibold">${escapeHtml(l.hebrew || '')}</td>
+            <td class="text-xs">${escapeHtml(l.description || '—')}</td>
         </tr>`).join('');
 
     container.innerHTML = `
-        <div class="box">
-            <h2 class="subtitle has-text-centered">${label}${helpIcon('agathadaimon')}</h2>
+        <div class="card">
+            <h2 class="h-subtitle text-center">${label}${helpIcon('agathadaimon')}</h2>
 
-            <div class="has-text-centered my-5">
-                <p class="title is-1 has-text-primary">${escapeHtml(name)}</p>
-                ${hebrew ? `<p class="title is-2 has-text-grey">${escapeHtml(hebrew)}</p>` : ''}
-                <p class="is-size-7 has-text-grey mt-2">Sufixo: ${escapeHtml(suffixLabel)}</p>
+            <div class="text-center my-5">
+                <p class="text-5xl font-bold text-amber-700">${escapeHtml(name)}</p>
+                ${hebrew ? `<p class="text-3xl font-semibold muted mt-1">${escapeHtml(hebrew)}</p>` : ''}
+                <p class="text-xs muted mt-2">Sufixo: ${escapeHtml(suffixLabel)}</p>
             </div>
 
-            <h3 class="subtitle is-5">Letras e Correspondências</h3>
-            <table class="table is-fullwidth is-narrow is-striped">
-                <thead><tr><th class="has-text-centered">Ponto</th><th class="has-text-centered">Letra</th><th class="has-text-centered">Hebraico</th><th class="has-text-centered">Descrição</th></tr></thead>
+            <h3 class="h-section">Letras e Correspondências</h3>
+            <table class="data-table">
+                <thead><tr><th>Ponto</th><th>Letra</th><th>Hebraico</th><th>Descrição</th></tr></thead>
                 <tbody>${rowsHtml}</tbody>
             </table>
             ${methodModal('agathadaimon')}
@@ -274,7 +274,7 @@ const METHOD_INFO = {
 
 function helpIcon(method) {
     return ` <a class="method-help" title="O que é isto?" onclick="openMethodModal('${method}')">
-        <span class="icon has-text-info is-small"><i class="fa fa-question-circle"></i></span></a>`;
+        <span class="ml-1 inline-flex text-sky-600"><i class="fa fa-question-circle"></i></span></a>`;
 }
 
 function methodModal(method) {
@@ -282,17 +282,17 @@ function methodModal(method) {
     if (!info) return '';
     return `
         <div class="modal" id="modal-${method}">
-            <div class="modal-background" onclick="closeMethodModal('${method}')"></div>
+            <div class="modal-backdrop" onclick="closeMethodModal('${method}')"></div>
             <div class="modal-card">
-                <header class="modal-card-head">
-                    <p class="modal-card-title">${info.title}</p>
-                    <button class="delete" aria-label="close" onclick="closeMethodModal('${method}')"></button>
+                <header class="modal-head">
+                    <p class="modal-title">${info.title}</p>
+                    <button class="modal-close text-2xl leading-none" aria-label="close" onclick="closeMethodModal('${method}')">&times;</button>
                 </header>
-                <section class="modal-card-body">
-                    <div class="content">${info.body}</div>
+                <section class="modal-body">
+                    ${info.body}
                 </section>
-                <footer class="modal-card-foot">
-                    <button class="button" onclick="closeMethodModal('${method}')">Fechar</button>
+                <footer class="modal-foot">
+                    <button class="btn-ghost" onclick="closeMethodModal('${method}')">Fechar</button>
                 </footer>
             </div>
         </div>`;
@@ -316,9 +316,9 @@ function renderRawJSON(data, container, method) {
     const pretty = JSON.stringify(data, null, 2)
         .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     container.innerHTML = `
-        <div class="box">
-            <h2 class="subtitle">${label}</h2>
-            <pre style="background:#f5f5f5;padding:1rem;border-radius:4px;overflow-x:auto;max-height:600px;font-size:0.8rem;">${pretty}</pre>
+        <div class="card">
+            <h2 class="h-subtitle">${label}</h2>
+            <pre class="max-h-[600px] overflow-x-auto rounded-md bg-stone-100 p-4 text-xs">${pretty}</pre>
         </div>`;
 }
 
@@ -334,15 +334,15 @@ function degreeLabelInterp(pos) {
 }
 
 function retroTagInterp(p) {
-    return p.retrograde ? ' <span class="tag is-light" title="Retrógrado">R</span>' : '';
+    return p.retrograde ? ' <span class="tag tag-neutral" title="Retrógrado">R</span>' : '';
 }
 
 function pointInterpCard(p) {
-    const glyph = p.glyph ? `<span style="font-size:26px;margin-right:.4rem">${p.glyph}</span>` : '';
+    const glyph = p.glyph ? `<span class="mr-2 text-2xl">${p.glyph}</span>` : '';
     const header = `${glyph}<strong>${escapeHtml(p.name)}</strong> em ` +
-        `<span style="font-size:20px;margin:0 .2rem">${p.sign_glyph || ''}</span>` +
+        `<span class="mx-1 text-xl">${p.sign_glyph || ''}</span>` +
         `<strong>${escapeHtml(p.sign_name)}</strong> ` +
-        `<small class="has-text-grey">(${degreeLabelInterp(p.position)})</small>` +
+        `<small class="muted">(${degreeLabelInterp(p.position)})</small>` +
         retroTagInterp(p);
 
     const signMeta = [p.sign_element, p.sign_quality, 'Regente: ' + p.sign_ruler]
@@ -351,34 +351,34 @@ function pointInterpCard(p) {
     let methodBlock = '';
     if (p.method_label) {
         methodBlock = `
-            <div class="has-text-centered">
-                <span class="tag is-primary is-light">${escapeHtml(p.method_label)}</span>
-                <p class="is-size-7" style="margin-top:.3rem">${p.method_text}</p>
+            <div class="text-center">
+                <span class="tag tag-primary">${escapeHtml(p.method_label)}</span>
+                <p class="text-xs mt-1">${p.method_text}</p>
             </div>`;
     }
 
     return `
-        <div class="box">
-            <h3 class="title is-5 has-text-centered">${header}</h3>
-            <hr>
-            <div class="columns is-multiline has-text-centered">
-                <div class="column">
-                    <p class="subtitle is-7 has-text-grey">O Planeta</p>
-                    <p class="title is-6">${escapeHtml(p.title)}</p>
-                    <p class="is-size-7">${p.planet_description}</p>
+        <div class="card">
+            <h3 class="h-section text-center">${header}</h3>
+            <hr class="divider">
+            <div class="interp-grid text-center">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide muted">O Planeta</p>
+                    <p class="mt-1 font-semibold text-stone-800">${escapeHtml(p.title)}</p>
+                    <p class="mt-1 text-xs">${p.planet_description}</p>
                 </div>
-                <div class="column">
-                    <p class="subtitle is-7 has-text-grey">O Signo</p>
-                    <p class="title is-6">${escapeHtml(p.sign_name)}</p>
-                    <p class="is-size-7 has-text-grey" style="margin-bottom:.3rem">${escapeHtml(signMeta)}</p>
-                    <p class="is-size-7">${p.sign_description}</p>
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wide muted">O Signo</p>
+                    <p class="mt-1 font-semibold text-stone-800">${escapeHtml(p.sign_name)}</p>
+                    <p class="mt-1 text-xs muted">${escapeHtml(signMeta)}</p>
+                    <p class="mt-1 text-xs">${p.sign_description}</p>
                 </div>
             </div>
-            <div class="content has-text-centered">
-                <p class="tag is-warning is-light">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
-                <p class="is-size-6" style="margin-top:.4rem">${p.combination}</p>
+            <div class="mt-3 text-center">
+                <p class="tag tag-warn">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
+                <p class="mt-2 text-sm">${p.combination}</p>
             </div>
-            ${methodBlock ? '<hr>' + methodBlock : ''}
+            ${methodBlock ? '<hr class="divider">' + methodBlock : ''}
         </div>`;
 }
 
@@ -388,15 +388,15 @@ function aspectInterpRow(a) {
     const ga = POINT_GLYPH[a.a] || '·';
     const gb = POINT_GLYPH[a.b] || '·';
     const tag = a.harmony === 'harmónico'
-        ? `<span class="tag is-link is-light">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`
-        : `<span class="tag is-warning is-light">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`;
+        ? `<span class="tag tag-info">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`
+        : `<span class="tag tag-warn">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`;
     return `
-        <div class="box">
-            <div class="columns is-vcentered has-text-centered is-mobile">
-                <div class="column is-3"><strong>${ga} ${escapeHtml(pa)}</strong></div>
-                <div class="column is-3">${tag}<br><small class="has-text-grey">${a.aspect_name} · orbe ${a.orb}°</small></div>
-                <div class="column is-3"><strong>${gb} ${escapeHtml(pb)}</strong></div>
-                <div class="column is-3"><p class="is-size-7">${a.description}</p></div>
+        <div class="card">
+            <div class="grid grid-cols-2 items-center gap-2 text-center sm:grid-cols-4">
+                <div><strong>${ga} ${escapeHtml(pa)}</strong></div>
+                <div>${tag}<br><small class="muted">${a.aspect_name} · orbe ${a.orb}°</small></div>
+                <div><strong>${gb} ${escapeHtml(pb)}</strong></div>
+                <div><p class="text-xs">${a.description}</p></div>
             </div>
         </div>`;
 }
@@ -404,21 +404,21 @@ function aspectInterpRow(a) {
 function agathadaimonInterpBlock(sec) {
     const rows = sec.letters.map(l => `
         <tr>
-            <td class="has-text-centered"><strong>${escapeHtml(l.point)}</strong></td>
-            <td class="has-text-centered"><span class="tag is-primary is-light">${escapeHtml(l.letter)}</span></td>
-            <td class="title is-5 has-text-centered">${escapeHtml(l.hebrew || '')}</td>
-            <td class="is-size-7 has-text-centered">${escapeHtml(l.description || '—')}</td>
+            <td><strong>${escapeHtml(l.point)}</strong></td>
+            <td><span class="tag tag-primary">${escapeHtml(l.letter)}</span></td>
+            <td class="text-xl font-semibold">${escapeHtml(l.hebrew || '')}</td>
+            <td class="text-xs">${escapeHtml(l.description || '—')}</td>
         </tr>`).join('');
     return `
-        <div class="box">
-            <h3 class="title is-5 has-text-centered">Nome do Anjo da Guarda</h3>
-            <div class="has-text-centered my-4">
-                <p class="title is-2 has-text-primary">${escapeHtml(sec.name)}</p>
-                ${sec.hebrew_letter ? `<p class="title is-3 has-text-grey">${escapeHtml(sec.hebrew_letter)}</p>` : ''}
-                ${sec.suffix ? `<p class="is-size-7 has-text-grey">Sufixo: <strong>${escapeHtml(sec.suffix)}</strong> — ${escapeHtml(sec.suffix_meaning || '')}</p>` : ''}
+        <div class="card">
+            <h3 class="h-section text-center">Nome do Anjo da Guarda</h3>
+            <div class="text-center my-4">
+                <p class="text-4xl font-bold text-amber-700">${escapeHtml(sec.name)}</p>
+                ${sec.hebrew_letter ? `<p class="text-2xl font-semibold muted mt-1">${escapeHtml(sec.hebrew_letter)}</p>` : ''}
+                ${sec.suffix ? `<p class="text-xs muted mt-1">Sufixo: <strong>${escapeHtml(sec.suffix)}</strong> — ${escapeHtml(sec.suffix_meaning || '')}</p>` : ''}
             </div>
-            <table class="table is-fullwidth is-narrow is-striped">
-                <thead><tr><th class="has-text-centered">Ponto</th><th class="has-text-centered">Letra</th><th class="has-text-centered">Hebraico</th><th class="has-text-centered">Descrição</th></tr></thead>
+            <table class="data-table">
+                <thead><tr><th>Ponto</th><th>Letra</th><th>Hebraico</th><th>Descrição</th></tr></thead>
                 <tbody>${rows}</tbody>
             </table>
         </div>`;
@@ -430,9 +430,9 @@ function renderInterpretation(interp, target) {
     const pointsHtml = (interp.points || []).map(pointInterpCard).join('');
 
     const aspectsHtml = (interp.aspects && interp.aspects.length)
-        ? `<h3 class="title is-5 has-text-centered">Aspectos do Mapa</h3>` +
+        ? `<h3 class="h-section text-center">Aspectos do Mapa</h3>` +
           interp.aspects.map(aspectInterpRow).join('')
-        : '<p class="has-text-centered has-text-grey">Nenhum aspecto detetado.</p>';
+        : '<p class="text-center muted">Nenhum aspecto detetado.</p>';
 
     let daimonHtml = '';
     if (interp.agathadaimon) {
@@ -441,11 +441,11 @@ function renderInterpretation(interp, target) {
 
     target.innerHTML = `
         <div class="mt-6">
-            <h2 class="title is-4 has-text-centered">Interpretação Completa</h2>
-            <div class="box">
-                <div class="content has-text-justified">${interp.method_intro}</div>
+            <h2 class="h-title text-center">Interpretação Completa</h2>
+            <div class="card">
+                <div class="prose-body text-justify">${interp.method_intro}</div>
             </div>
-            <h3 class="title is-5 has-text-centered">Os Pontos do Mapa</h3>
+            <h3 class="h-section text-center">Os Pontos do Mapa</h3>
             ${pointsHtml}
             ${daimonHtml}
             ${aspectsHtml}

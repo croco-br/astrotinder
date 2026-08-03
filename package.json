@@ -1,0 +1,30 @@
+{
+  "name": "natal-chart",
+  "version": "1.0.0",
+  "description": "Calculadora de mapas astrais com cinco métodos de análise: Tradicional (12 signos), Hermético (24 signos), Anjos Cabalísticos (72 signos), Astrologia Cabalística (Sephiroth) e Agathadaimon (Nome do Anjo da Guarda).",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "css:build": "tailwindcss -i app/static/css/input.css -o app/static/css/app.css --minify",
+    "css:watch": "tailwindcss -i app/static/css/input.css -o app/static/css/app.css --watch",
+    "test": "pytest tests/ui"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/croco-br/natal-chart.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/croco-br/natal-chart/issues"
+  },
+  "homepage": "https://github.com/croco-br/natal-chart#readme",
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "tailwindcss": "^4.3.3"
+  }
+}

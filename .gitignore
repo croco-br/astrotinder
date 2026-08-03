@@ -162,3 +162,7 @@ cython_debug/
 cache/*
 .claude/
 $CLAUDE_JOB_DIR/tmp/
+
+# Node / Tailwind
+node_modules/
+app/static/css/app.css

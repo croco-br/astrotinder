@@ -5,69 +5,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glossário — Mapa Astral</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', path='font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <script>
         // Server-injected glossary data (single source of truth: app/glossary.py).
         window.GLOSSARY = {{ glossary | tojson }};
     </script>
-    <script src="{{ url_for('static', path='js/glossary.js') }}?v=3" defer></script>
+    <script src="{{ url_for('static', path='js/glossary.js') }}?v=4" defer></script>
 </head>
 
-<body>
-    <section class="section">
-        <div class="container">
-            <div class="box">
-                <div class="tabs is-centered is-boxed mb-0">
-                    <ul>
-                        <li><a href="/">Calcular</a></li>
-                        <li class="is-active"><a href="/glossary">Glossário</a></li>
-                    </ul>
-                </div>
-                <h1 class="title has-text-centered mt-4">Glossário Esotérico</h1>
-                <p class="subtitle is-6 has-text-centered has-text-grey">
-                    Conceitos de astrologia, Cabala, Tarot hermético e anjos do Shem HaMephorash.
-                </p>
+<body class="min-h-screen bg-[#f6f1e3] text-stone-800 antialiased">
+    <section class="page-section">
+        <div class="card">
+            <nav class="tabs">
+                <a href="/" class="tab">Calcular</a>
+                <a href="/glossary" class="tab tab-active">Glossário</a>
+            </nav>
+            <h1 class="h-title text-center mt-4">Glossário Esotérico</h1>
+            <p class="text-center text-sm muted mt-1">
+                Conceitos de astrologia, Cabala, Tarot hermético e anjos do Shem HaMephorash.
+            </p>
 
-                <!-- search -->
-                <div class="field has-addons has-addons-centered mt-5">
-                    <div class="control has-icons-left is-expanded" style="max-width: 520px;">
-                        <input class="input" type="text" id="glossary-search"
-                               placeholder="Filtrar (ex.: Vehuiah, Tiferet, Sol em Áries…)" oninput="filterGlossary()">
-                        <span class="icon is-small is-left"><i class="fa fa-search"></i></span>
-                    </div>
-                    <div class="control">
-                        <button class="button" onclick="clearGlossarySearch()"><i class="fa fa-times"></i></button>
-                    </div>
+            <!-- search -->
+            <div class="mt-5 flex items-center justify-center gap-2">
+                <div class="input-icon-wrap w-full max-w-xl">
+                    <input class="input" type="text" id="glossary-search"
+                           placeholder="Filtrar (ex.: Vehuiah, Tiferet, Sol em Áries…)" oninput="filterGlossary()">
+                    <span class="input-icon"><i class="fa fa-search"></i></span>
                 </div>
+                <button class="btn-ghost" onclick="clearGlossarySearch()" aria-label="Limpar">
+                    <i class="fa fa-times"></i>
+                </button>
             </div>
         </div>
     </section>
 
-    <section class="section pt-0">
-        <div class="container">
-            <div class="columns">
-                <!-- sidebar -->
-                <aside class="column is-3">
-                    <div class="box" style="position: sticky; top: 1rem;">
-                        <p class="menu-label">Seções</p>
-                        <ul class="menu-list" id="glossary-nav">
-                            <li><a class="is-active" onclick="showSection('planets', this)">Planetas</a></li>
-                            <li><a onclick="showSection('signs', this)">Signos</a></li>
-                            <li><a onclick="showSection('combinations', this)">Planeta + Signo</a></li>
-                            <li><a onclick="showSection('aspects', this)">Aspectos</a></li>
-                            <li><a onclick="showSection('kabbalah', this)">Cabala & Sephiroth</a></li>
-                            <li><a onclick="showSection('tarot', this)">Tarot Hermético (24)</a></li>
-                            <li><a onclick="showSection('angels', this)">72 Anjos</a></li>
-                            <li><a onclick="showSection('agathadaimon', this)">Agathadaimon</a></li>
-                        </ul>
-                    </div>
-                </aside>
-
-                <!-- content -->
-                <div class="column is-9">
-                    <div id="glossary-content"></div>
+    <section class="mx-auto max-w-6xl px-4 pb-8">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+            <!-- sidebar -->
+            <aside class="md:col-span-1">
+                <div class="card sticky top-4">
+                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide muted">Seções</p>
+                    <ul id="glossary-nav" class="space-y-1">
+                        <li><a class="glossary-nav-link glossary-nav-active" onclick="showSection('planets', this)">Planetas</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('signs', this)">Signos</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('combinations', this)">Planeta + Signo</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('aspects', this)">Aspectos</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('kabbalah', this)">Cabala & Sephiroth</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('tarot', this)">Tarot Hermético (24)</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('angels', this)">72 Anjos</a></li>
+                        <li><a class="glossary-nav-link" onclick="showSection('agathadaimon', this)">Agathadaimon</a></li>
+                    </ul>
                 </div>
+            </aside>
+
+            <!-- content -->
+            <div class="md:col-span-3">
+                <div id="glossary-content"></div>
             </div>
         </div>
     </section>

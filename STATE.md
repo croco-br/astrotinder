@@ -30,7 +30,9 @@ Build an astrology compatibility matcher that:
 | **Match profiles** | Romance, Friendship, Business (weighted differently) |
 | **Birth time** | Required (for Ascendant/house positions) |
 | **Sephirotic mapping** | Traditional Golden Dawn only (decan-based scheme removed from UI) |
-| **Frontend** | Server-rendered Jinja2 + Bulma + vanilla JS + hand-built SVG (no React/SPA) |
+| **Frontend** | Server-rendered Jinja2 + **Tailwind CSS v4** (build-time compiled) + vanilla JS + hand-built SVG (no React/SPA, **no Bulma**) |
+| **CSS delivery** | `npm run css:build` → `app/static/css/app.css` (compiled, minified); component classes in `app/static/css/input.css` |
+| **UI testing** | Playwright + pytest (`tests/ui/`), behavioral assertions, in-process uvicorn server fixture |
 | **Scale** | Design for millions (NumPy → FAISS), but start simple |
 
 ---
@@ -213,6 +215,68 @@ truth and zero JS/Python duplication.
 
 ---
 
+### Phase 2.6: Bulma → Tailwind CSS (UI refactor) ✅
+
+**Goal:** Replace the Bulma CSS framework with build-time-compiled Tailwind CSS v4,
+with **zero behavior change**, guarded by a new behavioral UI test suite.
+
+**Decisions (locked with user):**
+- Tailwind delivered as **build-time compiled CSS** (`@tailwindcss/cli`), not Play CDN.
+- UI tests use **Playwright + pytest**, **behavioral assertions only** (not pixel snapshots).
+- Styling is a **free redesign in Tailwind idiom** (own design system, not a Bulma clone).
+- Bulma classes inside JS-generated HTML were **rewritten to Tailwind** in the template literals.
+
+**New files:**
+- `app/static/css/input.css` — Tailwind v4 source: `@import "tailwindcss"` + a `@layer components`
+  design system (`.card`, `.page-section`, `.h-title/.h-subtitle/.h-section`, `.tabs/.tab`,
+  `.input/.input-plain/.btn-primary/.btn-ghost`, `.tag-*`, `.data-table`, `.alert-error`,
+  `.spinner`, `.modal*`, `.glossary-nav-*`). Warm parchment/amber palette matching the SVG wheels.
+- `app/static/css/app.css` — compiled output (gitignored).
+- `package.json` — `tailwindcss` + `@tailwindcss/cli` dev deps; `css:build` / `css:watch` / `test` scripts.
+- `pytest.ini` — `testpaths=tests/ui`.
+- `tests/ui/conftest.py` — `live_server` fixture: in-process uvicorn on a random free port.
+- `tests/ui/test_index.py` (12 tests) — form fields, 5 method options, tab link, all wheel
+  methods render SVG + details table + interpretation, agathadaimon name block, help modal
+  open/close/title.
+- `tests/ui/test_glossary.py` (9 tests) — 8 nav sections, search input, tab link, default
+  planets section, nav switching, 132 combination cards, angels section, filter narrow/clear.
+
+**How the tests stay behavior-only:** they load the real page, then drive the app's own JS
+render functions (`renderVisual`, `renderInterpretation`, glossary `RENDERERS`) with a
+synthetic chart payload — no live geocoding needed, no CSS-class assertions. They verify
+structure (SVG/table/interpretation present) and interactions (modal `is-active` toggle,
+nav switching, filter show/hide). **They passed against Bulma (baseline) and still pass
+against Tailwind unchanged** — proving behavior parity.
+
+**Modified files (class renames only, no logic change):**
+- `app/templates/index.html`, `app/templates/glossary.html` — Bulma markup → Tailwind; Bulma
+  CDN `<link>` removed, replaced by compiled `css/app.css`.
+- `app/static/js/natal.js` — `.box`→`.card`, `.table is-*`→`.data-table`, `.tag is-*`→`.tag tag-*`,
+  `.subtitle`→`.h-subtitle/.h-section`, `.has-text-grey`→`.muted`, `.has-text-centered`→cell-level `text-center`.
+- `app/static/js/index.js` — same renames + `.notification is-danger`→`.alert-error`,
+  `is-loading`→`opacity-60 pointer-events-none` + `.spinner`, `is-hidden`→`hidden`,
+  Bulma modal (`.modal-background/.modal-card-*`)→`.modal*` components, `.columns/.column`→Tailwind `grid`.
+- `app/static/js/glossary.js` — `.box`→`.card`, `.content`→`.prose-body`, `.table is-*`→`.data-table`,
+  nav active class `is-active`→`glossary-nav-active` (matches new template).
+- `requirements.txt` — added `playwright`, `pytest`, `pytest-playwright`.
+- `.gitignore` — added `node_modules/`, `app/static/css/app.css`.
+
+**Preserved on purpose:**
+- `.modal.is-active` class toggle in `openMethodModal`/`closeMethodModal` — the test asserts this
+  exact class; CSS maps `.modal.is-active { display: flex }`.
+- All IDs (`#name`, `#method`, `#result`, `#wheel-container`, `#glossary-nav`, …), all inline
+  `onclick`/`oninput` handlers, all element text — untouched.
+
+**Verified:**
+- 21/21 UI tests pass against the Tailwind build (same suite that passed against Bulma).
+- `node --check` clean on all 4 JS files; page-scoped JS groups load in a shared `vm` scope without
+  redeclaration errors.
+- Visual smoke test: index (natal wheel + details + interpretation), glossary (sticky sidebar +
+  cards), agathadaimon view + help modal all render correctly with the new design.
+- No `bulma` references remain in templates or JS.
+
+---
+
 ## Current State
 
 **Running:** `python -m uvicorn app.main:app --reload --port 8000`, form at `/`.
@@ -231,6 +295,14 @@ truth and zero JS/Python duplication.
 **Python environment:**
 - Python 3.14 (pyenv), `.venv` active, all deps installed
 - Key deps: `kerykeion==4.2.4`, `fastapi`, `uvicorn`, `geopy`, `timezonefinder`, `numpy`
+- UI test deps: `playwright`, `pytest`, `pytest-playwright` (chromium installed via `python -m playwright install chromium`)
+
+**Frontend build:**
+- Node 22 + npm; `tailwindcss` + `@tailwindcss/cli` (dev deps in `package.json`)
+- `npm run css:build` compiles `app/static/css/input.css` → `app/static/css/app.css` (minified)
+- `npm run css:watch` for dev rebuilds. `app.css` is gitignored (build artifact).
+- Tailwind v4 auto-detects classes from `app/templates/*.html` + `app/static/js/*.js` template literals.
+- Reusable component classes (`.card`, `.data-table`, `.tag-*`, `.btn-primary`, `.modal`, `.input`, `.tabs`, etc.) are defined in `input.css` `@layer components` to keep JS template literals terse. **These are the app's own design system, not a Bulma clone.**
 
 **Kerykeion version quirk:**
 - v4.2.4 provides `sun.abs_pos`, `moon.abs_pos`, etc. as absolute longitudes.
@@ -242,7 +314,9 @@ truth and zero JS/Python duplication.
 one global scope. Do **not** redeclare a top-level `const`/`let` that another file already
 declares — it throws "Identifier already declared" and aborts the whole file. (`POINT_GLYPH` is
 declared in `natal.js`; `sephiroth.js` reuses it.) `node --check` per-file will NOT catch this —
-load both files in a `vm` sandbox together to verify.
+load both files in a `vm` sandbox together to verify. Note: `natal.js`/`index.js` and
+`glossary.js` legitimately re-declare some helpers (`SIGN_PT`, `POINT_PT`, `escapeHtml`) but are
+never loaded on the same page, so that's safe.
 
 **File structure:**
 ```
@@ -260,14 +334,24 @@ natal-chart/
 │   ├── geocoder.py          — resolve_location(): city → (lat, lon, tz)
 │   ├── glossary.py          — esoteric glossary: single source of truth (as_dict)
 │   ├── interpretation.py    — compose(): chart dict → narrative interpretation
-│   ├── templates/index.html — form UI (Calc/Glossário tabs)
-│   ├── templates/glossary.html — glossary page (server-injected window.GLOSSARY)
-│   └── static/js/
-│       ├── natal.js         — natal + hermetic wheels, aspect detection, detail tables
-│       ├── sephiroth.js     — Tree of Life renderer (renderTreeOfLife)
-│       ├── glossary.js      — glossary page renderer (8 sections + filter)
-│       └── index.js         — form handler, method dispatch, renderVisual, renderInterpretation
-├── tests/test_phase0.py     — 5 core tests + network probe
+│   ├── templates/index.html — form UI (Calc/Glossário tabs), Tailwind
+│   ├── templates/glossary.html — glossary page (server-injected window.GLOSSARY), Tailwind
+│   └── static/
+│       ├── css/input.css    — Tailwind v4 source (@import + @layer components design system)
+│       ├── css/app.css      — COMPILED (gitignored) — build via `npm run css:build`
+│       └── js/
+│           ├── natal.js         — natal + hermetic + angels wheels, aspect detection, detail tables
+│           ├── sephiroth.js     — Tree of Life renderer (renderTreeOfLife)
+│           ├── glossary.js      — glossary page renderer (8 sections + filter)
+│           └── index.js         — form handler, method dispatch, renderVisual, renderInterpretation, modal
+├── tests/
+│   ├── test_phase0.py       — (referenced) 5 core schema tests + network probe
+│   └── ui/                  — Playwright + pytest behavioral UI tests
+│       ├── conftest.py      — live_server fixture (in-process uvicorn on random port)
+│       ├── test_index.py    — form, 5 method renders, help modal, tabs
+│       └── test_glossary.py — nav sections, search filter, clear
+├── package.json             — tailwindcss + @tailwindcss/cli dev deps, css:build/css:watch scripts
+├── pytest.ini               — testpaths=tests/ui
 ├── requirements.txt
 ├── PLAN.md                  — original spec / architecture
 ├── STATE.md                 — THIS FILE
@@ -338,7 +422,8 @@ match-type selector, ranked list, and a bi-wheel highlighting shared aspects.
 ```bash
 cd /Users/nsx001146/Documents/source/natal-chart
 source .venv/bin/activate
-python tests/test_phase0.py          # 5/5 core tests + network probe
+npm run css:build                      # compile Tailwind → app/static/css/app.css (required after any class change)
+python -m pytest tests/ui              # 21 behavioral UI tests (Playwright + chromium)
 node --check app/static/js/natal.js
 node --check app/static/js/sephiroth.js
 node --check app/static/js/index.js

@@ -165,11 +165,11 @@ function degreeLabel(position) {
 
 function birthLine(birth) {
     return `Nascimento: <strong>${birth.date}</strong> ${birth.time} em ` +
-           `<strong>${birth.city}</strong> <small class="has-text-grey">(${birth.tz})</small>`;
+           `<strong>${birth.city}</strong> <small class="muted">(${birth.tz})</small>`;
 }
 
 function retroTag(p) {
-    return p.retrograde ? ' <span class="tag is-light" title="Retrógrado">R</span>' : "";
+    return p.retrograde ? ' <span class="tag tag-neutral" title="Retrógrado">R</span>' : "";
 }
 
 /* ============================================================
@@ -215,7 +215,7 @@ const COL_PONTO     = { header: "Ponto",   cell: (k, p) =>
 const COL_SIGNO     = { header: "Signo",   cell: (k, p) => signLabel(p.sign) };
 
 const COL_GRAU      = { header: "Grau",    cell: (k, p) =>
-    `${degreeLabel(p.position)} <small class="has-text-grey">(${p.lon.toFixed(2)}°)</small>` };
+    `${degreeLabel(p.position)} <small class="muted">(${p.lon.toFixed(2)}°)</small>` };
 
 const COL_SEPHIROTH = { header: "Sephiroth", cell: (k, p) => p.sephirah_traditional };
 
@@ -223,8 +223,8 @@ const COL_CASA      = { header: "Casa",    cell: (k, p) => houseNumber(p.house) 
 
 const COL_TITULO    = { header: "Título Hermético", cell: (k, p) =>
     p.hermetic_title
-        ? `<span class="tag is-warning is-light">${p.hermetic_title}</span>`
-        : `<span class="has-text-grey">—</span>` };
+        ? `<span class="tag tag-warn">${p.hermetic_title}</span>`
+        : `<span class="muted">—</span>` };
 
 const COL_ANJO      = { header: "Anjo", cell: (k, p) => {
     const idx = angelSectorForLon(p.lon);
@@ -233,11 +233,11 @@ const COL_ANJO      = { header: "Anjo", cell: (k, p) => {
 
 function pointTable(points, columns) {
     const header = columns.map(c =>
-        `<th class="has-text-centered">${c.header}</th>`).join("");
+        `<th>${c.header}</th>`).join("");
     const rows = Object.entries(points).map(([k, p]) =>
-        `<tr>${columns.map(c => `<td class="has-text-centered">${c.cell(k, p)}</td>`).join("")}</tr>`).join("");
+        `<tr>${columns.map(c => `<td>${c.cell(k, p)}</td>`).join("")}</tr>`).join("");
     return `
-        <table class="table is-fullwidth is-narrow is-striped mt-4">
+        <table class="data-table mt-4">
             <thead><tr>${header}</tr></thead>
             <tbody>${rows}</tbody>
         </table>`;
@@ -245,11 +245,11 @@ function pointTable(points, columns) {
 
 function aspectTable(aspects) {
     const rows = aspects.length === 0
-        ? `<tr><td colspan="4" class="has-text-grey">Nenhum aspecto detetado.</td></tr>`
+        ? `<tr><td colspan="4" class="muted">Nenhum aspecto detetado.</td></tr>`
         : aspects.map(a => {
             const tag = a.isHarmony
-                ? `<span class="tag is-link is-light">${aspectLabel(a.aspect)}</span>`
-                : `<span class="tag is-warning is-light">${aspectLabel(a.aspect)}</span>`;
+                ? `<span class="tag tag-info">${aspectLabel(a.aspect)}</span>`
+                : `<span class="tag tag-warn">${aspectLabel(a.aspect)}</span>`;
             return `
                 <tr>
                     <td>${POINT_GLYPH[a.a] || "·"} ${pointLabel(a.a)}</td>
@@ -259,9 +259,9 @@ function aspectTable(aspects) {
                 </tr>`;
         }).join("");
     return `
-        <h3 class="subtitle is-5 mt-5">Aspectos do Mapa</h3>
-        <table class="table is-fullwidth is-narrow is-striped">
-            <thead><tr><th class="has-text-centered">Ponto A</th><th class="has-text-centered">Aspecto</th><th class="has-text-centered">Ponto B</th><th class="has-text-centered">Orbe</th></tr></thead>
+        <h3 class="h-section mt-5">Aspectos do Mapa</h3>
+        <table class="data-table">
+            <thead><tr><th>Ponto A</th><th>Aspecto</th><th>Ponto B</th><th>Orbe</th></tr></thead>
             <tbody>${rows}</tbody>
         </table>`;
 }
@@ -269,10 +269,10 @@ function aspectTable(aspects) {
 function detailPanel(chart, inner, opts = {}) {
     const { name } = chart;
     return `
-        <div class="box">
-            <h2 class="subtitle">${opts.title || "Detalhes do Mapa"} — ${name || "—"}</h2>
-            <p class="is-size-6">${birthLine(chart.birth)}</p>
-            ${opts.note ? `<p class="is-size-7 has-text-grey mt-1">${opts.note}</p>` : ""}
+        <div class="card">
+            <h2 class="h-subtitle">${opts.title || "Detalhes do Mapa"} — ${name || "—"}</h2>
+            <p class="text-sm">${birthLine(chart.birth)}</p>
+            ${opts.note ? `<p class="text-xs muted mt-1">${opts.note}</p>` : ""}
             ${inner}
         </div>`;
 }

@@ -1,0 +1,163 @@
+@import "tailwindcss";
+
+/*
+ * Tailwind v4 — content auto-detected from Jinja templates + JS template
+ * literals. Output compiled to app/static/css/app.css, served by StaticFiles.
+ *
+ * Design language (replaces Bulma): warm parchment background, ink text,
+ * gold/amber accents matching the SVG wheel palette (#c5b88a, #f1ead8).
+ *
+ * Reusable component classes keep JS template literals terse. These are NOT
+ * a Bulma clone — they are this app's own components, named for intent.
+ */
+
+@layer components {
+  /* ---------- layout primitives ---------- */
+  .page-section {
+    @apply mx-auto max-w-3xl px-4 py-8;
+  }
+  .card {
+    @apply rounded-xl border border-amber-900/10 bg-white/90 p-6 shadow-sm;
+  }
+  .card + .card {
+    @apply mt-4;
+  }
+
+  /* ---------- typography ---------- */
+  .h-title {
+    @apply text-3xl font-bold text-stone-800;
+  }
+  .h-subtitle {
+    @apply text-xl font-semibold text-stone-700;
+  }
+  .h-section {
+    @apply text-lg font-semibold text-stone-700;
+  }
+  .muted {
+    @apply text-stone-500;
+  }
+  .prose-body {
+    @apply text-sm leading-relaxed text-stone-700;
+  }
+
+  /* ---------- tabs ---------- */
+  .tabs {
+    @apply flex justify-center border-b border-amber-900/15;
+  }
+  .tab {
+    @apply px-5 py-2.5 text-sm font-medium text-stone-500 border-b-2 border-transparent -mb-px transition-colors;
+  }
+  .tab:hover {
+    @apply text-stone-800;
+  }
+  .tab-active {
+    @apply text-amber-800 border-amber-700 font-semibold;
+  }
+
+  /* ---------- form ---------- */
+  .field-label {
+    @apply block text-sm font-medium text-stone-700 mb-1;
+  }
+  .input {
+    @apply block w-full rounded-lg border border-stone-300 bg-white px-3 py-2 pl-9 text-sm text-stone-800 shadow-sm focus:border-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-600;
+  }
+  .input-plain {
+    @apply block w-full rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 shadow-sm focus:border-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-600;
+  }
+  .input-icon-wrap {
+    @apply relative;
+  }
+  .input-icon {
+    @apply pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-stone-400;
+  }
+  .btn-primary {
+    @apply block w-full rounded-lg bg-amber-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 disabled:opacity-60;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-600 shadow-sm transition-colors hover:bg-stone-50;
+  }
+
+  /* ---------- tags / badges ---------- */
+  .tag {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium;
+  }
+  .tag-neutral {
+    @apply bg-stone-100 text-stone-600;
+  }
+  .tag-primary {
+    @apply bg-amber-100 text-amber-800;
+  }
+  .tag-info {
+    @apply bg-sky-100 text-sky-800;
+  }
+  .tag-warn {
+    @apply bg-orange-100 text-orange-800;
+  }
+
+  /* ---------- tables ---------- */
+  .data-table {
+    @apply w-full text-sm;
+  }
+  .data-table thead th {
+    @apply border-b border-stone-200 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wide text-stone-500;
+  }
+  .data-table tbody td {
+    @apply border-b border-stone-100 px-3 py-2 text-center text-stone-700;
+  }
+  .data-table tbody tr:nth-child(even) {
+    @apply bg-stone-50/60;
+  }
+
+  /* ---------- feedback ---------- */
+  .alert-error {
+    @apply rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-800;
+  }
+  .spinner {
+    @apply h-5 w-5 animate-spin rounded-full border-2 border-amber-700 border-t-transparent;
+  }
+
+  /* ---------- modal ---------- */
+  .modal {
+    @apply fixed inset-0 z-50 hidden items-center justify-center p-4;
+  }
+  .modal.is-active {
+    @apply flex;
+  }
+  .modal-backdrop {
+    @apply absolute inset-0 bg-stone-900/50;
+  }
+  .modal-card {
+    @apply relative w-full max-w-lg rounded-xl bg-white shadow-xl;
+  }
+  .modal-head {
+    @apply flex items-center justify-between border-b border-stone-200 px-5 py-4;
+  }
+  .modal-title {
+    @apply text-base font-semibold text-stone-800;
+  }
+  .modal-body {
+    @apply px-5 py-4 text-sm leading-relaxed text-stone-700;
+  }
+  .modal-foot {
+    @apply flex justify-end border-t border-stone-200 px-5 py-3;
+  }
+  .modal-close {
+    @apply text-stone-400 transition-colors hover:text-stone-700;
+  }
+
+  /* ---------- glossary nav ---------- */
+  .glossary-nav-link {
+    @apply block cursor-pointer rounded-md px-3 py-1.5 text-sm text-stone-600 transition-colors hover:bg-amber-50 hover:text-stone-800;
+  }
+  .glossary-nav-active {
+    @apply bg-amber-100 font-semibold text-amber-900;
+  }
+
+  /* ---------- misc ---------- */
+  .divider {
+    @apply my-4 border-t border-stone-200;
+  }
+  .interp-grid {
+    @apply grid grid-cols-1 gap-4 sm:grid-cols-2;
+  }
+}
