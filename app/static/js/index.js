@@ -145,11 +145,8 @@ function toggleDetails() {
 /* ---------- agathadaimon view (guardian angel name) ---------- */
 
 function renderAgathadaimonView(data, container) {
-    const chart = data.chart;
     const daimon = data.daimon || {};
     const label = METHOD_LABELS.agathadaimon;
-    const birth = chart.birth;
-    const personName = chart.name || '—';
     const name = daimon.name || '—';
     const hebrew = daimon.hebrew_letter || '';
     const suffix = daimon.suffix || '';
@@ -180,11 +177,7 @@ function renderAgathadaimonView(data, container) {
                 <tbody>${rowsHtml}</tbody>
             </table>
             ${methodModal('agathadaimon')}
-            <div id="interpretation-container"></div>
         </div>`;
-    if (data.interpretation) {
-        renderInterpretation(data.interpretation, document.getElementById('interpretation-container'));
-    }
 }
 
 function escapeHtml(s) {

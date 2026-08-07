@@ -1,8 +1,8 @@
 # Astrology Matcher — State Document
 
-**Date:** 2026-07-24  
+**Date:** 2026-08-07  
 **Project:** natal-chart (Astrology Calculator + Compatibility Matcher)  
-**Current Phase:** Phase 2 complete + Phase 2.5 (Glossary & Interpretations) — ready for Phase 3  
+**Current Phase:** Phase 2.7 complete (visual methods, glossary, and interpretations) — ready for Phase 3  
 **Language:** Python 3.14 (FastAPI) + vanilla JS + hand-built SVG
 
 ---
@@ -114,8 +114,8 @@ POST /calculate     — {date, time, city, name, method} → method-specific res
 
 **Aspect orbs (degrees):** conjunction 8, opposition 8, trine 7, square 6, sextile 5.
 
-**Conditional rendering:** `traditional` + `hermetic` + `sephiroth` → SVG views; `angels` +
-`agathadaimon` → raw JSON dump (visuals pending — see task #4 for angels).
+**Conditional rendering:** `traditional`, `hermetic`, `angels`, and `sephiroth` render dedicated
+SVG views. `agathadaimon` renders a dedicated guardian-angel result card.
 
 ---
 
@@ -201,17 +201,19 @@ backend glossary as the source of truth (Portuguese UI).
 - `app/main.py` — added `GET /glossary` (server-rendered) and `GET /api/glossary` (raw JSON)
 - `app/static/js/index.js` — `renderInterpretation()` + per-point cards (planet/sign/
   combination/method-layer), aspect rows, agathadaimon name block; rendered below
-  every visual method (traditional, hermetic, sephiroth, agathadaimon). `angels` is
-  no longer raw-JSON — it renders the interpretation block (the wheel is still pending,
-  see task #4)
+  the traditional, hermetic, angels, and sephiroth views. The Agathadaimon renderer is
+  intentionally separate and shows only the guardian-angel result, not the natal chart
+  interpretation.
 - `app/templates/index.html` — Calc/Glossário tabs; `index.js` cache-busted to v23
 
 **Design note:** the glossary is backend-only; the frontend never fetches it
 (`/api/glossary` exists only for programmatic consumers). This keeps one source of
 truth and zero JS/Python duplication.
 
-**Verified working:** server runs, all 5 methods return interpretation blocks,
-`/glossary` renders all 8 sections with filter.
+**Verified working:** server runs; all 5 methods return API interpretation payloads; the
+traditional, hermetic, angels, and sephiroth views render their interpretation blocks;
+the Agathadaimon UI renders only guardian-angel data. `/glossary` renders all 8 sections
+with filter.
 
 ---
 
@@ -277,6 +279,31 @@ against Tailwind unchanged** — proving behavior parity.
 
 ---
 
+### Phase 2.7: Angels Wheel & Focused Agathadaimon View ✅
+
+**Goal:** Complete the dedicated angel visual and ensure the Agathadaimon result remains
+focused on the guardian angel rather than repeating the natal chart.
+
+**Modified files:**
+- `app/static/js/natal.js` — added the 72-sector Shem HaMephorash SVG wheel. It renders six
+  five-degree sectors per sign, labels every angel, highlights sectors occupied by natal points,
+  and plots the natal point glyphs. `renderAngelsDetails()` lists each point's ruling angel.
+- `app/static/js/index.js` — wires `angels` into the SVG rendering path. The dedicated
+  `renderAgathadaimonView()` now renders only the guardian angel's name, Hebrew letter,
+  day/night suffix, and the three letter correspondences; it does not render the generic
+  per-point natal interpretation or aspect list.
+- `tests/ui/test_index.py` — asserts that the Agathadaimon result includes the guardian-angel
+  correspondence table and excludes `Interpretação Completa` and its container.
+
+**API note:** `POST /calculate` still returns `chart` and `interpretation` for Agathadaimon for
+programmatic consistency. The browser intentionally ignores the generic natal interpretation for
+this method.
+
+**Verified:** `npm run css:build`, `python -m pytest tests/ui` (21 passed),
+`node --check app/static/js/index.js`, and `git diff --check`.
+
+---
+
 ## Current State
 
 **Running:** `python -m uvicorn app.main:app --reload --port 8000`, form at `/`.
@@ -284,9 +311,10 @@ against Tailwind unchanged** — proving behavior parity.
 **Methods:**
 - `traditional` → natal wheel + aspect detail table + interpretation
 - `hermetic` → 24-sector wheel + hermetic detail table + interpretation
+- `angels` → 72-sector Shem HaMephorash wheel + angel detail table + interpretation
 - `sephiroth` → Tree of Life only + detail table (Sephiroth column = traditional) + interpretation
-- `angels` → interpretation block (72-angels wheel still pending — task #4)
-- `agathadaimon` → daimon name block + interpretation (wheel/visual TBD)
+- `agathadaimon` → guardian angel name, Hebrew letter, suffix, and three letter correspondences only;
+  no natal wheel, natal point cards, or aspect interpretation are shown
 
 ---
 
@@ -298,7 +326,8 @@ against Tailwind unchanged** — proving behavior parity.
 - UI test deps: `playwright`, `pytest`, `pytest-playwright` (chromium installed via `python -m playwright install chromium`)
 
 **Frontend build:**
-- Node 22 + npm; `tailwindcss` + `@tailwindcss/cli` (dev deps in `package.json`)
+- Node 22 + npm; `tailwindcss`, `@tailwindcss/cli`, and `@crocolaris/xss-analyzer` (dev deps in
+  `package.json`)
 - `npm run css:build` compiles `app/static/css/input.css` → `app/static/css/app.css` (minified)
 - `npm run css:watch` for dev rebuilds. `app.css` is gitignored (build artifact).
 - Tailwind v4 auto-detects classes from `app/templates/*.html` + `app/static/js/*.js` template literals.
@@ -340,7 +369,7 @@ natal-chart/
 │       ├── css/input.css    — Tailwind v4 source (@import + @layer components design system)
 │       ├── css/app.css      — COMPILED (gitignored) — build via `npm run css:build`
 │       └── js/
-│           ├── natal.js         — natal + hermetic + angels wheels, aspect detection, detail tables
+│           ├── natal.js         — natal + hermetic + 72-angels wheels, aspect detection, detail tables
 │           ├── sephiroth.js     — Tree of Life renderer (renderTreeOfLife)
 │           ├── glossary.js      — glossary page renderer (8 sections + filter)
 │           └── index.js         — form handler, method dispatch, renderVisual, renderInterpretation, modal
@@ -389,14 +418,8 @@ match-type selector, ranked list, and a bi-wheel highlighting shared aspects.
 
 ## Pending Frontend Work
 
-- **Task #4 (queued): 72 Angels of Shem HaMephorash diagram.** The `angels` method
-  now renders the narrative interpretation block, but no wheel yet. Each chart point
-  already carries `p.angel = "Sign (AngelName)"` via `enrich_angels`, and
-  `glossary.ANGELS` has all 72 sectors. Build a 72-sector ring (12 signs × 6
-  five-degree bins) showing the Shem HaMephorash names, with natal planets placed on
-  their angel's sector. Add to `natal.js` or a new `angels.js`; wire into `index.js`
-  `VISUAL_METHODS` + `renderVisual`.
-- `agathadaimon` method → daimon block + interpretation shown; dedicated visual TBD.
+- No Phase 2 visual work is queued. The next frontend work follows the Phase 3 matcher API:
+  a ranked match view and bi-wheel for shared synastry aspects (Phase 4).
 
 ---
 
@@ -410,7 +433,8 @@ match-type selector, ranked list, and a bi-wheel highlighting shared aspects.
    narrative output. Phase 3 should unify on the Python scorer as the source of truth.
 3. **Sephirotic mapping:** both schemes still computed server-side; UI shows traditional only.
    If Phase 3 needs a single sephirah value per point, use `sephirah_traditional`.
-4. **Scale:** no FAISS yet; current engine does brute-force NumPy (sufficient until Phase 5).
+4. **Scale:** no matcher or FAISS implementation exists yet; Phase 3 begins with brute-force
+   NumPy scoring, sufficient until Phase 5.
 5. **Match profiles:** weights not yet defined; placeholder land in Phase 3.
 6. **Phase 2.5 uncommitted:** glossary + interpretation work (4 new files, 4 modified)
    is on the working tree, not yet committed.
@@ -431,15 +455,14 @@ node --check app/static/js/glossary.js
 python -m uvicorn app.main:app --reload --port 8000
 ```
 
-Then navigate to http://127.0.0.1:8000 — all 5 methods respond; 3 render as SVG views
-(traditional, hermetic, sephiroth) and every method shows a narrative interpretation
-block; `angels` is interpretation-only until task #4. The `/glossary` page lists all
-esoteric content (planetas, signos, 132 combinações, aspectos, Cabala, Tarot, 72 anjos,
-Agathadaimon) with a text filter.
+Then navigate to http://127.0.0.1:8000 — all 5 methods respond. Traditional, hermetic,
+angels, and sephiroth have dedicated SVG views and narrative interpretation blocks.
+Agathadaimon shows only the guardian-angel name and letter correspondences. The `/glossary`
+page lists all esoteric content (planetas, signos, 132 combinações, aspectos, Cabala, Tarot,
+72 anjos, Agathadaimon) with a text filter.
 
-**Next task:** task #4 (72 Angels diagram) is queued; Phase 3 (NumPy synastry matcher)
-follows per PLAN.md §3. Consider committing Phase 2.5 (glossary + interpretations)
-first — it's a self-contained feature.
+**Next task:** Phase 3 (NumPy synastry matcher) follows per `PLAN.md` §3. Consider committing
+the completed Phase 2.5–2.7 work first; it is a self-contained feature.
 
 ---
 

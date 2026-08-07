@@ -94,13 +94,15 @@ class TestMethodRendering:
         # interpretation block present
         assert page.locator("#interpretation-container").inner_html().strip() != ""
 
-    def test_agathadaimon_renders_name_block(self, page, live_server):
+    def test_agathadaimon_renders_guardian_angel_only(self, page, live_server):
         page.goto(live_server + "/")
         _inject_and_render(page, "agathadaimon")
         # daimon name appears somewhere in the result
         text = page.locator("#result").inner_text()
         assert "Vehuiel" in text
-        assert page.locator("#interpretation-container").inner_html().strip() != ""
+        assert "Letras e Correspondências" in text
+        assert "Interpretação Completa" not in text
+        assert page.locator("#interpretation-container").count() == 0
 
     def test_result_has_method_label(self, page, live_server):
         page.goto(live_server + "/")
