@@ -77,14 +77,42 @@ class TestIndexPageStructure:
     def test_example_fill_is_explicit(self, page, live_server):
         page.goto(live_server + "/")
         examples = page.evaluate("EXAMPLE_PERSONALITIES")
-        assert len(examples) == 10
+        assert len(examples) == 20
         assert {example["name"] for example in examples} >= {
             "Marilyn Monroe", "Michael Jackson", "Kurt Cobain", "Nelson Mandela",
-            "Al Capone", "Mahatma Gandhi", "Albert Einstein",
+            "Al Capone", "Mahatma Gandhi", "Albert Einstein", "Barack Obama",
+            "Elvis Presley", "Oprah Winfrey", "Martin Luther King Jr.",
         }
         page.get_by_role("button", name="Preencher personalidade aleatória").click()
         assert page.locator("#name").input_value() in {example["name"] for example in examples}
-        assert "fontes astrológicas" in page.locator("#form-status").inner_text()
+        assert "Você pode alterar os dados" in page.locator("#form-status").inner_text()
+
+    def test_error_message_is_escaped(self, page, live_server):
+        page.goto(live_server + "/")
+        page.evaluate("""() => {
+            window.fetch = async () => ({
+                ok: false,
+                status: 422,
+                json: async () => ({ error: '<img src=x onerror=alert(1)>' }),
+            });
+            document.getElementById('birthdate').value = '1990-01-01';
+            document.getElementById('birthtime').value = '12:00';
+            document.getElementById('city').value = 'Teste';
+        }""")
+        page.evaluate("calculate()")
+        assert page.locator("#result img").count() == 0
+        assert "<img" in page.locator("#result").inner_text()
+
+    def test_birth_values_are_escaped_in_details(self, page, live_server):
+        page.goto(live_server + "/")
+        chart = {**CHART, "name": "<b>nome</b>", "birth": {**CHART["birth"], "city": "<img src=x>"}}
+        page.evaluate(
+            """([chart, interp]) => renderVisual({ chart, interpretation: interp }, document.getElementById('result'), 'traditional')""",
+            [chart, INTERPRETATION],
+        )
+        page.locator('button:has-text("Ver detalhes técnicos")').click()
+        assert page.locator("#details-container img").count() == 0
+        assert "<img src=x>" in page.locator("#details-container").inner_text()
 
     def test_method_choice_updates_submit_label(self, page, live_server):
         page.goto(live_server + "/")

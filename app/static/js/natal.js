@@ -165,8 +165,13 @@ function degreeLabel(position) {
 }
 
 function birthLine(birth) {
-    return `Nascimento: <strong>${birth.date}</strong> ${birth.time} em ` +
-           `<strong>${birth.city}</strong> <small class="muted">(${birth.tz})</small>`;
+    return `Nascimento: <strong>${natalEscapeHtml(birth.date)}</strong> ${natalEscapeHtml(birth.time)} em ` +
+           `<strong>${natalEscapeHtml(birth.city)}</strong> <small class="muted">(${natalEscapeHtml(birth.tz)})</small>`;
+}
+
+function natalEscapeHtml(value) {
+    return String(value == null ? "" : value)
+        .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
 function retroTag(p) {
@@ -271,7 +276,7 @@ function detailPanel(chart, inner, opts = {}) {
     const { name } = chart;
     return `
         <div class="card">
-            <h2 class="h-subtitle">${opts.title || "Detalhes do Mapa"} — ${name || "—"}</h2>
+            <h2 class="h-subtitle">${natalEscapeHtml(opts.title || "Detalhes do Mapa")} — ${natalEscapeHtml(name || "—")}</h2>
             <p class="text-sm">${birthLine(chart.birth)}</p>
             ${opts.note ? `<p class="text-xs muted mt-1">${opts.note}</p>` : ""}
             ${inner}

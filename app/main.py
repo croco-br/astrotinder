@@ -57,4 +57,6 @@ async def calculate(req: ChartRequest):
         )
     except (ValueError, LookupError) as exc:
         return JSONResponse(status_code=422, content={"error": str(exc)})
+    except ConnectionError as exc:
+        return JSONResponse(status_code=503, content={"error": str(exc)})
     return JSONResponse(content=result)

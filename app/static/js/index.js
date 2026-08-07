@@ -31,7 +31,6 @@ const METHOD_ACTIONS = {
     agathadaimon: 'Revelar nome do anjo guardião',
 };
 
-// Horários publicados por fontes astrológicas; não são certidões de nascimento.
 const EXAMPLE_PERSONALITIES = [
     { name: 'Marilyn Monroe', date: '1926-06-01', time: '09:30', city: 'Los Angeles, Estados Unidos' },
     { name: 'Michael Jackson', date: '1958-08-29', time: '19:33', city: 'Gary, Indiana, Estados Unidos' },
@@ -43,6 +42,16 @@ const EXAMPLE_PERSONALITIES = [
     { name: 'David Bowie', date: '1947-01-08', time: '09:15', city: 'Londres, Inglaterra' },
     { name: 'Princesa Diana', date: '1961-07-01', time: '19:45', city: 'Sandringham, Inglaterra' },
     { name: 'Albert Einstein', date: '1879-03-14', time: '11:30', city: 'Ulm, Alemanha' },
+    { name: 'Barack Obama', date: '1961-08-04', time: '19:24', city: 'Honolulu, Havaí, Estados Unidos' },
+    { name: 'Bill Clinton', date: '1946-08-19', time: '08:51', city: 'Hope, Arkansas, Estados Unidos' },
+    { name: 'Donald Trump', date: '1946-06-14', time: '10:54', city: 'Queens, Nova York, Estados Unidos' },
+    { name: 'Joe Biden', date: '1942-11-20', time: '08:30', city: 'Scranton, Pensilvânia, Estados Unidos' },
+    { name: 'Ronald Reagan', date: '1911-02-06', time: '04:16', city: 'Tampico, Illinois, Estados Unidos' },
+    { name: 'John F. Kennedy', date: '1917-05-29', time: '15:00', city: 'Brookline, Massachusetts, Estados Unidos' },
+    { name: 'Franklin D. Roosevelt', date: '1882-01-30', time: '20:45', city: 'Hyde Park, Nova York, Estados Unidos' },
+    { name: 'Elvis Presley', date: '1935-01-08', time: '04:35', city: 'Tupelo, Mississippi, Estados Unidos' },
+    { name: 'Oprah Winfrey', date: '1954-01-29', time: '04:30', city: 'Kosciusko, Mississippi, Estados Unidos' },
+    { name: 'Martin Luther King Jr.', date: '1929-01-15', time: '12:00', city: 'Atlanta, Geórgia, Estados Unidos' },
 ];
 
 function selectMethod(method) {
@@ -56,7 +65,7 @@ function fillExample() {
     document.getElementById('birthdate').value = example.date;
     document.getElementById('birthtime').value = example.time;
     document.getElementById('city').value = example.city;
-    document.getElementById('form-status').textContent = `Exemplo: ${example.name}. Horário de nascimento atribuído por fontes astrológicas; você pode alterá-lo antes de calcular.`;
+    document.getElementById('form-status').textContent = `Exemplo: ${example.name}. Você pode alterar os dados antes de calcular.`;
 }
 
 function editDetails() {
@@ -107,7 +116,7 @@ async function calculate() {
     } catch (err) {
         container.innerHTML = `
             <div class="alert-error">
-                <strong>Erro:</strong> ${err.message}
+                <strong>Erro:</strong> ${escapeHtml(err.message)}
             </div>`;
         status.textContent = 'Não foi possível calcular o resultado. Reveja os dados e tente novamente.';
     } finally {

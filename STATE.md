@@ -310,9 +310,9 @@ this method.
 adding accounts, saved charts, history, preferences, share links, or any other persistence.
 
 **Calculator flow:** birth-data fields start empty; `Nome` is optional; `Preencher exemplo`
-now selects one of 10 public-figure demo profiles at random for the current page only. Birth dates
-and cities are public biographical data; displayed birth times are attributed by astrological
-sources and the UI makes that limitation explicit. Field guidance explains birth-time and
+now selects one of 20 public-figure demo profiles at random for the current page only. Ten
+historical profiles and ten additional public figures provide varied demonstration inputs. Field
+guidance explains birth-time and
 city requirements. An outcome-led radio-card method picker updates the submit label. Calculation
 announces progress, disables the submit control, preserves form data on failure, and moves focus
 to the result heading on success.
@@ -335,6 +335,11 @@ duplicating all angels in individual cards.
 **House presentation:** Kerykeion labels such as `first_house`, `First_House`, and `First House`
 are normalized to numeric houses (`1` through `12`) in technical tables and interpretations;
 the canonical stored field remains unchanged.
+
+**Location resilience:** The 20 built-in demo locations use fixed coordinates and IANA timezones,
+so they do not depend on live geocoding. User-entered cities still use Nominatim. Location service
+or timezone-resolution failures return a controlled `503`; unknown locations return generic `422`
+messages without reflecting the submitted city.
 
 **Glossary and accessibility:** Glossary section controls are semantic buttons with
 `aria-current` on desktop and a session-only compact section picker on mobile; its search matches

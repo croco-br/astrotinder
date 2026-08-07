@@ -118,10 +118,11 @@ gera automaticamente um URL novo e evita cache desatualizada.
 
 ### UX Stateless
 
-- O formulário começa vazio; `Preencher personalidade aleatória` seleciona um dos 10 perfis de
+- O formulário começa vazio; `Preencher personalidade aleatória` seleciona um dos 20 perfis de
   demonstração: Marilyn Monroe, Michael Jackson, Kurt Cobain, Nelson Mandela, Al Capone, Mahatma
-  Gandhi, Frida Kahlo, David Bowie, Princesa Diana ou Albert Einstein. Os horários são atribuídos
-  por fontes astrológicas e podem ser alterados antes do cálculo.
+  Gandhi, Frida Kahlo, David Bowie, Princesa Diana, Albert Einstein, Barack Obama, Bill Clinton,
+  Donald Trump, Joe Biden, Ronald Reagan, John F. Kennedy, Franklin D. Roosevelt, Elvis Presley,
+  Oprah Winfrey ou Martin Luther King Jr.
 - O seletor descreve o resultado de cada método e o botão de cálculo se adapta ao método escolhido.
 - Durante o cálculo, a página fornece estado acessível; depois, move o foco para o resultado.
 - Resultados técnicos e interpretações extensas começam recolhidos, com resumos no topo.
@@ -134,6 +135,9 @@ gera automaticamente um URL novo e evita cache desatualizada.
   anjos ficam em uma única tabela pesquisável, sem cartões repetidos.
 - Casas são exibidas como números de 1 a 12 em todas as telas, embora o motor preserve o rótulo
   técnico original internamente.
+- As localidades dos perfis de demonstração são resolvidas localmente; cidades informadas pelo
+  usuário continuam usando o geocodificador. Se o serviço estiver indisponível, a API responde
+  com `503` e uma mensagem tratável.
 - Tabelas têm scroll horizontal em telas pequenas; o glossário usa um seletor de seção compacto
   no celular. Os diálogos de ajuda suportam teclado e Escape.
 
