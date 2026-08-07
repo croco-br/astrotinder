@@ -1,3 +1,6 @@
+from hashlib import blake2s
+from pathlib import Path
+
 from fastapi import FastAPI
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -12,6 +15,16 @@ app = FastAPI()
 
 templates = Jinja2Templates(directory="app/templates")
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
+STATIC_DIR = Path("app/static")
+
+
+def static_url(request: Request, path: str) -> str:
+    """Return a content-fingerprinted static URL for safe long-lived caching."""
+    digest = blake2s((STATIC_DIR / path).read_bytes(), digest_size=8).hexdigest()
+    return f"{request.url_for('static', path=path)}?v={digest}"
+
+
+templates.env.globals["static_url"] = static_url
 
 
 @app.get("/", response_class=HTMLResponse)

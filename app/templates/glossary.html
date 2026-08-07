@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Glossário — Mapa Astral</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ static_url(request, 'css/app.css') }}">
+    <link rel="stylesheet" href="{{ static_url(request, 'font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <script>
         // Server-injected glossary data (single source of truth: app/glossary.py).
         window.GLOSSARY = {{ glossary | tojson }};
     </script>
-    <script src="{{ url_for('static', path='js/glossary.js') }}?v=4" defer></script>
+    <script src="{{ static_url(request, 'js/glossary.js') }}" defer></script>
 </head>
 
 <body class="min-h-screen bg-[#f6f1e3] text-stone-800 antialiased">

@@ -5,11 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mapa Astral</title>
-    <link rel="stylesheet" href="{{ url_for('static', path='css/app.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', path='font-awesome-4.7.0/css/font-awesome.min.css') }}">
-    <script src="{{ url_for('static', path='js/natal.js') }}?v=23" defer></script>
-    <script src="{{ url_for('static', path='js/sephiroth.js') }}?v=20" defer></script>
-    <script src="{{ url_for('static', path='js/index.js') }}?v=24" defer></script>
+    <link rel="stylesheet" href="{{ static_url(request, 'css/app.css') }}">
+    <link rel="stylesheet" href="{{ static_url(request, 'font-awesome-4.7.0/css/font-awesome.min.css') }}">
+    <script src="{{ static_url(request, 'js/natal.js') }}" defer></script>
+    <script src="{{ static_url(request, 'js/sephiroth.js') }}" defer></script>
+    <script src="{{ static_url(request, 'js/index.js') }}" defer></script>
 </head>
 
 <body class="min-h-screen bg-[#f6f1e3] text-stone-800 antialiased">
