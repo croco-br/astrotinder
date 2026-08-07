@@ -46,11 +46,11 @@ const EXAMPLE_PERSONALITIES = [
     { name: 'Bill Clinton', date: '1946-08-19', time: '08:51', city: 'Hope, Arkansas, Estados Unidos' },
     { name: 'Donald Trump', date: '1946-06-14', time: '10:54', city: 'Queens, Nova York, Estados Unidos' },
     { name: 'Joe Biden', date: '1942-11-20', time: '08:30', city: 'Scranton, Pensilvânia, Estados Unidos' },
-    { name: 'Ronald Reagan', date: '1911-02-06', time: '04:16', city: 'Tampico, Illinois, Estados Unidos' },
+    { name: 'Luiz Inácio Lula da Silva', date: '1945-10-27', time: '05:30', city: 'Caetés, Pernambuco, Brasil' },
     { name: 'John F. Kennedy', date: '1917-05-29', time: '15:00', city: 'Brookline, Massachusetts, Estados Unidos' },
     { name: 'Franklin D. Roosevelt', date: '1882-01-30', time: '20:45', city: 'Hyde Park, Nova York, Estados Unidos' },
     { name: 'Elvis Presley', date: '1935-01-08', time: '04:35', city: 'Tupelo, Mississippi, Estados Unidos' },
-    { name: 'Oprah Winfrey', date: '1954-01-29', time: '04:30', city: 'Kosciusko, Mississippi, Estados Unidos' },
+    { name: 'Jair Bolsonaro', date: '1955-03-21', time: '14:45', city: 'Campinas, São Paulo, Brasil' },
     { name: 'Martin Luther King Jr.', date: '1929-01-15', time: '12:00', city: 'Atlanta, Geórgia, Estados Unidos' },
 ];
 

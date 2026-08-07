@@ -81,7 +81,8 @@ class TestIndexPageStructure:
         assert {example["name"] for example in examples} >= {
             "Marilyn Monroe", "Michael Jackson", "Kurt Cobain", "Nelson Mandela",
             "Al Capone", "Mahatma Gandhi", "Albert Einstein", "Barack Obama",
-            "Elvis Presley", "Oprah Winfrey", "Martin Luther King Jr.",
+            "Elvis Presley", "Luiz Inácio Lula da Silva", "Jair Bolsonaro",
+            "Martin Luther King Jr.",
         }
         page.get_by_role("button", name="Preencher personalidade aleatória").click()
         assert page.locator("#name").input_value() in {example["name"] for example in examples}

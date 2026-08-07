@@ -121,8 +121,8 @@ gera automaticamente um URL novo e evita cache desatualizada.
 - O formulário começa vazio; `Preencher personalidade aleatória` seleciona um dos 20 perfis de
   demonstração: Marilyn Monroe, Michael Jackson, Kurt Cobain, Nelson Mandela, Al Capone, Mahatma
   Gandhi, Frida Kahlo, David Bowie, Princesa Diana, Albert Einstein, Barack Obama, Bill Clinton,
-  Donald Trump, Joe Biden, Ronald Reagan, John F. Kennedy, Franklin D. Roosevelt, Elvis Presley,
-  Oprah Winfrey ou Martin Luther King Jr.
+  Donald Trump, Joe Biden, Luiz Inácio Lula da Silva, John F. Kennedy, Franklin D. Roosevelt,
+  Elvis Presley, Jair Bolsonaro ou Martin Luther King Jr.
 - O seletor descreve o resultado de cada método e o botão de cálculo se adapta ao método escolhido.
 - Durante o cálculo, a página fornece estado acessível; depois, move o foco para o resultado.
 - Resultados técnicos e interpretações extensas começam recolhidos, com resumos no topo.

@@ -17,15 +17,15 @@ DEMO_LOCATIONS = {
     "Londres, Inglaterra": (51.5072, -0.1276, "Europe/London"),
     "Sandringham, Inglaterra": (52.8300, 0.5100, "Europe/London"),
     "Ulm, Alemanha": (48.4011, 9.9876, "Europe/Berlin"),
+    "Caetés, Pernambuco, Brasil": (-8.7733, -36.6250, "America/Recife"),
     "Honolulu, Havaí, Estados Unidos": (21.3069, -157.8583, "Pacific/Honolulu"),
     "Hope, Arkansas, Estados Unidos": (33.6671, -93.5916, "America/Chicago"),
     "Queens, Nova York, Estados Unidos": (40.7282, -73.7949, "America/New_York"),
     "Scranton, Pensilvânia, Estados Unidos": (41.4090, -75.6624, "America/New_York"),
-    "Tampico, Illinois, Estados Unidos": (40.6300, -89.7900, "America/Chicago"),
     "Brookline, Massachusetts, Estados Unidos": (42.3318, -71.1212, "America/New_York"),
     "Hyde Park, Nova York, Estados Unidos": (41.7851, -73.9337, "America/New_York"),
     "Tupelo, Mississippi, Estados Unidos": (34.2576, -88.7034, "America/Chicago"),
-    "Kosciusko, Mississippi, Estados Unidos": (33.0585, -89.5876, "America/Chicago"),
+    "Campinas, São Paulo, Brasil": (-22.9056, -47.0608, "America/Sao_Paulo"),
     "Atlanta, Geórgia, Estados Unidos": (33.7490, -84.3880, "America/New_York"),
 }
 
