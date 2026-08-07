@@ -58,6 +58,9 @@
   .field-label {
     @apply block text-sm font-medium text-stone-700 mb-1;
   }
+  .field-help {
+    @apply mt-1 text-xs text-stone-500;
+  }
   .input {
     @apply block w-full rounded-lg border border-stone-300 bg-white px-3 py-2 pl-9 text-sm text-stone-800 shadow-sm focus:border-amber-600 focus:outline-none focus:ring-1 focus:ring-amber-600;
   }
@@ -71,7 +74,7 @@
     @apply pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-stone-400;
   }
   .btn-primary {
-    @apply block w-full rounded-lg bg-amber-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 disabled:opacity-60;
+    @apply block w-full rounded-lg bg-amber-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-amber-800 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60;
   }
   .btn-ghost {
     @apply inline-flex items-center rounded-lg border border-stone-300 bg-white px-3 py-2 text-sm text-stone-600 shadow-sm transition-colors hover:bg-stone-50;
@@ -97,6 +100,9 @@
   /* ---------- tables ---------- */
   .data-table {
     @apply w-full text-sm;
+  }
+  .table-wrap {
+    @apply overflow-x-auto;
   }
   .data-table thead th {
     @apply border-b border-stone-200 px-3 py-2 text-center text-xs font-semibold uppercase tracking-wide text-stone-500;
@@ -151,6 +157,30 @@
   }
   .glossary-nav-active {
     @apply bg-amber-100 font-semibold text-amber-900;
+  }
+  .method-grid {
+    @apply grid grid-cols-1 gap-2 sm:grid-cols-2;
+  }
+  .method-option {
+    @apply flex cursor-pointer items-start gap-3 rounded-lg border border-stone-200 bg-white p-3 text-sm transition-colors hover:border-amber-500 hover:bg-amber-50 has-[:checked]:border-amber-700 has-[:checked]:bg-amber-50;
+  }
+  .method-option input {
+    @apply mt-1 accent-amber-700;
+  }
+  .method-option strong {
+    @apply block text-stone-800;
+  }
+  .method-option small {
+    @apply mt-0.5 block text-stone-500;
+  }
+  .result-toolbar {
+    @apply mb-4 flex flex-wrap justify-center gap-2;
+  }
+  .details-toggle {
+    @apply mt-4 w-full rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 transition-colors hover:bg-stone-50;
+  }
+  .method-help {
+    @apply inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2;
   }
 
   /* ---------- misc ---------- */

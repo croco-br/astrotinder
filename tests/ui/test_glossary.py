@@ -8,7 +8,7 @@ must be preserved across the Bulma → Tailwind refactor.
 class TestGlossaryStructure:
     def test_sidebar_nav_has_eight_sections(self, page, live_server):
         page.goto(live_server + "/glossary")
-        links = page.locator("#glossary-nav a")
+        links = page.locator("#glossary-nav button")
         assert links.count() == 8
 
     def test_search_input_and_clear_present(self, page, live_server):
@@ -29,18 +29,18 @@ class TestGlossaryNav:
 
     def test_clicking_nav_switches_section(self, page, live_server):
         page.goto(live_server + "/glossary")
-        page.locator('#glossary-nav a:has-text("Signos")').click()
+        page.locator('#glossary-nav button:has-text("Signos")').click()
         assert page.locator("#glossary-content .glossary-item").count() >= 12
 
     def test_combinations_section_has_132_cards(self, page, live_server):
         page.goto(live_server + "/glossary")
-        page.locator('#glossary-nav a:has-text("Planeta + Signo")').click()
+        page.locator('#glossary-nav button:has-text("Planeta + Signo")').click()
         # 11 planet headers + 132 combination cards
         assert page.locator("#glossary-content .glossary-item").count() >= 132
 
     def test_angels_section_renders(self, page, live_server):
         page.goto(live_server + "/glossary")
-        page.locator('#glossary-nav a:has-text("72 Anjos")').click()
+        page.locator('#glossary-nav button:has-text("72 Anjos")').click()
         assert "Shem HaMephorash" in page.locator("#glossary-content").inner_text()
 
 

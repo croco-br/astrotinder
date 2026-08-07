@@ -4,15 +4,17 @@ Calculadora de mapas astrais com cinco métodos de análise: Tradicional (12 sig
 
 ## Arquitetura
 
-Aplicação FastAPI com pipeline unificado baseado em dataclasses. Cada método enriquece o esquema `Chart` com seus próprios campos específicos. O glossário esotérico (`app/glossary.py`) é a fonte única de verdade para todo o conteúdo narrativo; `app/interpretation.py` compõe uma interpretação completa por mapa.
+Aplicação FastAPI stateless com pipeline unificado baseado em dataclasses. Cada método enriquece o esquema `Chart` com seus próprios campos específicos. O glossário esotérico (`app/glossary.py`) é a fonte única de verdade para todo o conteúdo narrativo; `app/interpretation.py` compõe uma interpretação completa por mapa.
+
+Os dados de nascimento só existem no formulário e no pedido de cálculo atual. A aplicação não guarda contas, histórico, mapas, preferências ou resultados partilháveis.
 
 ### Métodos de Cálculo
 
-- **Tradicional**: Mapa astral padrão com 12 signos, aspectos e posições planetárias. Roda natal SVG interativa + tabela de detalhes + interpretação.
-- **Hermético**: 24 setores (12 signos × 2 metades de 15°) com títulos de tarô nas bordas. Adiciona campo `hermetic_title`. Roda hermética SVG + interpretação.
-- **Anjos Cabalísticos**: 72 anjos do Shem HaMephorash, mapeados por bins de 5°. Adiciona campo `angel`. Roda dos 72 anjos SVG + interpretação.
-- **Sephiroth**: Árvore da Vida cabalística (atribuição fixa Golden Dawn). Planeta→sephirah. Árvore SVG + interpretação.
-- **Agathadaimon**: Nome de três letras baseado em Sol, Lua e Ascendente + sufixo dia/noite. Retorna `{chart, daimon}` + interpretação.
+- **Tradicional**: Roda natal SVG, destaques (Sol, Lua, Ascendente), detalhes e interpretação expansíveis.
+- **Hermético**: 24 setores com títulos de Tarot. Adiciona `hermetic_title`; roda, resumo e detalhes expansíveis.
+- **Anjos Cabalísticos**: 72 anjos mapeados por bins de 5°. Adiciona `angel`; roda, anjos em destaque e detalhes expansíveis.
+- **Sephiroth**: Árvore da Vida cabalística (Golden Dawn), centros ativados e detalhes expansíveis.
+- **Agathadaimon**: Nome baseado em Sol, Lua, Ascendente e sufixo dia/noite. A interface mostra apenas o nome e o caminho do anjo, sem mapa natal completo.
 
 Todos os métodos retornam também um bloco `interpretation` (narrativa composta a partir do glossário).
 
@@ -59,13 +61,13 @@ app/
 │       ├── natal.js     # Rodas SVG (natal, hermética, anjos) + tabelas de detalhes
 │       ├── sephiroth.js # Árvore da Vida SVG
 │       ├── glossary.js  # Renderizador da página do glossário
-│       └── index.js     # Handler do formulário, dispatch por método, interpretação, modal
+│       └── index.js     # Fluxo stateless, dispatch por método, resultados progressivos e modal
 └── templates/
     ├── index.html       # Interface web (formulário)
     └── glossary.html    # Página do glossário
 
 tests/
-└── ui/                  # Testes de UI comportamentais (Playwright + pytest)
+└── ui/                  # Testes de comportamento da UI (Playwright + pytest)
     ├── conftest.py      # Fixture live_server (uvicorn em processo, porta aleatória)
     ├── test_index.py    # Formulário, render dos 5 métodos, modal, tabs
     └── test_glossary.py # Navegação por seções, filtro de busca, limpar
@@ -110,18 +112,33 @@ npm run css:build   # build único (minificado) → app/static/css/app.css
 npm run css:watch   # rebuild automático durante o desenvolvimento
 ```
 
+As referências a arquivos estáticos são geradas por `static_url()` em `app/main.py`, que acrescenta
+um hash do conteúdo ao URL. Não use versões manuais como `?v=25`: qualquer alteração a CSS ou JS
+gera automaticamente um URL novo e evita cache desatualizada.
+
+### UX Stateless
+
+- O formulário começa vazio; `Preencher exemplo` é a única forma de inserir dados de demonstração.
+- O seletor descreve o resultado de cada método e o botão de cálculo se adapta ao método escolhido.
+- Durante o cálculo, a página fornece estado acessível; depois, move o foco para o resultado.
+- Resultados técnicos e interpretações extensas começam recolhidos, com resumos no topo.
+- `Editar dados` e `Ver outro método` retornam ao formulário atual; não persistem dados.
+- Tabelas têm scroll horizontal em telas pequenas; o glossário usa um seletor de seção compacto
+  no celular. Os diálogos de ajuda suportam teclado e Escape.
+
 ### Testes de UI
 
-Os testes de UI são **comportamentais**: sobem o app FastAPI real em uma porta aleatória
+Os testes de UI são testes de **comportamento**: sobem o app FastAPI real em uma porta aleatória
 (fixture `live_server`) e dirigem as funções de render do próprio frontend com um payload
 sintético — sem depender de geocoding ao vivo nem de snapshots de pixel. Verificam estrutura
-(SVG/tabela/interpretação presentes) e interações (modal, navegação, filtro).
+(SVG/tabela/interpretação presentes) e interações (modal, seleção de método, preenchimento de
+exemplo, divulgação progressiva, navegação e filtro).
 
 ```bash
 # Primeira vez: instalar o Chromium do Playwright
 python -m playwright install chromium
 
-# Rodar a suíte (21 testes)
+# Rodar a suíte (24 testes)
 python -m pytest tests/ui
 ```
 
@@ -133,7 +150,7 @@ Unificação de dois pipelines paralelos (legacy mutável + novo canônico) em u
 
 ## Migração Bulma → Tailwind (Julho 2026)
 
-Substituição do Bulma por Tailwind CSS v4 compilado em build-time, sem mudança de comportamento — garantida pela suíte de testes de UI comportamentais (escrita antes da migração e verde nas duas versões). As classes Bulma foram reescritas para o design system próprio do app definido em `input.css`.
+Substituição do Bulma por Tailwind CSS v4 compilado em build-time, sem mudança de comportamento — garantida pela suíte de testes de comportamento da UI (escrita antes da migração e aprovada nas duas versões). As classes Bulma foram reescritas para o design system próprio do app definido em `input.css`.
 
 ## Licença
 

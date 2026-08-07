@@ -4,7 +4,7 @@
  * Camadas:
  *   1. i18n: mapas e helpers para traduzir pontos, signos, aspectos e
  *      elementos para Português. As chaves canónicas (inglês curto) continuam
- *      a ser o identificador interno; só a apresentação ao utilizador é
+ *      a ser o identificador interno; somente a apresentação ao usuário é
  *      traduzida.
  *   2. Geometria SVG: roda zodiacal, rodas hermética e dos anjos.
  *   3. Tabelas de detalhes partilhadas (pointTable + aspectTable + detailPanel).
@@ -21,7 +21,7 @@
  * ============================================================ */
 
 const POINT_PT = {
-    sun: "Sol", moon: "Lua", mercury: "Mercúrio", venus: "Vénus",
+    sun: "Sol", moon: "Lua", mercury: "Mercúrio", venus: "Vênus",
     mars: "Marte", jupiter: "Júpiter", saturn: "Saturno",
     uranus: "Urano", neptune: "Netuno", pluto: "Plutão", asc: "Ascendente",
 };
@@ -237,15 +237,15 @@ function pointTable(points, columns) {
     const rows = Object.entries(points).map(([k, p]) =>
         `<tr>${columns.map(c => `<td>${c.cell(k, p)}</td>`).join("")}</tr>`).join("");
     return `
-        <table class="data-table mt-4">
+        <div class="table-wrap"><table class="data-table mt-4">
             <thead><tr>${header}</tr></thead>
             <tbody>${rows}</tbody>
-        </table>`;
+        </table></div>`;
 }
 
 function aspectTable(aspects) {
     const rows = aspects.length === 0
-        ? `<tr><td colspan="4" class="muted">Nenhum aspecto detetado.</td></tr>`
+        ? `<tr><td colspan="4" class="muted">Nenhum aspecto detectado.</td></tr>`
         : aspects.map(a => {
             const tag = a.isHarmony
                 ? `<span class="tag tag-info">${aspectLabel(a.aspect)}</span>`
@@ -260,10 +260,10 @@ function aspectTable(aspects) {
         }).join("");
     return `
         <h3 class="h-section mt-5">Aspectos do Mapa</h3>
-        <table class="data-table">
+        <div class="table-wrap"><table class="data-table">
             <thead><tr><th>Ponto A</th><th>Aspecto</th><th>Ponto B</th><th>Orbe</th></tr></thead>
             <tbody>${rows}</tbody>
-        </table>`;
+        </table></div>`;
 }
 
 function detailPanel(chart, inner, opts = {}) {

@@ -23,9 +23,36 @@ const METHOD_LABELS = {
 // Methods that get a visual SVG render instead of a raw JSON dump.
 const VISUAL_METHODS = new Set(['traditional', 'hermetic', 'sephiroth', 'angels', 'agathadaimon']);
 
+const METHOD_ACTIONS = {
+    traditional: 'Calcular mapa natal',
+    hermetic: 'Calcular correspondências herméticas',
+    angels: 'Encontrar anjos regentes',
+    sephiroth: 'Ver na Árvore da Vida',
+    agathadaimon: 'Revelar nome do anjo guardião',
+};
+
+function selectMethod(method) {
+    document.getElementById('method').value = method;
+    document.getElementById('calculate-button').textContent = METHOD_ACTIONS[method];
+}
+
+function fillExample() {
+    document.getElementById('name').value = 'Exemplo';
+    document.getElementById('birthdate').value = '1990-06-25';
+    document.getElementById('birthtime').value = '22:15';
+    document.getElementById('city').value = 'São Paulo, Brasil';
+    document.getElementById('form-status').textContent = 'Dados de exemplo preenchidos. Pode alterá-los antes de calcular.';
+}
+
+function editDetails() {
+    document.querySelector('form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    document.getElementById('birthdate').focus();
+}
+
 async function calculate() {
     const button = document.getElementById('calculate-button');
     const container = document.getElementById('result');
+    const status = document.getElementById('form-status');
 
     const payload = {
         date:   document.getElementById('birthdate').value,
@@ -35,7 +62,8 @@ async function calculate() {
         method: document.getElementById('method').value,
     };
 
-    button.classList.add('opacity-60', 'pointer-events-none');
+    button.disabled = true;
+    status.textContent = 'A localizar a cidade e a calcular o resultado…';
     container.innerHTML = '<div class="flex justify-center py-6"><div class="spinner" role="status" aria-label="calculando…"></div></div>';
 
     try {
@@ -55,13 +83,20 @@ async function calculate() {
         } else {
             renderRawJSON(data, container, payload.method);
         }
+        status.textContent = 'Resultado calculado.';
+        const heading = container.querySelector('[data-result-heading]');
+        if (heading) {
+            heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            heading.focus({ preventScroll: true });
+        }
     } catch (err) {
         container.innerHTML = `
             <div class="alert-error">
                 <strong>Erro:</strong> ${err.message}
             </div>`;
+        status.textContent = 'Não foi possível calcular o resultado. Reveja os dados e tente novamente.';
     } finally {
-        button.classList.remove('opacity-60', 'pointer-events-none');
+        button.disabled = false;
     }
 }
 
@@ -74,10 +109,17 @@ function renderVisual(data, container, method) {
     // Visual methods with a wheel + detail table: render inline, no toggle.
     if (method === 'traditional' || method === 'hermetic' || method === 'angels' || method === 'sephiroth') {
         container.innerHTML = `
+            <div class="result-toolbar">
+                <button type="button" class="btn-ghost" onclick="editDetails()">Editar dados</button>
+                <button type="button" class="btn-ghost" onclick="editDetails()">Ver outro método</button>
+            </div>
             <div class="card">
-                <h2 class="h-subtitle">${label}${helpIcon(method)}</h2>
+                <h2 class="h-subtitle" data-result-heading tabindex="-1">${label}${helpIcon(method)}</h2>
                 <div id="wheel-container" class="mx-auto max-w-[540px]"></div>
+                <div id="highlights-container"></div>
+                <button type="button" class="details-toggle" aria-expanded="false" aria-controls="details-container" onclick="toggleSection('details-container', this, 'Ver detalhes técnicos', 'Ocultar detalhes técnicos')">Ver detalhes técnicos</button>
                 <div id="details-container"></div>
+                <button type="button" class="details-toggle" aria-expanded="false" aria-controls="interpretation-container" onclick="toggleSection('interpretation-container', this, 'Ler interpretação completa', 'Ocultar interpretação completa')">Ler interpretação completa</button>
                 <div id="interpretation-container"></div>
                 ${methodModal(method)}
             </div>`;
@@ -88,19 +130,25 @@ function renderVisual(data, container, method) {
         if (method === 'traditional') {
             const { aspects } = renderWheel(chart, wheelContainer);
             renderDetails(chart, detailsContainer, aspects);
+            renderHighlights(chart, method, document.getElementById('highlights-container'), aspects);
         } else if (method === 'hermetic') {
             renderHermeticWheel(chart, wheelContainer);
             renderHermeticDetails(chart, detailsContainer);
+            renderHighlights(chart, method, document.getElementById('highlights-container'));
         } else if (method === 'angels') {
             renderAngelsWheel(chart, wheelContainer);
             renderAngelsDetails(chart, detailsContainer);
+            renderHighlights(chart, method, document.getElementById('highlights-container'));
         } else if (method === 'sephiroth') {
             renderTreeOfLife(chart, wheelContainer);
             renderSephirothDetails(chart, detailsContainer);
+            renderHighlights(chart, method, document.getElementById('highlights-container'));
         }
+        detailsContainer.hidden = true;
         if (data.interpretation) {
             renderInterpretation(data.interpretation, document.getElementById('interpretation-container'));
         }
+        document.getElementById('interpretation-container').hidden = true;
         return;
     }
 
@@ -119,6 +167,32 @@ function renderVisual(data, container, method) {
     // Stash chart + method for the details toggle.
     wheelContainer.dataset.method = method;
     wheelContainer.dataset.chart = JSON.stringify(chart);
+}
+
+function toggleSection(id, button, showLabel, hideLabel) {
+    const section = document.getElementById(id);
+    const isHidden = section.hidden;
+    section.hidden = !isHidden;
+    button.setAttribute('aria-expanded', String(isHidden));
+    button.textContent = isHidden ? hideLabel : showLabel;
+}
+
+function renderHighlights(chart, method, target, aspects = []) {
+    const points = chart.points || {};
+    if (method === 'traditional') {
+        const featured = ['sun', 'moon', 'asc'].filter(key => points[key]).map(key =>
+            `<span class="tag tag-primary">${POINT_GLYPH[key] || ''} ${POINT_PT[key] || key}: ${points[key].sign}</span>`).join('');
+        const aspectText = aspects.length ? `${aspects.length} aspectos detectados` : 'Sem aspectos detectados';
+        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Destaques do mapa</h3><p class="mt-2 flex flex-wrap justify-center gap-2">${featured}</p><p class="mt-2 text-sm muted">${aspectText}</p></div>`;
+    } else if (method === 'angels') {
+        const angels = [...new Set(Object.values(points).map(p => p.angel).filter(Boolean))];
+        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Anjos em destaque</h3><p class="mt-2 text-sm muted">${angels.slice(0, 4).join(' · ') || 'Consulte a roda para os anjos regentes.'}</p></div>`;
+    } else if (method === 'sephiroth') {
+        const nodes = [...new Set(Object.values(points).map(p => p.sephirah_traditional).filter(Boolean))];
+        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Centros mais ativados</h3><p class="mt-2 text-sm muted">${nodes.join(' · ')}</p></div>`;
+    } else {
+        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Correspondências principais</h3><p class="mt-2 text-sm muted">Consulte os títulos e posições para explorar as relações herméticas.</p></div>`;
+    }
 }
 
 function toggleDetails() {
@@ -162,8 +236,12 @@ function renderAgathadaimonView(data, container) {
         </tr>`).join('');
 
     container.innerHTML = `
+        <div class="result-toolbar">
+            <button type="button" class="btn-ghost" onclick="editDetails()">Editar dados</button>
+            <button type="button" class="btn-ghost" onclick="editDetails()">Ver outro método</button>
+        </div>
         <div class="card">
-            <h2 class="h-subtitle text-center">${label}${helpIcon('agathadaimon')}</h2>
+            <h2 class="h-subtitle text-center" data-result-heading tabindex="-1">O seu nome de anjo guardião${helpIcon('agathadaimon')}</h2>
 
             <div class="text-center my-5">
                 <p class="text-5xl font-bold text-amber-700">${escapeHtml(name)}</p>
@@ -171,11 +249,12 @@ function renderAgathadaimonView(data, container) {
                 <p class="text-xs muted mt-2">Sufixo: ${escapeHtml(suffixLabel)}</p>
             </div>
 
-            <h3 class="h-section">Letras e Correspondências</h3>
-            <table class="data-table">
+            <p class="text-center text-sm muted mb-4">Formado pelas correspondências do Sol, Lua e Ascendente, com sufixo diurno ou noturno.</p>
+            <h3 class="h-section">Caminho do anjo</h3>
+            <div class="table-wrap"><table class="data-table">
                 <thead><tr><th>Ponto</th><th>Letra</th><th>Hebraico</th><th>Descrição</th></tr></thead>
                 <tbody>${rowsHtml}</tbody>
-            </table>
+            </table></div>
             ${methodModal('agathadaimon')}
         </div>`;
 }
@@ -233,7 +312,7 @@ const METHOD_INFO = {
         title: 'O que é o Agathadaimon?',
         body: `
             <p>O <strong>Agathadaimon</strong> (ou <em>Agathos Daimon</em>) é o
-            "Bom Demónio" da tradição hermética e helenística — o espírito
+            "Bom Demônio" da tradição hermética e helenística — o espírito
             guardião pessoal, equivalente ao <em>nous</em> ou génio de cada
             indivíduo.</p>
             <p>Este método constrói o <strong>nome do anjo da guarda</strong> a
@@ -266,19 +345,19 @@ const METHOD_INFO = {
 };
 
 function helpIcon(method) {
-    return ` <a class="method-help" title="O que é isto?" onclick="openMethodModal('${method}')">
-        <span class="ml-1 inline-flex text-sky-600"><i class="fa fa-question-circle"></i></span></a>`;
+    return ` <button type="button" class="method-help" title="O que é isto?" aria-label="Saber mais sobre este método" onclick="openMethodModal('${method}', this)">
+        <span class="ml-1 inline-flex text-sky-600"><i class="fa fa-question-circle"></i></span></button>`;
 }
 
 function methodModal(method) {
     const info = METHOD_INFO[method];
     if (!info) return '';
     return `
-        <div class="modal" id="modal-${method}">
+        <div class="modal" id="modal-${method}" role="dialog" aria-modal="true" aria-labelledby="modal-title-${method}" onkeydown="handleModalKey(event, '${method}')">
             <div class="modal-backdrop" onclick="closeMethodModal('${method}')"></div>
             <div class="modal-card">
                 <header class="modal-head">
-                    <p class="modal-title">${info.title}</p>
+                    <p class="modal-title" id="modal-title-${method}">${info.title}</p>
                     <button class="modal-close text-2xl leading-none" aria-label="close" onclick="closeMethodModal('${method}')">&times;</button>
                 </header>
                 <section class="modal-body">
@@ -291,14 +370,25 @@ function methodModal(method) {
         </div>`;
 }
 
-function openMethodModal(method) {
+let modalTrigger = null;
+
+function openMethodModal(method, trigger) {
     const m = document.getElementById('modal-' + method);
-    if (m) m.classList.add('is-active');
+    if (m) {
+        modalTrigger = trigger || document.activeElement;
+        m.classList.add('is-active');
+        m.querySelector('.modal-close').focus();
+    }
 }
 
 function closeMethodModal(method) {
     const m = document.getElementById('modal-' + method);
     if (m) m.classList.remove('is-active');
+    if (modalTrigger) modalTrigger.focus();
+}
+
+function handleModalKey(event, method) {
+    if (event.key === 'Escape') closeMethodModal(method);
 }
 
 /* ---------- raw JSON render path ---------- */
@@ -425,7 +515,7 @@ function renderInterpretation(interp, target) {
     const aspectsHtml = (interp.aspects && interp.aspects.length)
         ? `<h3 class="h-section text-center">Aspectos do Mapa</h3>` +
           interp.aspects.map(aspectInterpRow).join('')
-        : '<p class="text-center muted">Nenhum aspecto detetado.</p>';
+        : '<p class="text-center muted">Nenhum aspecto detectado.</p>';
 
     let daimonHtml = '';
     if (interp.agathadaimon) {

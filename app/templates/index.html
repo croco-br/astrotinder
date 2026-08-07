@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -20,6 +20,7 @@
                 <a href="/glossary" class="tab">Glossário</a>
             </nav>
             <h1 class="h-title text-center mt-4">Mapa Astral</h1>
+            <p class="text-center text-sm muted mt-1">Os dados são usados apenas para calcular o resultado nesta página.</p>
             <form onsubmit="calculate(); return false;" class="mt-6">
                 <fieldset>
                     <legend class="h-subtitle text-center mb-4 w-full">Informações Pessoais</legend>
@@ -27,7 +28,7 @@
                     <div class="mb-4">
                         <label class="field-label" for="name">Nome</label>
                         <div class="input-icon-wrap">
-                            <input class="input" type="text" id="name" placeholder="Nome" value="John Doe" required>
+                            <input class="input" type="text" id="name" placeholder="Nome (opcional)">
                             <span class="input-icon"><i class="fa fa-user"></i></span>
                         </div>
                     </div>
@@ -36,7 +37,7 @@
                         <div>
                             <label class="field-label" for="birthdate">Data de Nascimento</label>
                             <div class="input-icon-wrap">
-                                <input class="input" type="date" id="birthdate" value="1990-06-25" required>
+                                <input class="input" type="date" id="birthdate" required>
                                 <span class="input-icon"><i class="fa fa-calendar"></i></span>
                             </div>
                         </div>
@@ -44,42 +45,51 @@
                         <div>
                             <label class="field-label" for="birthtime">Hora de Nascimento</label>
                             <div class="input-icon-wrap">
-                                <input class="input" type="time" id="birthtime" value="22:15" required>
+                                <input class="input" type="time" id="birthtime" required>
                                 <span class="input-icon"><i class="fa fa-clock-o"></i></span>
                             </div>
+                            <p class="field-help">Necessária para calcular o Ascendente e as casas.</p>
                         </div>
                     </div>
 
                     <div class="mt-4">
                         <label class="field-label" for="city">Cidade</label>
                         <div class="input-icon-wrap">
-                            <input class="input" type="text" id="city" placeholder="Cidade" value="São Paulo" required>
+                            <input class="input" type="text" id="city" placeholder="Cidade e país" required>
                             <span class="input-icon"><i class="fa fa-map-marker"></i></span>
                         </div>
+                        <p class="field-help">Exemplo: Porto, Portugal. Isto ajuda a localizar a cidade correta.</p>
                     </div>
 
-                    <div class="mt-4">
-                        <label class="field-label" for="method">Método</label>
-                        <select id="method" name="options" class="input-plain">
-                            <option value="traditional" selected>Astrologia Tradicional (12 Signos)</option>
-                            <option value="hermetic">Astrologia Hermética (24 Signos)</option>
-                            <option value="angels">Anjos Cabalísticos (72 Signos)</option>
-                            <option value="sephiroth">Astrologia Cabalística (Sephiroth)</option>
-                            <option value="agathadaimon">Agathadaimon (Nome do Anjo da Guarda)</option>
+                    <fieldset class="mt-6">
+                        <legend class="field-label">O que quer explorar?</legend>
+                        <div class="method-grid" role="radiogroup" aria-label="Método de cálculo">
+                            <label class="method-option"><input type="radio" name="method-choice" value="traditional" checked onchange="selectMethod(this.value)"><span><strong>Mapa natal</strong><small>Roda, posições e aspectos.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="hermetic" onchange="selectMethod(this.value)"><span><strong>Tarot hermético</strong><small>Setores e títulos de Tarot.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="angels" onchange="selectMethod(this.value)"><span><strong>Anjos regentes</strong><small>Anjo de cada ponto natal.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="sephiroth" onchange="selectMethod(this.value)"><span><strong>Árvore da Vida</strong><small>Planetas nas Sephiroth.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="agathadaimon" onchange="selectMethod(this.value)"><span><strong>Anjo guardião</strong><small>Nome e caminho do Agathadaimon.</small></span></label>
+                        </div>
+                        <select id="method" name="options" class="sr-only" aria-hidden="true" tabindex="-1">
+                            <option value="traditional" selected>Astrologia Tradicional</option>
+                            <option value="hermetic">Astrologia Hermética</option>
+                            <option value="angels">Anjos Cabalísticos</option>
+                            <option value="sephiroth">Astrologia Cabalística</option>
+                            <option value="agathadaimon">Agathadaimon</option>
                         </select>
-                    </div>
+                    </fieldset>
 
-                    <div class="mt-6">
-                        <button id="calculate-button" class="btn-primary" type="submit">
-                            Calcular Mapa Astral
-                        </button>
+                    <div class="mt-6 flex gap-3">
+                        <button id="calculate-button" class="btn-primary" type="submit">Calcular mapa natal</button>
+                        <button class="btn-ghost" type="button" onclick="fillExample()">Preencher exemplo</button>
                     </div>
+                    <p id="form-status" class="mt-3 text-center text-sm muted" aria-live="polite"></p>
                 </fieldset>
             </form>
         </div>
     </section>
 
-    <div id="result" class="page-section pt-0">
+    <div id="result" class="page-section pt-0" aria-live="polite">
         <!-- Result will be displayed here -->
     </div>
 </body>

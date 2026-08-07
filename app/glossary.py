@@ -53,11 +53,11 @@ PLANETS = {
         ),
     },
     "venus": {
-        "name": "Vénus",
+        "name": "Vênus",
         "glyph": "♀",
         "title": "O Amor e os Valores",
         "description": (
-            "Vénus rege o amor, a atração, o prazer, a beleza e o sistema "
+            "Vênus rege o amor, a atração, o prazer, a beleza e o sistema "
             "de valores. Indica o que se aprecia, como se relaciona e de "
             "que forma se busca a harmonia e a afinidade. Governa a "
             "estética, o afeto e a sensualidade."
@@ -156,9 +156,9 @@ SIGNS = {
     },
     "Tau": {
         "name": "Touro", "glyph": "♉", "element": "Terra", "quality": "Fixo",
-        "ruler": "Vénus",
+        "ruler": "Vênus",
         "description": (
-            "Signo de Terra Fixo, regido por Vénus. Estabilidade, "
+            "Signo de Terra Fixo, regido por Vênus. Estabilidade, "
             "paciência, sensualidade e apego aos valores materiais. "
             "Representa a construção lenta e a fruição do que é sólido."
         ),
@@ -201,9 +201,9 @@ SIGNS = {
     },
     "Lib": {
         "name": "Libra", "glyph": "♎", "element": "Ar", "quality": "Cardinal",
-        "ruler": "Vénus",
+        "ruler": "Vênus",
         "description": (
-            "Signo de Ar Cardinal, regido por Vénus. Equilíbrio, "
+            "Signo de Ar Cardinal, regido por Vênus. Equilíbrio, "
             "harmonia, parceria e estética. Representa a relação com o "
             "outro e a busca da justiça e da beleza."
         ),
@@ -545,7 +545,7 @@ KABBALAH = {
             ),
         },
         "Netzach": {
-            "hebrew": "נצח", "title": "Vitória", "planet": "Vénus",
+            "hebrew": "נצח", "title": "Vitória", "planet": "Vênus",
             "pillar": "Misericórdia",
             "description": (
                 "A vitória através da emoção, da natureza, do instinto e "
@@ -760,7 +760,7 @@ ANGELS = [
 AGATHADAIMON = {
     "intro": (
         "O <strong>Agathadaimon</strong> (ou <em>Agathos Daimon</em>) é o "
-        "“Bom Demónio” da tradição helenística e hermética — o espírito "
+        "“Bom Demônio” da tradição helenística e hermética — o espírito "
         "guardião pessoal, equivalente ao <em>nous</em> ou génio de cada "
         "indivíduo. Este método constrói o <strong>nome do anjo da "
         "guarda</strong> a partir de três letras hebraicas derivadas dos "

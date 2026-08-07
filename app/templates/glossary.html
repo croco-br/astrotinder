@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 
 <head>
     <meta charset="UTF-8">
@@ -33,7 +33,7 @@
                            placeholder="Filtrar (ex.: Vehuiah, Tiferet, Sol em Áries…)" oninput="filterGlossary()">
                     <span class="input-icon"><i class="fa fa-search"></i></span>
                 </div>
-                <button class="btn-ghost" onclick="clearGlossarySearch()" aria-label="Limpar">
+                <button class="btn-ghost" type="button" onclick="clearGlossarySearch()" aria-label="Limpar pesquisa">
                     <i class="fa fa-times"></i>
                 </button>
             </div>
@@ -41,20 +41,34 @@
     </section>
 
     <section class="mx-auto max-w-6xl px-4 pb-8">
+        <div class="mb-4 md:hidden">
+            <label class="field-label" for="glossary-section-picker">Secção</label>
+            <select id="glossary-section-picker" class="input-plain" onchange="showSection(this.value)">
+                <option value="planets">Planetas</option>
+                <option value="signs">Signos</option>
+                <option value="combinations">Planeta + Signo</option>
+                <option value="aspects">Aspectos</option>
+                <option value="kabbalah">Cabala & Sephiroth</option>
+                <option value="tarot">Tarot Hermético (24)</option>
+                <option value="angels">72 Anjos</option>
+                <option value="agathadaimon">Agathadaimon</option>
+            </select>
+        </div>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
+            <div id="glossary-search-status" class="sr-only" aria-live="polite"></div>
             <!-- sidebar -->
-            <aside class="md:col-span-1">
+            <aside class="hidden md:col-span-1 md:block">
                 <div class="card sticky top-4">
                     <p class="mb-2 text-xs font-semibold uppercase tracking-wide muted">Seções</p>
                     <ul id="glossary-nav" class="space-y-1">
-                        <li><a class="glossary-nav-link glossary-nav-active" onclick="showSection('planets', this)">Planetas</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('signs', this)">Signos</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('combinations', this)">Planeta + Signo</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('aspects', this)">Aspectos</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('kabbalah', this)">Cabala & Sephiroth</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('tarot', this)">Tarot Hermético (24)</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('angels', this)">72 Anjos</a></li>
-                        <li><a class="glossary-nav-link" onclick="showSection('agathadaimon', this)">Agathadaimon</a></li>
+                        <li><button type="button" class="glossary-nav-link glossary-nav-active" aria-current="page" onclick="showSection('planets', this)">Planetas</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('signs', this)">Signos</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('combinations', this)">Planeta + Signo</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('aspects', this)">Aspectos</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('kabbalah', this)">Cabala & Sephiroth</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('tarot', this)">Tarot Hermético (24)</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('angels', this)">72 Anjos</button></li>
+                        <li><button type="button" class="glossary-nav-link" onclick="showSection('agathadaimon', this)">Agathadaimon</button></li>
                     </ul>
                 </div>
             </aside>

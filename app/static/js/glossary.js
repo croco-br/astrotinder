@@ -12,7 +12,7 @@ const SIGN_PT = {
 };
 
 const POINT_PT = {
-    sun: "Sol", moon: "Lua", mercury: "Mercúrio", venus: "Vénus",
+    sun: "Sol", moon: "Lua", mercury: "Mercúrio", venus: "Vênus",
     mars: "Marte", jupiter: "Júpiter", saturn: "Saturno",
     uranus: "Urano", neptune: "Netuno", pluto: "Plutão", asc: "Ascendente",
 };
@@ -108,11 +108,11 @@ function renderTarot(g) {
     out += `<div class="card glossary-item" data-key="Regra cuspial"><h3 class="text-base font-semibold text-stone-800">Regra Cuspial</h3><div class="prose-body mt-2">${t.cuspal_rule}</div></div>`;
 
     out += `<div class="card glossary-item" data-key="24 setores tabela"><h3 class="text-base font-semibold text-stone-800">Os 24 Setores</h3>
-        <table class="data-table mt-2 text-xs">
+        <div class="table-wrap"><table class="data-table mt-2 text-xs">
         <thead><tr><th>Signo</th><th>Metade</th><th>Título Hermético</th><th>Naipe</th><th>Elemento</th></tr></thead><tbody>`;
     out += t.sectors.map(sec =>
         `<tr><td>${SIGN_PT[sec.sign] || sec.sign}</td><td>${sec.half}</td><td><strong>${sec.title}</strong></td><td>${sec.suit}</td><td>${sec.element}</td></tr>`).join("");
-    out += `</tbody></table></div>`;
+    out += `</tbody></table></div></div>`;
     return out;
 }
 
@@ -121,11 +121,11 @@ function renderAngels(g) {
         <div class="prose-body mt-2">
         <p>São as 72 expressões do Nome Divino na Cabala — 6 anjos por signo, um por cada intervalo de 5° do zodíaco
         ([0,5), [5,10), [10,15), [15,20), [20,25), [25,30]). Cada planeta cai no setor do seu anjo regente.</p></div></div>`;
-    out += `<div class="card glossary-item" data-key="tabela 72 anjos"><table class="data-table mt-2 text-xs">
+    out += `<div class="card glossary-item" data-key="tabela 72 anjos"><div class="table-wrap"><table class="data-table mt-2 text-xs">
         <thead><tr><th>Anjo</th><th>Signo</th><th>Grau</th><th>Virtude</th></tr></thead><tbody>`;
     out += g.angels.map(a =>
         `<tr><td><strong>${a.angel}</strong></td><td>${SIGN_PT[a.sign] || a.sign}</td><td>${a.degrees}</td><td>${a.virtue}<br><span class="muted">${a.description}</span></td></tr>`).join("");
-    out += `</tbody></table></div>`;
+    out += `</tbody></table></div></div>`;
     // Individual cards for filtering
     out += g.angels.map(a =>
         card(`${a.angel} — ${SIGN_PT[a.sign] || a.sign} ${a.degrees}`, "",
@@ -144,13 +144,13 @@ function renderAgathadaimon(g) {
         `<p class="mt-1 text-sm"><strong>${name}:</strong> ${desc}</p>`).join("") + `</div>`;
 
     out += `<div class="card glossary-item" data-key="Letras hebraicas"><h3 class="text-base font-semibold text-stone-800">As 22 Letras Hebraicas & Correspondências</h3>
-        <table class="data-table mt-2 text-xs">
+        <div class="table-wrap"><table class="data-table mt-2 text-xs">
         <thead><tr><th>Letra</th><th>Hebraico</th><th>Correspondência</th></tr></thead><tbody>`;
     out += Object.entries(a.hebrew_letters).map(([name, desc]) => {
         const uni = a.hebrew_unicode[name] || "";
         return `<tr><td><strong>${name}</strong></td><td class="text-xl font-semibold">${uni}</td><td>${desc}</td></tr>`;
     }).join("");
-    out += `</tbody></table></div>`;
+    out += `</tbody></table></div></div>`;
     return out;
 }
 
@@ -170,28 +170,43 @@ const RENDERERS = {
 function showSection(name, navLink) {
     CURRENT_SECTION = name;
     document.getElementById("glossary-content").innerHTML = RENDERERS[name](window.GLOSSARY);
+    const picker = document.getElementById("glossary-section-picker");
+    if (picker) picker.value = name;
     // nav active state
-    document.querySelectorAll("#glossary-nav a").forEach(a => a.classList.remove("glossary-nav-active"));
-    if (navLink) navLink.classList.add("glossary-nav-active");
+    document.querySelectorAll("#glossary-nav button").forEach(a => {
+        a.classList.remove("glossary-nav-active");
+        a.removeAttribute("aria-current");
+    });
+    if (navLink) {
+        navLink.classList.add("glossary-nav-active");
+        navLink.setAttribute("aria-current", "page");
+    }
     else {
         // activate the matching link (after a re-render/filter)
-        const links = document.querySelectorAll("#glossary-nav a");
+        const links = document.querySelectorAll("#glossary-nav button");
         links.forEach(a => { if (a.textContent.trim().toLowerCase().includes(name) ||
             (name === "combinations" && a.textContent.includes("Planeta + Signo")) ||
             (name === "kabbalah" && a.textContent.includes("Cabala")) ||
             (name === "tarot" && a.textContent.includes("Tarot")) ||
-            (name === "angels" && a.textContent.includes("72")) ) a.classList.add("glossary-nav-active"); });
+            (name === "angels" && a.textContent.includes("72")) ) {
+            a.classList.add("glossary-nav-active");
+            a.setAttribute("aria-current", "page");
+        }});
     }
     filterGlossary();
 }
 
 function filterGlossary() {
-    const q = (document.getElementById("glossary-search").value || "").toLowerCase().trim();
+    const q = (document.getElementById("glossary-search").value || "").toLocaleLowerCase().trim();
     const items = document.querySelectorAll("#glossary-content .glossary-item");
+    let visible = 0;
     items.forEach(el => {
-        if (!q) { el.style.display = ""; return; }
-        el.style.display = (el.dataset.key || "").toLowerCase().includes(q) ? "" : "none";
+        const matches = !q || el.textContent.toLocaleLowerCase().includes(q);
+        el.style.display = matches ? "" : "none";
+        if (matches) visible++;
     });
+    document.getElementById("glossary-search-status").textContent = q
+        ? `${visible} resultados nesta seção.` : "";
 }
 
 function clearGlossarySearch() {
@@ -200,5 +215,5 @@ function clearGlossarySearch() {
 }
 
 window.addEventListener("DOMContentLoaded", () => {
-    showSection("planets", document.querySelector("#glossary-nav a"));
+    showSection("planets", document.querySelector("#glossary-nav button"));
 });

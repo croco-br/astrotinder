@@ -67,6 +67,21 @@ class TestIndexPageStructure:
             assert page.locator(f"#{fid}").count() == 1, f"missing #{fid}"
         assert page.locator("#calculate-button").count() == 1
 
+    def test_personal_fields_start_empty(self, page, live_server):
+        page.goto(live_server + "/")
+        for fid in ["name", "birthdate", "birthtime", "city"]:
+            assert page.locator(f"#{fid}").input_value() == ""
+
+    def test_example_fill_is_explicit(self, page, live_server):
+        page.goto(live_server + "/")
+        page.get_by_role("button", name="Preencher exemplo").click()
+        assert page.locator("#city").input_value() == "São Paulo, Brasil"
+
+    def test_method_choice_updates_submit_label(self, page, live_server):
+        page.goto(live_server + "/")
+        page.get_by_role("radio", name="Anjo guardião").check()
+        assert page.locator("#calculate-button").inner_text() == "Revelar nome do anjo guardião"
+
     def test_method_select_has_five_options(self, page, live_server):
         page.goto(live_server + "/")
         options = page.locator("#method option")
@@ -91,8 +106,10 @@ class TestMethodRendering:
         assert page.locator("#wheel-container svg").count() >= 1
         # details table present
         assert page.locator("#details-container table").count() >= 1
+        assert page.locator("#details-container").evaluate("el => el.hidden")
         # interpretation block present
         assert page.locator("#interpretation-container").inner_html().strip() != ""
+        assert page.locator("#interpretation-container").evaluate("el => el.hidden")
 
     def test_agathadaimon_renders_guardian_angel_only(self, page, live_server):
         page.goto(live_server + "/")
@@ -100,7 +117,7 @@ class TestMethodRendering:
         # daimon name appears somewhere in the result
         text = page.locator("#result").inner_text()
         assert "Vehuiel" in text
-        assert "Letras e Correspondências" in text
+        assert "Caminho do anjo" in text
         assert "Interpretação Completa" not in text
         assert page.locator("#interpretation-container").count() == 0
 

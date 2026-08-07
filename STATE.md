@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-07  
 **Project:** natal-chart (Astrology Calculator + Compatibility Matcher)  
-**Current Phase:** Phase 2.7 complete (visual methods, glossary, and interpretations) — ready for Phase 3  
+**Current Phase:** Phase 2.8 complete (stateless UX and accessibility) — ready for Phase 3  
 **Language:** Python 3.14 (FastAPI) + vanilla JS + hand-built SVG
 
 ---
@@ -299,8 +299,38 @@ focused on the guardian angel rather than repeating the natal chart.
 programmatic consistency. The browser intentionally ignores the generic natal interpretation for
 this method.
 
-**Verified:** `npm run css:build`, `python -m pytest tests/ui` (21 passed),
+**Verified:** `npm run css:build`, `python -m pytest tests/ui` (21 passed at Phase 2.7),
 `node --check app/static/js/index.js`, and `git diff --check`.
+
+---
+
+### Phase 2.8: Stateless UX & Accessibility ✅
+
+**Goal:** Make current-session flows understandable, responsive, and keyboard-accessible without
+adding accounts, saved charts, history, preferences, share links, or any other persistence.
+
+**Calculator flow:** birth-data fields start empty; `Nome` is optional; `Preencher exemplo`
+explicitly inserts demo data for the current page only. Field guidance explains birth-time and
+city requirements. An outcome-led radio-card method picker updates the submit label. Calculation
+announces progress, disables the submit control, preserves form data on failure, and moves focus
+to the result heading on success.
+
+**Results:** Traditional, Hermetic, Angels, and Sephiroth retain their SVG visuals but show a
+short summary before collapsed technical details and narrative interpretation. `Editar dados` and
+`Ver outro método` only scroll to the current form. Agathadaimon remains focused on the angel
+name and its Sol/Lua/Ascendente correspondence path, with no natal-chart content.
+
+**Glossary and accessibility:** Glossary section controls are semantic buttons with
+`aria-current` on desktop and a session-only compact section picker on mobile; its search matches
+visible card text and announces a local result count. Help dialogs support dialog semantics,
+Escape, and focus restoration. Tables scroll horizontally on narrow screens, and pages declare
+`lang="pt-BR"`.
+
+**Cache delivery:** `static_url()` fingerprints local static assets with BLAKE2s content hashes;
+templates no longer use manually incremented `?v=N` query strings.
+
+**Verified:** `npm run css:build`; `python -m pytest tests/ui` (**24 passed**); `node --check`
+on all frontend files; and `git diff --check`.
 
 ---
 
@@ -315,6 +345,10 @@ this method.
 - `sephiroth` → Tree of Life only + detail table (Sephiroth column = traditional) + interpretation
 - `agathadaimon` → guardian angel name, Hebrew letter, suffix, and three letter correspondences only;
   no natal wheel, natal point cards, or aspect interpretation are shown
+
+**Interaction model:** The app is stateless. It does not persist birth data, charts, calculation
+history, preferences, accounts, or shareable result links. Editing and method switching use only
+the fields in the current page session.
 
 ---
 
@@ -377,8 +411,8 @@ natal-chart/
 │   ├── test_phase0.py       — (referenced) 5 core schema tests + network probe
 │   └── ui/                  — Playwright + pytest behavioral UI tests
 │       ├── conftest.py      — live_server fixture (in-process uvicorn on random port)
-│       ├── test_index.py    — form, 5 method renders, help modal, tabs
-│       └── test_glossary.py — nav sections, search filter, clear
+│       ├── test_index.py    — empty form, demo fill, methods, progressive results, modal, tabs
+│       └── test_glossary.py — semantic nav, full-text section filter, clear
 ├── package.json             — tailwindcss + @tailwindcss/cli dev deps, css:build/css:watch scripts
 ├── pytest.ini               — testpaths=tests/ui
 ├── requirements.txt
@@ -447,7 +481,7 @@ match-type selector, ranked list, and a bi-wheel highlighting shared aspects.
 cd /Users/nsx001146/Documents/source/natal-chart
 source .venv/bin/activate
 npm run css:build                      # compile Tailwind → app/static/css/app.css (required after any class change)
-python -m pytest tests/ui              # 21 behavioral UI tests (Playwright + chromium)
+python -m pytest tests/ui              # 24 behavioral UI tests (Playwright + chromium)
 node --check app/static/js/natal.js
 node --check app/static/js/sephiroth.js
 node --check app/static/js/index.js
@@ -456,8 +490,9 @@ python -m uvicorn app.main:app --reload --port 8000
 ```
 
 Then navigate to http://127.0.0.1:8000 — all 5 methods respond. Traditional, hermetic,
-angels, and sephiroth have dedicated SVG views and narrative interpretation blocks.
-Agathadaimon shows only the guardian-angel name and letter correspondences. The `/glossary`
+angels, and sephiroth have dedicated SVG views with summaries and expandable details/
+interpretation. Agathadaimon shows only the guardian-angel name and letter correspondences.
+The stateless form begins empty; use `Preencher exemplo` only when needed. The `/glossary`
 page lists all esoteric content (planetas, signos, 132 combinações, aspectos, Cabala, Tarot,
 72 anjos, Agathadaimon) with a text filter.
 
