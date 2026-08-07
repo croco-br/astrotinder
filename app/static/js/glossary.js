@@ -54,23 +54,33 @@ function renderSigns(g) {
 }
 
 function renderCombinations(g) {
-    const signKeys = Object.keys(g.signs);
-    const out = [];
-    for (const [pKey, combos] of Object.entries(g.combinations)) {
-        const planet = g.planets[pKey];
-        out.push(`<div class="card glossary-item" data-key="${planet.name}"><h3 class="text-base font-semibold text-stone-800">
-            <span class="mr-2 text-lg">${planet.glyph}</span>${planet.name} nos Signos</h3></div>`);
-        for (const sKey of signKeys) {
-            const text = combos[sKey];
-            const s = g.signs[sKey];
-            const title = `${planet.name} em ${s.name}`;
-            out.push(card(title, planet.glyph,
-                `<p>${text}</p>`,
-                `${s.element} · ${s.quality} · Regente: ${s.ruler}`,
-                `${title} ${text}`));
-        }
-    }
-    return out.join("");
+    const planetOptions = Object.entries(g.planets).map(([key, planet]) =>
+        `<option value="${key}"${key === "sun" ? " selected" : ""}>${planet.glyph} ${planet.name}</option>`).join("");
+    const signOptions = Object.entries(g.signs).map(([key, sign]) =>
+        `<option value="${key}"${key === "Ari" ? " selected" : ""}>${sign.glyph} ${sign.name}</option>`).join("");
+    return `
+        <div class="card glossary-item" data-key="combinações planeta signo interpretação">
+            <h3 class="h-section">Explore as 132 combinações planeta + signo</h3>
+            <p class="prose-body mt-2">Cada planeta pode se manifestar nos 12 signos. Esta é a primeira camada da leitura; casa, aspectos e o método escolhido acrescentam contexto ao mapa natal.</p>
+            <div class="combination-explorer mt-4">
+                <div><label class="field-label" for="combination-planet">Planeta</label><select id="combination-planet" class="input-plain" onchange="showCombination()">${planetOptions}</select></div>
+                <div><label class="field-label" for="combination-sign">Signo</label><select id="combination-sign" class="input-plain" onchange="showCombination()">${signOptions}</select></div>
+            </div>
+            <div id="combination-result" class="mt-4"></div>
+        </div>`;
+}
+
+function showCombination() {
+    const planetKey = document.getElementById("combination-planet").value;
+    const signKey = document.getElementById("combination-sign").value;
+    const planet = window.GLOSSARY.planets[planetKey];
+    const sign = window.GLOSSARY.signs[signKey];
+    const text = window.GLOSSARY.combinations[planetKey][signKey];
+    document.getElementById("combination-result").innerHTML = card(
+        `${planet.name} em ${sign.name}`, planet.glyph, `<p>${text}</p>`,
+        `${sign.element} · ${sign.quality} · Regente: ${sign.ruler}`,
+        `${planet.name} ${sign.name} ${text}`,
+    );
 }
 
 function renderAspects(g) {
@@ -126,12 +136,6 @@ function renderAngels(g) {
     out += g.angels.map(a =>
         `<tr><td><strong>${a.angel}</strong></td><td>${SIGN_PT[a.sign] || a.sign}</td><td>${a.degrees}</td><td>${a.virtue}<br><span class="muted">${a.description}</span></td></tr>`).join("");
     out += `</tbody></table></div></div>`;
-    // Individual cards for filtering
-    out += g.angels.map(a =>
-        card(`${a.angel} — ${SIGN_PT[a.sign] || a.sign} ${a.degrees}`, "",
-            `<p><strong>Virtude:</strong> ${a.virtue}</p><p>${a.description}</p>`,
-            `Anjo do Shem HaMephorash, setor de 5°`,
-            `${a.angel} ${a.sign} ${a.degrees} ${a.virtue} ${a.description}`)).join("");
     return out;
 }
 
@@ -170,6 +174,7 @@ const RENDERERS = {
 function showSection(name, navLink) {
     CURRENT_SECTION = name;
     document.getElementById("glossary-content").innerHTML = RENDERERS[name](window.GLOSSARY);
+    if (name === "combinations") showCombination();
     const picker = document.getElementById("glossary-section-picker");
     if (picker) picker.value = name;
     // nav active state

@@ -146,14 +146,15 @@ function ringPath(arcStartDeg, arcEndDeg, rOuter, rInner, cx, cy) {
  * ============================================================ */
 
 const _HOUSE_NUM = {
-    First: 1, Second: 2, Third: 3, Fourth: 4, Fifth: 5, Sixth: 6,
-    Seventh: 7, Eighth: 8, Ninth: 9, Tenth: 10, Eleventh: 11, Twelfth: 12,
+    first: 1, second: 2, third: 3, fourth: 4, fifth: 5, sixth: 6,
+    seventh: 7, eighth: 8, ninth: 9, tenth: 10, eleventh: 11, twelfth: 12,
 };
 
 function houseNumber(house) {
     if (!house || house === "None") return "—";
-    const m = /^(\w+)_House$/.exec(house);
-    if (m && _HOUSE_NUM[m[1]] !== undefined) return _HOUSE_NUM[m[1]];
+    const normalized = String(house).toLowerCase().replaceAll("_", " ").trim();
+    const name = normalized.replace(/ house$/, "");
+    if (_HOUSE_NUM[name] !== undefined) return _HOUSE_NUM[name];
     return house;
 }
 
@@ -643,27 +644,27 @@ function renderAngelsWheel(chart, target) {
 
 function renderDetails(chart, target, aspects) {
     target.innerHTML = detailPanel(chart,
-        pointTable(chart.points, [COL_PONTO, COL_SIGNO, COL_GRAU, COL_SEPHIROTH, COL_CASA]) +
+        pointTable(chart.points, [COL_PONTO, COL_GRAU, COL_SEPHIROTH, COL_CASA]) +
         aspectTable(aspects),
         { title: "Detalhes do Mapa" });
 }
 
 function renderHermeticDetails(chart, target) {
     target.innerHTML = detailPanel(chart,
-        pointTable(chart.points, [COL_PONTO, COL_SIGNO, COL_GRAU, COL_TITULO]),
+        pointTable(chart.points, [COL_PONTO, COL_GRAU, COL_TITULO]),
         { title: "Detalhes Herméticos",
           note: "Títulos em destaque = graus cuspais (≤5° ou ≥25°)" });
 }
 
 function renderAngelsDetails(chart, target) {
     target.innerHTML = detailPanel(chart,
-        pointTable(chart.points, [COL_PONTO, COL_SIGNO, COL_GRAU, COL_ANJO]),
+        pointTable(chart.points, [COL_PONTO, COL_GRAU, COL_ANJO]),
         { title: "Anjos do Shem HaMephorash",
           note: "72 anjos — 6 por signo, 1 por intervalo de 5°. Sectores destacados = anjo regente do planeta." });
 }
 
 function renderSephirothDetails(chart, target) {
     target.innerHTML = detailPanel(chart,
-        pointTable(chart.points, [COL_PONTO, COL_SIGNO, COL_GRAU, COL_SEPHIROTH, COL_CASA]),
+        pointTable(chart.points, [COL_PONTO, COL_GRAU, COL_SEPHIROTH, COL_CASA]),
         { title: "Detalhes do Mapa" });
 }

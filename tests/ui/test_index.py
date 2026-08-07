@@ -10,6 +10,8 @@ exercises the exact code paths a real calculation triggers.
 
 import pytest
 
+from app.interpretation import _house_number
+
 # A minimal but structurally complete chart payload matching app/schema.py
 # (11 canonical points, each with the fields the renderers read).
 CHART = {
@@ -74,8 +76,15 @@ class TestIndexPageStructure:
 
     def test_example_fill_is_explicit(self, page, live_server):
         page.goto(live_server + "/")
-        page.get_by_role("button", name="Preencher exemplo").click()
-        assert page.locator("#city").input_value() == "São Paulo, Brasil"
+        examples = page.evaluate("EXAMPLE_PERSONALITIES")
+        assert len(examples) == 10
+        assert {example["name"] for example in examples} >= {
+            "Marilyn Monroe", "Michael Jackson", "Kurt Cobain", "Nelson Mandela",
+            "Al Capone", "Mahatma Gandhi", "Albert Einstein",
+        }
+        page.get_by_role("button", name="Preencher personalidade aleatória").click()
+        assert page.locator("#name").input_value() in {example["name"] for example in examples}
+        assert "fontes astrológicas" in page.locator("#form-status").inner_text()
 
     def test_method_choice_updates_submit_label(self, page, live_server):
         page.goto(live_server + "/")
@@ -110,6 +119,24 @@ class TestMethodRendering:
         # interpretation block present
         assert page.locator("#interpretation-container").inner_html().strip() != ""
         assert page.locator("#interpretation-container").evaluate("el => el.hidden")
+
+    def test_interpretation_exposes_combination_explorer(self, page, live_server):
+        page.goto(live_server + "/")
+        _inject_and_render(page, "traditional")
+        page.locator('button:has-text("Ler interpretação completa")').click()
+        assert "Uma leitura nasce do encontro de camadas" in page.locator(
+            "#interpretation-container"
+        ).inner_text()
+        assert page.locator("#combination-picker button").count() == 1
+        assert "Combinação Sol + Áries" in page.locator("#selected-combination").inner_text()
+        assert "Aspectos do Mapa" not in page.locator("#interpretation-container").inner_text()
+
+    def test_house_labels_render_as_numbers(self, page, live_server):
+        page.goto(live_server + "/")
+        _inject_and_render(page, "traditional")
+        page.locator('button:has-text("Ver detalhes técnicos")').click()
+        assert "First House" not in page.locator("#details-container").inner_text()
+        assert "1" in page.locator("#details-container").inner_text()
 
     def test_agathadaimon_renders_guardian_angel_only(self, page, live_server):
         page.goto(live_server + "/")
@@ -151,3 +178,10 @@ class TestMethodHelpModal:
         _inject_and_render(page, "traditional")
         modal = page.locator("#modal-traditional")
         assert "Astrologia Tradicional" in modal.inner_text()
+
+
+def test_house_number_normalizes_kerykeion_label_variants():
+    assert _house_number("first_house") == "1"
+    assert _house_number("First_House") == "1"
+    assert _house_number("First House") == "1"
+    assert _house_number("tenth_house") == "10"

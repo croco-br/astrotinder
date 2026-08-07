@@ -310,7 +310,9 @@ this method.
 adding accounts, saved charts, history, preferences, share links, or any other persistence.
 
 **Calculator flow:** birth-data fields start empty; `Nome` is optional; `Preencher exemplo`
-explicitly inserts demo data for the current page only. Field guidance explains birth-time and
+now selects one of 10 public-figure demo profiles at random for the current page only. Birth dates
+and cities are public biographical data; displayed birth times are attributed by astrological
+sources and the UI makes that limitation explicit. Field guidance explains birth-time and
 city requirements. An outcome-led radio-card method picker updates the submit label. Calculation
 announces progress, disables the submit control, preserves form data on failure, and moves focus
 to the result heading on success.
@@ -319,6 +321,20 @@ to the result heading on success.
 short summary before collapsed technical details and narrative interpretation. `Editar dados` and
 `Ver outro método` only scroll to the current form. Agathadaimon remains focused on the angel
 name and its Sol/Lua/Ascendente correspondence path, with no natal-chart content.
+
+**Combination explorer:** Interpretation now explains that each reading combines planeta, signo,
+casa ou lente do método, and aspectos. Users pick one current-chart point at a time to inspect
+its combined reading. The glossary's `Planeta + Signo` section exposes all 132 combinations
+through local planet/sign filters instead of rendering 132 cards at once.
+
+**Redundancy removal:** Sign names remain in the selected combination, so technical point tables
+now omit that repeated column. Aspect narratives remain in technical details rather than being
+repeated in the full interpretation. The 72 Angels glossary uses one searchable table instead of
+duplicating all angels in individual cards.
+
+**House presentation:** Kerykeion labels such as `first_house`, `First_House`, and `First House`
+are normalized to numeric houses (`1` through `12`) in technical tables and interpretations;
+the canonical stored field remains unchanged.
 
 **Glossary and accessibility:** Glossary section controls are semantic buttons with
 `aria-current` on desktop and a session-only compact section picker on mobile; its search matches

@@ -49,6 +49,21 @@ _SIGN_PT = {
     "Sag": "Sagitário", "Cap": "Capricórnio", "Aqu": "Aquário", "Pis": "Peixes",
 }
 
+_HOUSE_NUMBERS = {
+    "first": 1, "second": 2, "third": 3, "fourth": 4,
+    "fifth": 5, "sixth": 6, "seventh": 7, "eighth": 8,
+    "ninth": 9, "tenth": 10, "eleventh": 11, "twelfth": 12,
+}
+
+
+def _house_number(house: str | None) -> str:
+    """Convert Kerykeion house labels such as ``first_house`` to numbers."""
+    if not house or house == "None":
+        return ""
+    normalized = house.lower().replace("_", " ").strip()
+    name = normalized.removesuffix(" house")
+    return str(_HOUSE_NUMBERS.get(name, house))
+
 
 def _circular_separation(a: float, b: float) -> float:
     d = abs(((a - b) % 360 + 360) % 360)
@@ -140,7 +155,7 @@ def _point_method_layer(method: str, point: dict) -> dict:
         house = point.get("house")
         if house and house != "None":
             layer["label"] = "Casa"
-            layer["text"] = str(house)
+            layer["text"] = _house_number(house)
         else:
             layer["label"] = ""
             layer["text"] = ""

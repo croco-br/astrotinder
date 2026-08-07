@@ -182,6 +182,27 @@
   .method-help {
     @apply inline-flex rounded-full focus:outline-none focus:ring-2 focus:ring-amber-600 focus:ring-offset-2;
   }
+  .combination-layers {
+    @apply mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4;
+  }
+  .combination-layer {
+    @apply rounded-lg border border-amber-900/10 bg-amber-50/60 p-3 text-center text-xs text-stone-600;
+  }
+  .combination-layer strong {
+    @apply mb-1 block text-sm text-amber-900;
+  }
+  .combination-picker {
+    @apply mt-4 flex flex-wrap justify-center gap-2;
+  }
+  .combination-picker button {
+    @apply rounded-full border border-stone-300 bg-white px-3 py-1.5 text-sm text-stone-700 transition-colors hover:border-amber-600 hover:bg-amber-50 focus:outline-none focus:ring-2 focus:ring-amber-600;
+  }
+  .combination-picker button[aria-pressed="true"] {
+    @apply border-amber-700 bg-amber-100 font-semibold text-amber-900;
+  }
+  .combination-explorer {
+    @apply grid grid-cols-1 gap-3 sm:grid-cols-2;
+  }
 
   /* ---------- misc ---------- */
   .divider {

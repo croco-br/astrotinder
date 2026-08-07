@@ -32,16 +32,25 @@ class TestGlossaryNav:
         page.locator('#glossary-nav button:has-text("Signos")').click()
         assert page.locator("#glossary-content .glossary-item").count() >= 12
 
-    def test_combinations_section_has_132_cards(self, page, live_server):
+    def test_combinations_section_has_explorer(self, page, live_server):
         page.goto(live_server + "/glossary")
         page.locator('#glossary-nav button:has-text("Planeta + Signo")').click()
-        # 11 planet headers + 132 combination cards
-        assert page.locator("#glossary-content .glossary-item").count() >= 132
+        assert page.locator("#combination-planet option").count() == 11
+        assert page.locator("#combination-sign option").count() == 12
+        assert "Sol em Áries" in page.locator("#combination-result").inner_text()
+
+    def test_combination_explorer_updates_result(self, page, live_server):
+        page.goto(live_server + "/glossary")
+        page.locator('#glossary-nav button:has-text("Planeta + Signo")').click()
+        page.select_option("#combination-planet", "venus")
+        page.select_option("#combination-sign", "Lib")
+        assert "Vênus em Libra" in page.locator("#combination-result").inner_text()
 
     def test_angels_section_renders(self, page, live_server):
         page.goto(live_server + "/glossary")
         page.locator('#glossary-nav button:has-text("72 Anjos")').click()
         assert "Shem HaMephorash" in page.locator("#glossary-content").inner_text()
+        assert page.locator("#glossary-content .glossary-item").count() == 2
 
 
 class TestGlossaryFilter:

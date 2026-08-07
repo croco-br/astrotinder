@@ -31,17 +31,32 @@ const METHOD_ACTIONS = {
     agathadaimon: 'Revelar nome do anjo guardião',
 };
 
+// Horários publicados por fontes astrológicas; não são certidões de nascimento.
+const EXAMPLE_PERSONALITIES = [
+    { name: 'Marilyn Monroe', date: '1926-06-01', time: '09:30', city: 'Los Angeles, Estados Unidos' },
+    { name: 'Michael Jackson', date: '1958-08-29', time: '19:33', city: 'Gary, Indiana, Estados Unidos' },
+    { name: 'Kurt Cobain', date: '1967-02-20', time: '19:38', city: 'Aberdeen, Washington, Estados Unidos' },
+    { name: 'Nelson Mandela', date: '1918-07-18', time: '14:54', city: 'Mvezo, África do Sul' },
+    { name: 'Al Capone', date: '1899-01-17', time: '18:00', city: 'Brooklyn, Nova York, Estados Unidos' },
+    { name: 'Mahatma Gandhi', date: '1869-10-02', time: '07:11', city: 'Porbandar, Índia' },
+    { name: 'Frida Kahlo', date: '1907-07-06', time: '08:30', city: 'Coyoacán, Cidade do México, México' },
+    { name: 'David Bowie', date: '1947-01-08', time: '09:15', city: 'Londres, Inglaterra' },
+    { name: 'Princesa Diana', date: '1961-07-01', time: '19:45', city: 'Sandringham, Inglaterra' },
+    { name: 'Albert Einstein', date: '1879-03-14', time: '11:30', city: 'Ulm, Alemanha' },
+];
+
 function selectMethod(method) {
     document.getElementById('method').value = method;
     document.getElementById('calculate-button').textContent = METHOD_ACTIONS[method];
 }
 
 function fillExample() {
-    document.getElementById('name').value = 'Exemplo';
-    document.getElementById('birthdate').value = '1990-06-25';
-    document.getElementById('birthtime').value = '22:15';
-    document.getElementById('city').value = 'São Paulo, Brasil';
-    document.getElementById('form-status').textContent = 'Dados de exemplo preenchidos. Pode alterá-los antes de calcular.';
+    const example = EXAMPLE_PERSONALITIES[Math.floor(Math.random() * EXAMPLE_PERSONALITIES.length)];
+    document.getElementById('name').value = example.name;
+    document.getElementById('birthdate').value = example.date;
+    document.getElementById('birthtime').value = example.time;
+    document.getElementById('city').value = example.city;
+    document.getElementById('form-status').textContent = `Exemplo: ${example.name}. Horário de nascimento atribuído por fontes astrológicas; você pode alterá-lo antes de calcular.`;
 }
 
 function editDetails() {
@@ -220,7 +235,6 @@ function toggleDetails() {
 
 function renderAgathadaimonView(data, container) {
     const daimon = data.daimon || {};
-    const label = METHOD_LABELS.agathadaimon;
     const name = daimon.name || '—';
     const hebrew = daimon.hebrew_letter || '';
     const suffix = daimon.suffix || '';
@@ -465,62 +479,40 @@ function pointInterpCard(p) {
         </div>`;
 }
 
-function aspectInterpRow(a) {
-    const pa = POINT_PT[a.a] || a.a;
-    const pb = POINT_PT[a.b] || a.b;
-    const ga = POINT_GLYPH[a.a] || '·';
-    const gb = POINT_GLYPH[a.b] || '·';
-    const tag = a.harmony === 'harmónico'
-        ? `<span class="tag tag-info">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`
-        : `<span class="tag tag-warn">${a.aspect_glyph} ${escapeHtml(a.aspect_name)}</span>`;
-    return `
-        <div class="card">
-            <div class="grid grid-cols-2 items-center gap-2 text-center sm:grid-cols-4">
-                <div><strong>${ga} ${escapeHtml(pa)}</strong></div>
-                <div>${tag}<br><small class="muted">${a.aspect_name} · orbe ${a.orb}°</small></div>
-                <div><strong>${gb} ${escapeHtml(pb)}</strong></div>
-                <div><p class="text-xs">${a.description}</p></div>
-            </div>
-        </div>`;
+let interpretationPoints = [];
+
+function selectInterpretationPoint(index) {
+    const point = interpretationPoints[index];
+    const target = document.getElementById('selected-combination');
+    if (!point || !target) return;
+    target.innerHTML = pointInterpCard(point);
+    document.querySelectorAll('#combination-picker button').forEach((button, buttonIndex) => {
+        button.setAttribute('aria-pressed', String(buttonIndex === index));
+    });
 }
 
-function agathadaimonInterpBlock(sec) {
-    const rows = sec.letters.map(l => `
-        <tr>
-            <td><strong>${escapeHtml(l.point)}</strong></td>
-            <td><span class="tag tag-primary">${escapeHtml(l.letter)}</span></td>
-            <td class="text-xl font-semibold">${escapeHtml(l.hebrew || '')}</td>
-            <td class="text-xs">${escapeHtml(l.description || '—')}</td>
-        </tr>`).join('');
+function combinationLayers(method) {
+    const fourthLayer = method === 'traditional' ? 'Casa' :
+        method === 'hermetic' ? 'Tarot' : method === 'angels' ? 'Anjo regente' : 'Sephirah';
     return `
         <div class="card">
-            <h3 class="h-section text-center">Nome do Anjo da Guarda</h3>
-            <div class="text-center my-4">
-                <p class="text-4xl font-bold text-amber-700">${escapeHtml(sec.name)}</p>
-                ${sec.hebrew_letter ? `<p class="text-2xl font-semibold muted mt-1">${escapeHtml(sec.hebrew_letter)}</p>` : ''}
-                ${sec.suffix ? `<p class="text-xs muted mt-1">Sufixo: <strong>${escapeHtml(sec.suffix)}</strong> — ${escapeHtml(sec.suffix_meaning || '')}</p>` : ''}
+            <h3 class="h-section text-center">Uma leitura nasce do encontro de camadas</h3>
+            <p class="mt-2 text-center text-sm muted">Nenhum elemento do mapa é lido isoladamente. Escolha um ponto abaixo para explorar a combinação que ele forma neste mapa.</p>
+            <div class="combination-layers">
+                <div class="combination-layer"><strong>Planeta</strong>o que se expressa</div>
+                <div class="combination-layer"><strong>Signo</strong>como se expressa</div>
+                <div class="combination-layer"><strong>${fourthLayer}</strong>onde ou por qual lente se expressa</div>
+                <div class="combination-layer"><strong>Aspectos</strong>como dialoga com os demais pontos</div>
             </div>
-            <table class="data-table">
-                <thead><tr><th>Ponto</th><th>Letra</th><th>Hebraico</th><th>Descrição</th></tr></thead>
-                <tbody>${rows}</tbody>
-            </table>
         </div>`;
 }
 
 function renderInterpretation(interp, target) {
     if (!interp) { target.innerHTML = ''; return; }
 
-    const pointsHtml = (interp.points || []).map(pointInterpCard).join('');
-
-    const aspectsHtml = (interp.aspects && interp.aspects.length)
-        ? `<h3 class="h-section text-center">Aspectos do Mapa</h3>` +
-          interp.aspects.map(aspectInterpRow).join('')
-        : '<p class="text-center muted">Nenhum aspecto detectado.</p>';
-
-    let daimonHtml = '';
-    if (interp.agathadaimon) {
-        daimonHtml = agathadaimonInterpBlock(interp.agathadaimon);
-    }
+    interpretationPoints = interp.points || [];
+    const pickerHtml = interpretationPoints.map((point, index) =>
+        `<button type="button" aria-pressed="${index === 0}" onclick="selectInterpretationPoint(${index})">${point.glyph || ''} ${escapeHtml(point.name)} em ${escapeHtml(point.sign_name)}</button>`).join('');
 
     target.innerHTML = `
         <div class="mt-6">
@@ -528,9 +520,9 @@ function renderInterpretation(interp, target) {
             <div class="card">
                 <div class="prose-body text-justify">${interp.method_intro}</div>
             </div>
-            <h3 class="h-section text-center">Os Pontos do Mapa</h3>
-            ${pointsHtml}
-            ${daimonHtml}
-            ${aspectsHtml}
+            ${combinationLayers(interp.method)}
+            <h3 class="h-section text-center">Explore as combinações deste mapa</h3>
+            <div id="combination-picker" class="combination-picker">${pickerHtml}</div>
+            <div id="selected-combination">${interpretationPoints[0] ? pointInterpCard(interpretationPoints[0]) : ''}</div>
         </div>`;
 }

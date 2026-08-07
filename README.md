@@ -118,11 +118,22 @@ gera automaticamente um URL novo e evita cache desatualizada.
 
 ### UX Stateless
 
-- O formulário começa vazio; `Preencher exemplo` é a única forma de inserir dados de demonstração.
+- O formulário começa vazio; `Preencher personalidade aleatória` seleciona um dos 10 perfis de
+  demonstração: Marilyn Monroe, Michael Jackson, Kurt Cobain, Nelson Mandela, Al Capone, Mahatma
+  Gandhi, Frida Kahlo, David Bowie, Princesa Diana ou Albert Einstein. Os horários são atribuídos
+  por fontes astrológicas e podem ser alterados antes do cálculo.
 - O seletor descreve o resultado de cada método e o botão de cálculo se adapta ao método escolhido.
 - Durante o cálculo, a página fornece estado acessível; depois, move o foco para o resultado.
 - Resultados técnicos e interpretações extensas começam recolhidos, com resumos no topo.
 - `Editar dados` e `Ver outro método` retornam ao formulário atual; não persistem dados.
+- A interpretação apresenta cada ponto como uma combinação de planeta, signo, casa ou lente do
+  método e aspectos; o usuário explora uma combinação por vez, sem perder o contexto do mapa.
+- O glossário traz um explorador das 132 combinações planeta + signo, com filtros locais de planeta
+  e signo, em vez de renderizar todas as combinações de uma só vez.
+- Cada informação aparece em sua camada principal: aspectos ficam nos detalhes técnicos, e os 72
+  anjos ficam em uma única tabela pesquisável, sem cartões repetidos.
+- Casas são exibidas como números de 1 a 12 em todas as telas, embora o motor preserve o rótulo
+  técnico original internamente.
 - Tabelas têm scroll horizontal em telas pequenas; o glossário usa um seletor de seção compacto
   no celular. Os diálogos de ajuda suportam teclado e Escape.
 
