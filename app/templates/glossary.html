@@ -1,83 +1,60 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Glossário — Mapa Astral</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ static_url(request, 'css/app.css') }}">
-    <link rel="stylesheet" href="{{ static_url(request, 'font-awesome-4.7.0/css/font-awesome.min.css') }}">
-    <script>
-        // Server-injected glossary data (single source of truth: app/glossary.py).
-        window.GLOSSARY = {{ glossary | tojson }};
-    </script>
+    <script>window.GLOSSARY = {{ glossary | tojson }};</script>
     <script src="{{ static_url(request, 'js/glossary.js') }}" defer></script>
 </head>
-
-<body class="min-h-screen bg-[#f6f1e3] text-stone-800 antialiased">
-    <section class="page-section">
-        <div class="card">
-            <nav class="tabs">
-                <a href="/" class="tab">Calcular</a>
-                <a href="/glossary" class="tab tab-active">Glossário</a>
-            </nav>
-            <h1 class="h-title text-center mt-4">Glossário Esotérico</h1>
-            <p class="text-center text-sm muted mt-1">
-                Conceitos de astrologia, Cabala, Tarot hermético e anjos do Shem HaMephorash.
-            </p>
-
-            <!-- search -->
-            <div class="mt-5 flex items-center justify-center gap-2">
-                <div class="input-icon-wrap w-full max-w-xl">
-                    <input class="input" type="text" id="glossary-search"
-                           placeholder="Filtrar (ex.: Vehuiah, Tiferet, Sol em Áries…)" oninput="filterGlossary()">
-                    <span class="input-icon"><i class="fa fa-search"></i></span>
-                </div>
-                <button class="btn-ghost" type="button" onclick="clearGlossarySearch()" aria-label="Limpar pesquisa">
-                    <i class="fa fa-times"></i>
-                </button>
+<body class="site-shell library-shell">
+    <header class="masthead">
+        <p class="masthead-kicker">Índice de referências esotéricas</p>
+        <a class="wordmark" href="/">Mapa Astral</a>
+        <nav class="mastnav" aria-label="Navegação principal">
+            <a href="/" class="mastnav-link">Calcular</a>
+            <a href="/glossary" class="mastnav-link mastnav-link-active" aria-current="page">Glossário</a>
+        </nav>
+    </header>
+    <main class="library-main">
+        <section class="library-intro" aria-labelledby="glossary-title">
+            <p class="kicker">Biblioteca de consulta</p>
+            <h1 id="glossary-title">Glossário Esotérico</h1>
+            <p class="lede">Conceitos de astrologia, Cabala, Tarot hermético e anjos do Shem HaMephorash.</p>
+            <div class="library-search">
+                <label class="sr-only" for="glossary-search">Pesquisar no glossário</label>
+                <input class="input" type="search" id="glossary-search" placeholder="Pesquisar Vehuiah, Tiferet, Sol em Áries…" oninput="filterGlossary()">
+                <button class="btn-ghost" type="button" onclick="clearGlossarySearch()" aria-label="Limpar pesquisa">Limpar</button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <section class="mx-auto max-w-6xl px-4 pb-8">
-        <div class="mb-4 md:hidden">
-            <label class="field-label" for="glossary-section-picker">Secção</label>
-            <select id="glossary-section-picker" class="input-plain" onchange="showSection(this.value)">
-                <option value="planets">Planetas</option>
-                <option value="signs">Signos</option>
-                <option value="combinations">Planeta + Signo</option>
-                <option value="aspects">Aspectos</option>
-                <option value="kabbalah">Cabala & Sephiroth</option>
-                <option value="tarot">Tarot Hermético (24)</option>
-                <option value="angels">72 Anjos</option>
-                <option value="agathadaimon">Agathadaimon</option>
-            </select>
-        </div>
-        <div class="grid grid-cols-1 gap-6 md:grid-cols-4">
-            <div id="glossary-search-status" class="sr-only" aria-live="polite"></div>
-            <!-- sidebar -->
-            <aside class="hidden md:col-span-1 md:block">
-                <div class="card sticky top-4">
-                    <p class="mb-2 text-xs font-semibold uppercase tracking-wide muted">Seções</p>
-                    <ul id="glossary-nav" class="space-y-1">
-                        <li><button type="button" class="glossary-nav-link glossary-nav-active" aria-current="page" onclick="showSection('planets', this)">Planetas</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('signs', this)">Signos</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('combinations', this)">Planeta + Signo</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('aspects', this)">Aspectos</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('kabbalah', this)">Cabala & Sephiroth</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('tarot', this)">Tarot Hermético (24)</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('angels', this)">72 Anjos</button></li>
-                        <li><button type="button" class="glossary-nav-link" onclick="showSection('agathadaimon', this)">Agathadaimon</button></li>
-                    </ul>
-                </div>
+        <section class="library-layout">
+            <div class="library-mobile-picker">
+                <label class="field-label" for="glossary-section-picker">Secção</label>
+                <select id="glossary-section-picker" class="input" onchange="showSection(this.value)">
+                    <option value="planets">Planetas</option><option value="signs">Signos</option><option value="combinations">Planeta + Signo</option><option value="aspects">Aspectos</option><option value="kabbalah">Cabala & Sephiroth</option><option value="tarot">Tarot Hermético (24)</option><option value="angels">72 Anjos</option><option value="agathadaimon">Agathadaimon</option>
+                </select>
+            </div>
+            <aside class="library-index" aria-label="Secções do glossário">
+                <p>Índice</p>
+                <ul id="glossary-nav">
+                    <li><button type="button" class="glossary-nav-link glossary-nav-active" aria-current="page" onclick="showSection('planets', this)">01 Planetas</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('signs', this)">02 Signos</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('combinations', this)">03 Planeta + Signo</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('aspects', this)">04 Aspectos</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('kabbalah', this)">05 Cabala & Sephiroth</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('tarot', this)">06 Tarot Hermético</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('angels', this)">07 72 Anjos</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('agathadaimon', this)">08 Agathadaimon</button></li>
+                </ul>
             </aside>
-
-            <!-- content -->
-            <div class="md:col-span-3">
-                <div id="glossary-content"></div>
-            </div>
-        </div>
-    </section>
+            <div class="library-content-wrap"><div id="glossary-search-status" class="sr-only" aria-live="polite"></div><div id="glossary-content"></div></div>
+        </section>
+    </main>
+    <footer class="foot-mast"><p class="wordmark">Mapa Astral</p><p>Um vocabulário para leituras mais cuidadosas.</p><p><a href="/">Voltar ao cálculo</a></p></footer>
 </body>
 </html>

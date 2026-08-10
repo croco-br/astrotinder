@@ -37,17 +37,17 @@ const SEPHIROTH = {
 
 // Traditional Qabalistic (Golden Dawn) colours per sephirah.
 const SEPHIRAH_COLOR = {
-    Kether:  "#f4e8a8",
-    Chockmah:"#9aa6d8",
-    Binah:   "#3b3f6e",
-    Daath:   "#6b6f8c",
-    Chesed:  "#3d7bd0",
-    Geburah: "#c0392b",
-    Tiferet: "#e6b800",
-    Netzach: "#2e9e6b",
-    Hod:     "#e67e22",
-    Yesod:   "#7d5ba6",
-    Malkuth: "#6b4f2e",
+    Kether:  "var(--color-accent)",
+    Chockmah:"var(--color-element-air)",
+    Binah:   "var(--color-paper-soft)",
+    Daath:   "var(--color-muted)",
+    Chesed:  "var(--color-element-air)",
+    Geburah: "var(--color-error)",
+    Tiferet: "var(--color-accent)",
+    Netzach: "var(--color-element-earth)",
+    Hod:     "var(--color-element-fire)",
+    Yesod:   "var(--color-element-water)",
+    Malkuth: "var(--color-accent-ink)",
 };
 
 // The 22 paths of the Kircher tree: { from, to, letter }.

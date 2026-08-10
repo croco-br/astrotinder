@@ -1,74 +1,80 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Mapa Astral</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ static_url(request, 'css/app.css') }}">
-    <link rel="stylesheet" href="{{ static_url(request, 'font-awesome-4.7.0/css/font-awesome.min.css') }}">
     <script src="{{ static_url(request, 'js/natal.js') }}" defer></script>
     <script src="{{ static_url(request, 'js/sephiroth.js') }}" defer></script>
     <script src="{{ static_url(request, 'js/index.js') }}" defer></script>
 </head>
+<body class="site-shell">
+    <header class="masthead">
+        <p class="masthead-kicker">Estudo astral · cálculo sem registo</p>
+        <a class="wordmark" href="/">Mapa Astral</a>
+        <nav class="mastnav" aria-label="Navegação principal">
+            <a href="/" class="mastnav-link mastnav-link-active" aria-current="page">Calcular</a>
+            <a href="/glossary" class="mastnav-link">Glossário</a>
+        </nav>
+    </header>
 
-<body class="min-h-screen bg-[#f6f1e3] text-stone-800 antialiased">
-    <section class="page-section">
-        <div class="card">
-            <nav class="tabs">
-                <a href="/" class="tab tab-active">Calcular</a>
-                <a href="/glossary" class="tab">Glossário</a>
-            </nav>
-            <h1 class="h-title text-center mt-4">Mapa Astral</h1>
-            <p class="text-center text-sm muted mt-1">Os dados são usados apenas para calcular o resultado nesta página.</p>
-            <form onsubmit="calculate(); return false;" class="mt-6">
-                <fieldset>
-                    <legend class="h-subtitle text-center mb-4 w-full">Informações Pessoais</legend>
+    <main>
+        <section class="observatory" aria-labelledby="page-title">
+            <div class="observatory-intro">
+                <p class="kicker">Um momento, cinco lentes</p>
+                <h1 id="page-title">Leia o céu de um momento específico.</h1>
+                <p class="lede">Data, hora e lugar situam o mapa. Depois, escolha a tradição que quer usar para percorrê-lo.</p>
+                <div class="zodiac-key" aria-label="Os doze signos do zodíaco" aria-hidden="true">♈ · ♉ · ♊ · ♋ · ♌ · ♍ · ♎ · ♏ · ♐ · ♑ · ♒ · ♓</div>
+                <p class="privacy-note">Os dados existem apenas durante este cálculo. Nada é guardado.</p>
+            </div>
 
-                    <div class="mb-4">
-                        <label class="field-label" for="name">Nome</label>
-                        <div class="input-icon-wrap">
-                            <input class="input" type="text" id="name" placeholder="Nome (opcional)">
-                            <span class="input-icon"><i class="fa fa-user"></i></span>
-                        </div>
-                    </div>
+            <div class="birth-record">
+                <div class="record-heading">
+                    <p class="kicker">Registo de nascimento</p>
+                    <p>Indique o momento com o maior rigor disponível.</p>
+                </div>
+                <form onsubmit="calculate(); return false;">
+                    <fieldset class="form-group">
+                        <legend>Identidade</legend>
+                        <label class="field-label" for="name">Nome <span>opcional</span></label>
+                        <input class="input" type="text" id="name" placeholder="Como quer ser identificado na leitura">
+                    </fieldset>
 
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                        <div>
-                            <label class="field-label" for="birthdate">Data de Nascimento</label>
-                            <div class="input-icon-wrap">
+                    <fieldset class="form-group">
+                        <legend>Momento</legend>
+                        <div class="field-pair">
+                            <div>
+                                <label class="field-label" for="birthdate">Data de nascimento</label>
                                 <input class="input" type="date" id="birthdate" required>
-                                <span class="input-icon"><i class="fa fa-calendar"></i></span>
                             </div>
-                        </div>
-
-                        <div>
-                            <label class="field-label" for="birthtime">Hora de Nascimento</label>
-                            <div class="input-icon-wrap">
+                            <div>
+                                <label class="field-label" for="birthtime">Hora de nascimento</label>
                                 <input class="input" type="time" id="birthtime" required>
-                                <span class="input-icon"><i class="fa fa-clock-o"></i></span>
                             </div>
-                            <p class="field-help">Necessária para calcular o Ascendente e as casas.</p>
                         </div>
-                    </div>
+                        <p class="field-help">A hora permite calcular Ascendente e casas.</p>
+                    </fieldset>
 
-                    <div class="mt-4">
-                        <label class="field-label" for="city">Cidade</label>
-                        <div class="input-icon-wrap">
-                            <input class="input" type="text" id="city" placeholder="Cidade e país" required>
-                            <span class="input-icon"><i class="fa fa-map-marker"></i></span>
-                        </div>
-                        <p class="field-help">Exemplo: Porto, Portugal. Isto ajuda a localizar a cidade correta.</p>
-                    </div>
+                    <fieldset class="form-group">
+                        <legend>Lugar</legend>
+                        <label class="field-label" for="city">Cidade e país</label>
+                        <input class="input" type="text" id="city" placeholder="Ex.: Porto, Portugal" required>
+                        <p class="field-help">O lugar resolve a zona horária e a posição geográfica.</p>
+                    </fieldset>
 
-                    <fieldset class="mt-6">
-                        <legend class="field-label">O que quer explorar?</legend>
+                    <fieldset class="lens-fieldset">
+                        <legend>Escolha uma lente de leitura</legend>
+                        <p class="lens-intro">Cada método revela a mesma carta por uma organização distinta.</p>
                         <div class="method-grid" role="radiogroup" aria-label="Método de cálculo">
-                            <label class="method-option"><input type="radio" name="method-choice" value="traditional" checked onchange="selectMethod(this.value)"><span><strong>Mapa natal</strong><small>Roda, posições e aspectos.</small></span></label>
-                            <label class="method-option"><input type="radio" name="method-choice" value="hermetic" onchange="selectMethod(this.value)"><span><strong>Tarot hermético</strong><small>Setores e títulos de Tarot.</small></span></label>
-                            <label class="method-option"><input type="radio" name="method-choice" value="angels" onchange="selectMethod(this.value)"><span><strong>Anjos regentes</strong><small>Anjo de cada ponto natal.</small></span></label>
-                            <label class="method-option"><input type="radio" name="method-choice" value="sephiroth" onchange="selectMethod(this.value)"><span><strong>Árvore da Vida</strong><small>Planetas nas Sephiroth.</small></span></label>
-                            <label class="method-option"><input type="radio" name="method-choice" value="agathadaimon" onchange="selectMethod(this.value)"><span><strong>Anjo guardião</strong><small>Nome e caminho do Agathadaimon.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="traditional" checked onchange="selectMethod(this.value)"><span class="method-index">I</span><span><strong>Mapa natal</strong><small>Roda, posições e aspectos.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="hermetic" onchange="selectMethod(this.value)"><span class="method-index">II</span><span><strong>Tarot hermético</strong><small>Setores e títulos de Tarot.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="angels" onchange="selectMethod(this.value)"><span class="method-index">III</span><span><strong>Anjos regentes</strong><small>Anjo de cada ponto natal.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="sephiroth" onchange="selectMethod(this.value)"><span class="method-index">IV</span><span><strong>Árvore da Vida</strong><small>Planetas nas Sephiroth.</small></span></label>
+                            <label class="method-option"><input type="radio" name="method-choice" value="agathadaimon" onchange="selectMethod(this.value)"><span class="method-index">V</span><span><strong>Anjo guardião</strong><small>Nome e caminho do Agathadaimon.</small></span></label>
                         </div>
                         <select id="method" name="options" class="sr-only" aria-hidden="true" tabindex="-1">
                             <option value="traditional" selected>Astrologia Tradicional</option>
@@ -79,19 +85,23 @@
                         </select>
                     </fieldset>
 
-                    <div class="mt-6 flex gap-3">
-                        <button id="calculate-button" class="btn-primary" type="submit">Calcular mapa natal</button>
+                    <div class="form-actions">
+                        <button id="calculate-button" class="btn-primary" type="submit">Abrir leitura</button>
                         <button class="btn-ghost" type="button" onclick="fillExample()">Preencher personalidade aleatória</button>
                     </div>
-                    <p id="form-status" class="mt-3 text-center text-sm muted" aria-live="polite"></p>
-                </fieldset>
-            </form>
-        </div>
-    </section>
+                    <p id="method-description" class="method-description">Mapa natal · roda, posições e aspectos.</p>
+                    <p id="form-status" class="form-status" aria-live="polite"></p>
+                </form>
+            </div>
+        </section>
 
-    <div id="result" class="page-section pt-0" aria-live="polite">
-        <!-- Result will be displayed here -->
-    </div>
+        <section id="result" class="result-stage" aria-live="polite"></section>
+    </main>
+
+    <footer class="foot-mast">
+        <p class="wordmark">Mapa Astral</p>
+        <p>Astrologia, Cabala e Tarot como instrumentos de estudo.</p>
+        <p><a href="/">Calcular</a> · <a href="/glossary">Consultar glossário</a></p>
+    </footer>
 </body>
-
 </html>

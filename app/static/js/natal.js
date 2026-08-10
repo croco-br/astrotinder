@@ -80,18 +80,18 @@ const POINT_GLYPH = {
 
 /* Tintas por elemento (paleta clara). */
 const ELEMENT_FILL = {
-    fire:  "#c2410c",
-    earth: "#65a30d",
-    air:   "#0369a1",
-    water: "#0d9488",
+    fire:  "var(--color-element-fire)",
+    earth: "var(--color-element-earth)",
+    air:   "var(--color-element-air)",
+    water: "var(--color-element-water)",
 };
 
 const ASPECT_COLOR = {
-    conjunction: "#0369a1",
-    sextile:     "#059669",
-    square:      "#b45309",
-    trine:       "#047857",
-    opposition:  "#be123c",
+    conjunction: "var(--color-element-air)",
+    sextile:     "var(--color-element-earth)",
+    square:      "var(--color-accent)",
+    trine:       "var(--color-element-water)",
+    opposition:  "var(--color-error)",
 };
 
 /* Definição de aspectos (espelha a lógica canónica do backend). */
@@ -275,10 +275,10 @@ function aspectTable(aspects) {
 function detailPanel(chart, inner, opts = {}) {
     const { name } = chart;
     return `
-        <div class="card">
-            <h2 class="h-subtitle">${natalEscapeHtml(opts.title || "Detalhes do Mapa")} — ${natalEscapeHtml(name || "—")}</h2>
-            <p class="text-sm">${birthLine(chart.birth)}</p>
-            ${opts.note ? `<p class="text-xs muted mt-1">${opts.note}</p>` : ""}
+        <div class="detail-panel">
+            <h2>${natalEscapeHtml(opts.title || "Detalhes do Mapa")} — ${natalEscapeHtml(name || "—")}</h2>
+            <p class="field-help">${birthLine(chart.birth)}</p>
+            ${opts.note ? `<p class="field-help">${opts.note}</p>` : ""}
             ${inner}
         </div>`;
 }
@@ -307,7 +307,7 @@ function pointMarker(cx, cy, name, lon, rPoint, rGlyph) {
     const base = svgPoint(cx, cy, lon, rPoint);
     const tick = svgPoint(cx, cy, lon, rPoint - 6);
     const labelPoint = svgPoint(cx, cy, lon, rGlyph);
-    const color = name === "asc" ? "#0369a1" : "#1c1917";
+    const color = name === "asc" ? "var(--color-element-air)" : "var(--color-ink-dark)";
     return `
         <line x1="${tick.x}" y1="${tick.y}" x2="${base.x}" y2="${base.y}"
               stroke="${color}" stroke-width="1.2" opacity="0.7"/>
@@ -439,7 +439,7 @@ function hermeticMarker(cx, cy, name, lon, position, rPoint, rGlyph) {
     const tick = svgPoint(cx, cy, lon, rPoint - 6);
     const labelPoint = svgPoint(cx, cy, lon, rGlyph);
     const isCuspal = position <= 5 || position >= 25;
-    const color = name === "asc" ? "#0369a1" : (isCuspal ? "#b45309" : "#1c1917");
+    const color = name === "asc" ? "var(--color-element-air)" : (isCuspal ? "var(--color-accent)" : "var(--color-ink-dark)");
     const ring = isCuspal
         ? `<circle cx="${base.x}" cy="${base.y}" r="9" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.6"/>`
         : "";
@@ -602,7 +602,7 @@ function angelMarker(cx, cy, name, lon, rPoint, rGlyph) {
     const base = svgPoint(cx, cy, lon, rPoint);
     const tick = svgPoint(cx, cy, lon, rPoint - 6);
     const labelPoint = svgPoint(cx, cy, lon, rGlyph);
-    const color = name === "asc" ? "#0369a1" : "#1c1917";
+    const color = name === "asc" ? "var(--color-element-air)" : "var(--color-ink-dark)";
     return `
         <line x1="${tick.x}" y1="${tick.y}" x2="${base.x}" y2="${base.y}"
               stroke="${color}" stroke-width="1.2" opacity="0.7"/>

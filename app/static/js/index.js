@@ -24,11 +24,19 @@ const METHOD_LABELS = {
 const VISUAL_METHODS = new Set(['traditional', 'hermetic', 'sephiroth', 'angels', 'agathadaimon']);
 
 const METHOD_ACTIONS = {
-    traditional: 'Calcular mapa natal',
+    traditional: 'Abrir leitura',
     hermetic: 'Calcular correspondências herméticas',
     angels: 'Encontrar anjos regentes',
     sephiroth: 'Ver na Árvore da Vida',
     agathadaimon: 'Revelar nome do anjo guardião',
+};
+
+const METHOD_DESCRIPTIONS = {
+    traditional: 'Mapa natal · roda, posições e aspectos.',
+    hermetic: 'Tarot hermético · setores e títulos de Tarot.',
+    angels: 'Anjos regentes · um anjo para cada ponto natal.',
+    sephiroth: 'Árvore da Vida · planetas nas Sephiroth.',
+    agathadaimon: 'Anjo guardião · nome e caminho do Agathadaimon.',
 };
 
 const EXAMPLE_PERSONALITIES = [
@@ -57,6 +65,7 @@ const EXAMPLE_PERSONALITIES = [
 function selectMethod(method) {
     document.getElementById('method').value = method;
     document.getElementById('calculate-button').textContent = METHOD_ACTIONS[method];
+    document.getElementById('method-description').textContent = METHOD_DESCRIPTIONS[method];
 }
 
 function fillExample() {
@@ -88,7 +97,7 @@ async function calculate() {
 
     button.disabled = true;
     status.textContent = 'A localizar a cidade e a calcular o resultado…';
-    container.innerHTML = '<div class="flex justify-center py-6"><div class="spinner" role="status" aria-label="calculando…"></div></div>';
+    container.innerHTML = '<div class="result-loading"><div class="spinner" role="status" aria-label="calculando…"></div><span>A localizar a cidade e a compor a leitura…</span></div>';
 
     try {
         const res = await fetch('/calculate', {
@@ -135,18 +144,25 @@ function renderVisual(data, container, method) {
         container.innerHTML = `
             <div class="result-toolbar">
                 <button type="button" class="btn-ghost" onclick="editDetails()">Editar dados</button>
-                <button type="button" class="btn-ghost" onclick="editDetails()">Ver outro método</button>
+                <button type="button" class="btn-ghost" onclick="editDetails()">Mudar lente</button>
             </div>
-            <div class="card">
-                <h2 class="h-subtitle" data-result-heading tabindex="-1">${label}${helpIcon(method)}</h2>
-                <div id="wheel-container" class="mx-auto max-w-[540px]"></div>
-                <div id="highlights-container"></div>
-                <button type="button" class="details-toggle" aria-expanded="false" aria-controls="details-container" onclick="toggleSection('details-container', this, 'Ver detalhes técnicos', 'Ocultar detalhes técnicos')">Ver detalhes técnicos</button>
-                <div id="details-container"></div>
-                <button type="button" class="details-toggle" aria-expanded="false" aria-controls="interpretation-container" onclick="toggleSection('interpretation-container', this, 'Ler interpretação completa', 'Ocultar interpretação completa')">Ler interpretação completa</button>
-                <div id="interpretation-container"></div>
-                ${methodModal(method)}
-            </div>`;
+            <section class="result-heading">
+                <p class="kicker">Leitura calculada</p>
+                <h2 data-result-heading tabindex="-1">${label}${helpIcon(method)}</h2>
+                <p class="result-meta">${birthLine(chart.birth)}${chart.name ? ` · ${escapeHtml(chart.name)}` : ''}</p>
+            </section>
+            <div class="reading-desk">
+                <div class="diagram-panel"><div id="wheel-container"></div></div>
+                <div class="reading-panel">
+                    <h3>Primeiras leituras</h3>
+                    <div id="highlights-container"></div>
+                    <button type="button" class="details-toggle" aria-expanded="false" aria-controls="details-container" onclick="toggleSection('details-container', this, 'Ver detalhes técnicos', 'Ocultar detalhes técnicos')">Ver detalhes técnicos</button>
+                    <div id="details-container" class="details-container"></div>
+                    <button type="button" class="details-toggle" aria-expanded="false" aria-controls="interpretation-container" onclick="toggleSection('interpretation-container', this, 'Ler interpretação completa', 'Ocultar interpretação completa')">Ler interpretação completa</button>
+                    <div id="interpretation-container" class="interpretation-container"></div>
+                </div>
+            </div>
+            ${methodModal(method)}`;
 
         const wheelContainer = document.getElementById('wheel-container');
         const detailsContainer = document.getElementById('details-container');
@@ -207,15 +223,15 @@ function renderHighlights(chart, method, target, aspects = []) {
         const featured = ['sun', 'moon', 'asc'].filter(key => points[key]).map(key =>
             `<span class="tag tag-primary">${POINT_GLYPH[key] || ''} ${POINT_PT[key] || key}: ${points[key].sign}</span>`).join('');
         const aspectText = aspects.length ? `${aspects.length} aspectos detectados` : 'Sem aspectos detectados';
-        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Destaques do mapa</h3><p class="mt-2 flex flex-wrap justify-center gap-2">${featured}</p><p class="mt-2 text-sm muted">${aspectText}</p></div>`;
+        target.innerHTML = `<div class="highlights-panel"><h3 class="reading-section-title">Destaques do mapa</h3><p class="highlight-tags">${featured}</p><p class="field-help">${aspectText}</p></div>`;
     } else if (method === 'angels') {
         const angels = [...new Set(Object.values(points).map(p => p.angel).filter(Boolean))];
-        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Anjos em destaque</h3><p class="mt-2 text-sm muted">${angels.slice(0, 4).join(' · ') || 'Consulte a roda para os anjos regentes.'}</p></div>`;
+        target.innerHTML = `<div class="highlights-panel"><h3 class="reading-section-title">Anjos em destaque</h3><p class="field-help">${angels.slice(0, 4).join(' · ') || 'Consulte a roda para os anjos regentes.'}</p></div>`;
     } else if (method === 'sephiroth') {
         const nodes = [...new Set(Object.values(points).map(p => p.sephirah_traditional).filter(Boolean))];
-        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Centros mais ativados</h3><p class="mt-2 text-sm muted">${nodes.join(' · ')}</p></div>`;
+        target.innerHTML = `<div class="highlights-panel"><h3 class="reading-section-title">Centros mais ativados</h3><p class="field-help">${nodes.join(' · ')}</p></div>`;
     } else {
-        target.innerHTML = `<div class="mt-5 text-center"><h3 class="h-section">Correspondências principais</h3><p class="mt-2 text-sm muted">Consulte os títulos e posições para explorar as relações herméticas.</p></div>`;
+        target.innerHTML = `<div class="highlights-panel"><h3 class="reading-section-title">Correspondências principais</h3><p class="field-help">Consulte os títulos e posições para explorar as relações herméticas.</p></div>`;
     }
 }
 
@@ -263,23 +279,26 @@ function renderAgathadaimonView(data, container) {
             <button type="button" class="btn-ghost" onclick="editDetails()">Editar dados</button>
             <button type="button" class="btn-ghost" onclick="editDetails()">Ver outro método</button>
         </div>
-        <div class="card">
-            <h2 class="h-subtitle text-center" data-result-heading tabindex="-1">O seu nome de anjo guardião${helpIcon('agathadaimon')}</h2>
+        <section class="result-heading">
+            <p class="kicker">Leitura calculada</p>
+            <h2 data-result-heading tabindex="-1">O seu nome de anjo guardião${helpIcon('agathadaimon')}</h2>
+        </section>
+        <div class="reading-desk">
+        <div class="diagram-panel">
 
-            <div class="text-center my-5">
-                <p class="text-5xl font-bold text-amber-700">${escapeHtml(name)}</p>
-                ${hebrew ? `<p class="text-3xl font-semibold muted mt-1">${escapeHtml(hebrew)}</p>` : ''}
-                <p class="text-xs muted mt-2">Sufixo: ${escapeHtml(suffixLabel)}</p>
+            <div>
+                <p class="guardian-name">${escapeHtml(name)}</p>
+                ${hebrew ? `<p class="reading-section-title">${escapeHtml(hebrew)}</p>` : ''}
+                <p class="field-help">Sufixo: ${escapeHtml(suffixLabel)}</p>
             </div>
 
-            <p class="text-center text-sm muted mb-4">Formado pelas correspondências do Sol, Lua e Ascendente, com sufixo diurno ou noturno.</p>
-            <h3 class="h-section">Caminho do anjo</h3>
+            <p class="field-help">Formado pelas correspondências do Sol, Lua e Ascendente, com sufixo diurno ou noturno.</p>
+        </div><div class="reading-panel"><h3>Caminho do anjo</h3>
             <div class="table-wrap"><table class="data-table">
                 <thead><tr><th>Ponto</th><th>Letra</th><th>Hebraico</th><th>Descrição</th></tr></thead>
                 <tbody>${rowsHtml}</tbody>
             </table></div>
-            ${methodModal('agathadaimon')}
-        </div>`;
+        </div></div>${methodModal('agathadaimon')}`;
 }
 
 function escapeHtml(s) {
@@ -464,10 +483,10 @@ function pointInterpCard(p) {
     }
 
     return `
-        <div class="card">
-            <h3 class="h-section text-center">${header}</h3>
+        <div class="interpretation-card">
+            <h3>${header}</h3>
             <hr class="divider">
-            <div class="interp-grid text-center">
+            <div class="interp-grid">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-wide muted">O Planeta</p>
                     <p class="mt-1 font-semibold text-stone-800">${escapeHtml(p.title)}</p>
@@ -480,7 +499,7 @@ function pointInterpCard(p) {
                     <p class="mt-1 text-xs">${p.sign_description}</p>
                 </div>
             </div>
-            <div class="mt-3 text-center">
+            <div class="mt-3">
                 <p class="tag tag-warn">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
                 <p class="mt-2 text-sm">${p.combination}</p>
             </div>
@@ -504,9 +523,9 @@ function combinationLayers(method) {
     const fourthLayer = method === 'traditional' ? 'Casa' :
         method === 'hermetic' ? 'Tarot' : method === 'angels' ? 'Anjo regente' : 'Sephirah';
     return `
-        <div class="card">
-            <h3 class="h-section text-center">Uma leitura nasce do encontro de camadas</h3>
-            <p class="mt-2 text-center text-sm muted">Nenhum elemento do mapa é lido isoladamente. Escolha um ponto abaixo para explorar a combinação que ele forma neste mapa.</p>
+        <div class="combination-card">
+            <h3>Uma leitura nasce do encontro de camadas</h3>
+            <p class="field-help">Nenhum elemento do mapa é lido isoladamente. Escolha um ponto abaixo para explorar a combinação que ele forma neste mapa.</p>
             <div class="combination-layers">
                 <div class="combination-layer"><strong>Planeta</strong>o que se expressa</div>
                 <div class="combination-layer"><strong>Signo</strong>como se expressa</div>
@@ -525,12 +544,10 @@ function renderInterpretation(interp, target) {
 
     target.innerHTML = `
         <div class="mt-6">
-            <h2 class="h-title text-center">Interpretação Completa</h2>
-            <div class="card">
-                <div class="prose-body text-justify">${interp.method_intro}</div>
-            </div>
+            <h2 class="reading-section-title">Interpretação completa</h2>
+            <div class="interpretation-card"><div class="prose-body">${interp.method_intro}</div></div>
             ${combinationLayers(interp.method)}
-            <h3 class="h-section text-center">Explore as combinações deste mapa</h3>
+            <h3 class="reading-section-title">Explore as combinações deste mapa</h3>
             <div id="combination-picker" class="combination-picker">${pickerHtml}</div>
             <div id="selected-combination">${interpretationPoints[0] ? pointInterpCard(interpretationPoints[0]) : ''}</div>
         </div>`;
