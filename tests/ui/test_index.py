@@ -10,7 +10,7 @@ exercises the exact code paths a real calculation triggers.
 
 import pytest
 
-from app.interpretation import _house_number
+from app.interpretation import _combination_with_house, _house_number
 
 # A minimal but structurally complete chart payload matching app/schema.py
 # (11 canonical points, each with the fields the renderers read).
@@ -214,3 +214,11 @@ def test_house_number_normalizes_kerykeion_label_variants():
     assert _house_number("First_House") == "1"
     assert _house_number("First House") == "1"
     assert _house_number("tenth_house") == "10"
+
+
+def test_combination_description_includes_its_house_context():
+    description = _combination_with_house("Linha base", "tenth_house")
+    assert description.splitlines() == [
+        "Linha base",
+        "Na casa 10, isso fica visível na carreira, reputação, metas públicas e relação com autoridade.",
+    ]

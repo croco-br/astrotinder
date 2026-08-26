@@ -55,6 +55,21 @@ _HOUSE_NUMBERS = {
     "ninth": 9, "tenth": 10, "eleventh": 11, "twelfth": 12,
 }
 
+_HOUSE_COMBINATION_CONTEXT = {
+    "1": "Na casa 1, isso aparece na postura, no corpo e na maneira de iniciar situações.",
+    "2": "Na casa 2, isso se mostra em dinheiro, posses, autoestima e critérios de valor.",
+    "3": "Na casa 3, isso se expressa em conversas, estudos básicos, deslocamentos e relações próximas.",
+    "4": "Na casa 4, isso ganha força no lar, na família, nas memórias e na vida privada.",
+    "5": "Na casa 5, isso aparece em criatividade, romances, prazer, filhos e projetos autorais.",
+    "6": "Na casa 6, isso entra na rotina, no trabalho diário, na saúde e nas responsabilidades práticas.",
+    "7": "Na casa 7, isso se aprende e se negocia em parcerias, acordos e relações a dois.",
+    "8": "Na casa 8, isso envolve intimidade, recursos compartilhados, perdas, confiança e mudanças profundas.",
+    "9": "Na casa 9, isso se amplia por estudos, viagens, crenças, ensino e visão de mundo.",
+    "10": "Na casa 10, isso fica visível na carreira, reputação, metas públicas e relação com autoridade.",
+    "11": "Na casa 11, isso se desenvolve em amizades, grupos, redes e planos para o futuro.",
+    "12": "Na casa 12, isso atua em bastidores, descanso, mundo interno, medos e formas de cuidado silencioso.",
+}
+
 
 def _house_number(house: str | None) -> str:
     """Convert Kerykeion house labels such as ``first_house`` to numbers."""
@@ -63,6 +78,13 @@ def _house_number(house: str | None) -> str:
     normalized = house.lower().replace("_", " ").strip()
     name = normalized.removesuffix(" house")
     return str(_HOUSE_NUMBERS.get(name, house))
+
+
+def _combination_with_house(description: str, house: str | None) -> str:
+    """Add the concrete life area where a planet-sign combination operates."""
+    house_number = _house_number(house)
+    context = _HOUSE_COMBINATION_CONTEXT.get(house_number)
+    return f"{description}\n{context}" if context else description
 
 
 def _circular_separation(a: float, b: float) -> float:
@@ -220,7 +242,10 @@ def compose(chart: dict, method: str, daimon: dict | None = None) -> dict:
     for key, p in points.items():
         planet = PLANETS.get(key, {})
         sign = SIGNS.get(p.get("sign"), {})
-        combination = COMBINATIONS.get(key, {}).get(p.get("sign"), "")
+        combination = _combination_with_house(
+            COMBINATIONS.get(key, {}).get(p.get("sign"), ""),
+            p.get("house"),
+        )
         layer = _point_method_layer(method, p)
         point_interps.append({
             "key": key,

@@ -46,6 +46,20 @@ class TestGlossaryNav:
         page.select_option("#combination-sign", "Lib")
         assert "Vênus em Libra" in page.locator("#combination-result").inner_text()
 
+    def test_every_combination_has_five_practical_lines(self, page, live_server):
+        page.goto(live_server + "/glossary")
+        combinations = page.evaluate("window.GLOSSARY.combinations")
+        assert len(combinations) == 11
+        assert all(
+            len(description.split("\n")) >= 5
+            for signs in combinations.values()
+            for description in signs.values()
+        )
+        assert all(
+            len({signs[sign] for signs in combinations.values()}) == 11
+            for sign in next(iter(combinations.values()))
+        )
+
     def test_angels_section_renders(self, page, live_server):
         page.goto(live_server + "/glossary")
         page.locator('#glossary-nav button:has-text("72 Anjos")').click()

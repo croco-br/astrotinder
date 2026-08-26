@@ -462,6 +462,10 @@ function retroTagInterp(p) {
     return p.retrograde ? ' <span class="tag tag-neutral" title="Retrógrado">R</span>' : '';
 }
 
+function formatCombination(text) {
+    return escapeHtml(text).replace(/\n/g, '<br>');
+}
+
 function pointInterpCard(p) {
     const glyph = p.glyph ? `<span class="mr-2 text-2xl">${p.glyph}</span>` : '';
     const header = `${glyph}<strong>${escapeHtml(p.name)}</strong> em ` +
@@ -501,7 +505,7 @@ function pointInterpCard(p) {
             </div>
             <div class="mt-3">
                 <p class="tag tag-warn">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
-                <p class="mt-2 text-sm">${p.combination}</p>
+                <p class="mt-2 text-sm">${formatCombination(p.combination)}</p>
             </div>
             ${methodBlock ? '<hr class="divider">' + methodBlock : ''}
         </div>`;

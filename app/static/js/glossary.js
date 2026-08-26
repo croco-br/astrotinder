@@ -36,6 +36,10 @@ function escapeHtml(s) {
         .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 }
 
+function formatCombination(text) {
+    return escapeHtml(text).replace(/\n/g, "<br>");
+}
+
 /* ---------- section renderers ---------- */
 
 function renderPlanets(g) {
@@ -77,7 +81,7 @@ function showCombination() {
     const sign = window.GLOSSARY.signs[signKey];
     const text = window.GLOSSARY.combinations[planetKey][signKey];
     document.getElementById("combination-result").innerHTML = card(
-        `${planet.name} em ${sign.name}`, planet.glyph, `<p>${text}</p>`,
+        `${planet.name} em ${sign.name}`, planet.glyph, `<p>${formatCombination(text)}</p>`,
         `${sign.element} · ${sign.quality} · Regente: ${sign.ruler}`,
         `${planet.name} ${sign.name} ${text}`,
     );
