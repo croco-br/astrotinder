@@ -249,20 +249,34 @@ function pointTable(points, columns) {
         </table></div>`;
 }
 
-function aspectTable(aspects) {
+function aspectTable(aspects, interpAspects) {
+    const match = a => (interpAspects || []).find(i =>
+        i.a === a.a && i.b === a.b && i.aspect === a.aspect);
     const rows = aspects.length === 0
         ? `<tr><td colspan="4" class="muted">Nenhum aspecto detectado.</td></tr>`
         : aspects.map(a => {
             const tag = a.isHarmony
                 ? `<span class="tag tag-info">${aspectLabel(a.aspect)}</span>`
                 : `<span class="tag tag-warn">${aspectLabel(a.aspect)}</span>`;
+            const info = match(a);
+            const reading = info ? `
+                    <tr class="aspect-description-row"><td colspan="4">
+                        <div class="aspect-reading">
+                            ${info.description ? `<p>${natalEscapeHtml(info.description)}</p>` : ""}
+                            ${info.light ? `<p><strong>Luz.</strong> ${natalEscapeHtml(info.light)}</p>` : ""}
+                            ${info.shadow ? `<p><strong>Sombra.</strong> ${natalEscapeHtml(info.shadow)}</p>` : ""}
+                            ${info.integration ? `<p><strong>Integração.</strong> ${natalEscapeHtml(info.integration)}</p>` : ""}
+                            ${info.a_interpretation ? `<p>${natalEscapeHtml(info.a_interpretation).replace(/\n/g, "<br>")}</p>` : ""}
+                            ${info.b_interpretation ? `<p>${natalEscapeHtml(info.b_interpretation).replace(/\n/g, "<br>")}</p>` : ""}
+                        </div>
+                    </td></tr>` : "";
             return `
                 <tr>
                     <td>${POINT_GLYPH[a.a] || "·"} ${pointLabel(a.a)}</td>
                     <td>${tag}</td>
                     <td>${POINT_GLYPH[a.b] || "·"} ${pointLabel(a.b)}</td>
                     <td>${a.orb}°</td>
-                </tr>`;
+                </tr>${reading}`;
         }).join("");
     return `
         <h3 class="h-section mt-5">Aspectos do Mapa</h3>
@@ -370,8 +384,8 @@ function renderWheel(chart, target) {
  */
 
 const HERMETIC_SECTORS = [
-    { sign: "Ari", early: "Rainha de Bastões",   late: "Principe de Moedas" },
-    { sign: "Tau", early: "Principe de Moedas",  late: "Rei de Espadas" },
+    { sign: "Ari", early: "Rainha de Bastões",   late: "Príncipe de Moedas" },
+    { sign: "Tau", early: "Príncipe de Moedas",  late: "Rei de Espadas" },
     { sign: "Gem", early: "Rei de Espadas",      late: "Rainha de Taças" },
     { sign: "Can", early: "Rainha de Taças",     late: "Príncipe de Bastões" },
     { sign: "Leo", early: "Príncipe de Bastões", late: "Rei de Moedas" },
@@ -647,10 +661,10 @@ function renderAngelsWheel(chart, target) {
  *  Tabelas de detalhes (um render por método)
  * ============================================================ */
 
-function renderDetails(chart, target, aspects) {
+function renderDetails(chart, target, aspects, interpAspects) {
     target.innerHTML = detailPanel(chart,
         pointTable(chart.points, [COL_PONTO, COL_GRAU, COL_SEPHIROTH, COL_CASA]) +
-        aspectTable(aspects),
+        aspectTable(aspects, interpAspects),
         { title: "Detalhes do Mapa" });
 }
 

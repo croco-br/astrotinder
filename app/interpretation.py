@@ -24,6 +24,7 @@ from __future__ import annotations
 from app.glossary import (
     AGATHADAIMON,
     ANGELS,
+    ASPECT_COMBINATIONS,
     ASPECTS,
     COMBINATIONS,
     KABBALAH,
@@ -103,6 +104,10 @@ def _compute_aspects(points: dict) -> list:
                 d = abs(sep - asp["angle"])
                 if d <= asp["orb"]:
                     info = ASPECTS[asp["key"]]
+                    combo_a = ASPECT_COMBINATIONS.get(asp["key"], {}).get(
+                        names[i], {}).get(names[j], "")
+                    combo_b = ASPECT_COMBINATIONS.get(asp["key"], {}).get(
+                        names[j], {}).get(names[i], "")
                     out.append({
                         "a": names[i],
                         "b": names[j],
@@ -112,6 +117,11 @@ def _compute_aspects(points: dict) -> list:
                         "harmony": info["harmony"],
                         "orb": round(d, 2),
                         "description": info["description"],
+                        "light": info.get("light", ""),
+                        "shadow": info.get("shadow", ""),
+                        "integration": info.get("integration", ""),
+                        "a_interpretation": combo_a,
+                        "b_interpretation": combo_b,
                     })
                     break
     return out
@@ -155,8 +165,8 @@ def _method_intro(method: str) -> str:
         return (
             "Os <strong>72 Anjos do Shem HaMephorash</strong> são as expressões "
             "do Nome Divino na Cabala — 6 anjos por signo, um por cada intervalo "
-            "de 5° do zodíaco. Cada ponto do mapa cai no sector do seu anjo "
-            "regente, que influência a expressão daquele planeta."
+            "de 5° do zodíaco. Cada ponto do mapa cai no setor do seu anjo "
+            "regente, que influencia a expressão daquele planeta."
         )
     if method == "agathadaimon":
         return AGATHADAIMON["intro"]
@@ -253,9 +263,15 @@ def compose(chart: dict, method: str, daimon: dict | None = None) -> dict:
             "glyph": planet.get("glyph", ""),
             "title": planet.get("title", ""),
             "planet_description": planet.get("description", ""),
+            "planet_light": planet.get("light", ""),
+            "planet_shadow": planet.get("shadow", ""),
+            "planet_integration": planet.get("integration", ""),
             "sign_name": sign.get("name", p.get("sign", "")),
             "sign_glyph": sign.get("glyph", ""),
             "sign_description": sign.get("description", ""),
+            "sign_light": sign.get("light", ""),
+            "sign_shadow": sign.get("shadow", ""),
+            "sign_integration": sign.get("integration", ""),
             "sign_element": sign.get("element", ""),
             "sign_quality": sign.get("quality", ""),
             "sign_ruler": sign.get("ruler", ""),

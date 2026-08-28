@@ -42,19 +42,33 @@ function formatCombination(text) {
 
 /* ---------- section renderers ---------- */
 
+function structuredSections(d) {
+    const sections = [
+        ["Luz", d.light],
+        ["Sombra", d.shadow],
+        ["Integração", d.integration],
+    ].filter(([, text]) => text);
+    if (!sections.length) return "";
+    return `<div class="interp-layers">` + sections.map(([label, text]) => `
+        <div class="reading-layer">
+            <p class="reading-layer-name">${label}</p>
+            <p>${text}</p>
+        </div>`).join("") + `</div>`;
+}
+
 function renderPlanets(g) {
     return Object.entries(g.planets).map(([key, p]) =>
         card(p.name, p.glyph,
-            `<p><strong>${p.title}.</strong> ${p.description}</p>`,
-            "", `${p.name} ${p.title}`)).join("");
+            `<div class="prose-body"><p class="lead-par"><strong>${p.title}.</strong> ${p.description}</p></div>${structuredSections(p)}`,
+            "", `${p.name} ${p.title} luz sombra integração`)).join("");
 }
 
 function renderSigns(g) {
     return Object.entries(g.signs).map(([key, s]) =>
         card(s.name, s.glyph,
-            `<p>${s.description}</p>`,
+            `<div class="prose-body"><p class="lead-par">${s.description}</p></div>${structuredSections(s)}`,
             `Elemento: ${s.element} · Qualidade: ${s.quality} · Regente: ${s.ruler}`,
-            `${s.name} ${s.element} ${s.quality} ${s.ruler}`)).join("");
+            `${s.name} ${s.element} ${s.quality} ${s.ruler} luz sombra integração`)).join("");
 }
 
 function renderCombinations(g) {
@@ -88,12 +102,12 @@ function showCombination() {
 }
 
 function renderAspects(g) {
-    const out = `<div class="prose-body"><p>Aspectos são relações angulares entre planetas. Cada um tem um ângulo ideal e um orbe (tolerância) que define se está ativo.</p></div>`;
+    const out = `<div class="prose-body"><p>Aspectos são relações angulares entre planetas. Cada um tem um ângulo ideal e um orbe (tolerância) que define se está ativo. Um aspecto nunca é "bom" ou "mau": é uma dinâmica com luz, sombra e caminho de integração.</p></div>`;
     return out + Object.entries(g.aspects).map(([key, a]) =>
         card(a.name, a.glyph,
-            `<p>${a.description}</p>`,
+            `<div class="prose-body"><p class="lead-par">${a.description}</p></div>${structuredSections(a)}`,
             `Ângulo: ${a.angle}° · Orbe: ${a.orb}° · Natureza: ${a.harmony}`,
-            `${a.name} ${a.description}`)).join("");
+            `${a.name} ${a.description} luz sombra integração`)).join("");
 }
 
 function renderKabbalah(g) {
@@ -162,11 +176,53 @@ function renderAgathadaimon(g) {
     return out;
 }
 
+function renderAspectCombinations(g) {
+    const aspectKeys = Object.keys(g.aspects);
+    const planetKeys = Object.keys(g.planets);
+    const planetOptions = sel => planetKeys.map((key, i) =>
+        `<option value="${key}"${key === sel ? " selected" : ""}>${g.planets[key].glyph} ${g.planets[key].name}</option>`).join("");
+    const aspectOptions = aspectKeys.map((key, i) =>
+        `<option value="${key}"${i === 0 ? " selected" : ""}>${g.aspects[key].glyph} ${g.aspects[key].name}</option>`).join("");
+    return `
+        <div class="card glossary-item" data-key="combinações planeta aspecto interpretação">
+            <h3 class="h-section">Explore as 550 combinações planeta + aspecto + planeta</h3>
+            <p class="prose-body mt-2">Cada planeta vive o dinamismo do aspecto de um jeito próprio — e cada lado do par tem a sua perspectiva. Escolha dois pontos e um aspecto para ler a relação pelos olhos de cada um.</p>
+            <div class="combination-explorer mt-4">
+                <div><label class="field-label" for="aspect-combination-planet-a">Planeta A</label><select id="aspect-combination-planet-a" class="input-plain" onchange="showAspectCombination()">${planetOptions("sun")}</select></div>
+                <div><label class="field-label" for="aspect-combination-aspect">Aspecto</label><select id="aspect-combination-aspect" class="input-plain" onchange="showAspectCombination()">${aspectOptions}</select></div>
+                <div><label class="field-label" for="aspect-combination-planet-b">Planeta B</label><select id="aspect-combination-planet-b" class="input-plain" onchange="showAspectCombination()">${planetOptions("moon")}</select></div>
+            </div>
+            <div id="aspect-combination-result" class="mt-4"></div>
+        </div>`;
+}
+
+function showAspectCombination() {
+    const planetKeyA = document.getElementById("aspect-combination-planet-a").value;
+    const aspectKey = document.getElementById("aspect-combination-aspect").value;
+    const planetKeyB = document.getElementById("aspect-combination-planet-b").value;
+    if (planetKeyA === planetKeyB) {
+        document.getElementById("aspect-combination-result").innerHTML =
+            `<div class="card glossary-item"><p class="muted">Escolha dois pontos diferentes.</p></div>`;
+        return;
+    }
+    const planetA = window.GLOSSARY.planets[planetKeyA];
+    const planetB = window.GLOSSARY.planets[planetKeyB];
+    const aspect = window.GLOSSARY.aspects[aspectKey];
+    const text = (window.GLOSSARY.aspect_combinations || {})[aspectKey]?.[planetKeyA]?.[planetKeyB];
+    document.getElementById("aspect-combination-result").innerHTML = card(
+        `${planetA.name} em ${aspect.name.toLowerCase()} com ${planetB.name}`, planetA.glyph,
+        text ? `<p>${formatCombination(text)}</p>` : "<p class=\"muted\">Texto não disponível.</p>",
+        `${aspect.angle}° · Orbe: ${aspect.orb}° · Natureza: ${aspect.harmony}`,
+        `${planetA.name} ${aspect.name} ${planetB.name} ${text || ""}`,
+    );
+}
+
 const RENDERERS = {
     planets: renderPlanets,
     signs: renderSigns,
     combinations: renderCombinations,
     aspects: renderAspects,
+    aspect_combinations: renderAspectCombinations,
     kabbalah: renderKabbalah,
     tarot: renderTarot,
     angels: renderAngels,
@@ -179,6 +235,7 @@ function showSection(name, navLink) {
     CURRENT_SECTION = name;
     document.getElementById("glossary-content").innerHTML = RENDERERS[name](window.GLOSSARY);
     if (name === "combinations") showCombination();
+    if (name === "aspect_combinations") showAspectCombination();
     const picker = document.getElementById("glossary-section-picker");
     if (picker) picker.value = name;
     // nav active state
@@ -195,6 +252,7 @@ function showSection(name, navLink) {
         const links = document.querySelectorAll("#glossary-nav button");
         links.forEach(a => { if (a.textContent.trim().toLowerCase().includes(name) ||
             (name === "combinations" && a.textContent.includes("Planeta + Signo")) ||
+            (name === "aspect_combinations" && a.textContent.includes("Planeta + Aspecto")) ||
             (name === "kabbalah" && a.textContent.includes("Cabala")) ||
             (name === "tarot" && a.textContent.includes("Tarot")) ||
             (name === "angels" && a.textContent.includes("72")) ) {

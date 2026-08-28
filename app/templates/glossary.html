@@ -34,22 +34,23 @@
 
         <section class="library-layout">
             <div class="library-mobile-picker">
-                <label class="field-label" for="glossary-section-picker">Secção</label>
+                <label class="field-label" for="glossary-section-picker">Seção</label>
                 <select id="glossary-section-picker" class="input" onchange="showSection(this.value)">
-                    <option value="planets">Planetas</option><option value="signs">Signos</option><option value="combinations">Planeta + Signo</option><option value="aspects">Aspectos</option><option value="kabbalah">Cabala & Sephiroth</option><option value="tarot">Tarot Hermético (24)</option><option value="angels">72 Anjos</option><option value="agathadaimon">Agathadaimon</option>
+                    <option value="planets">Planetas</option><option value="signs">Signos</option><option value="combinations">Planeta + Signo</option><option value="aspects">Aspectos</option><option value="aspect_combinations">Planeta + Aspecto</option><option value="kabbalah">Cabala & Sephiroth</option><option value="tarot">Tarot Hermético (24)</option><option value="angels">72 Anjos</option><option value="agathadaimon">Agathadaimon</option>
                 </select>
             </div>
-            <aside class="library-index" aria-label="Secções do glossário">
+            <aside class="library-index" aria-label="Seções do glossário">
                 <p>Índice</p>
                 <ul id="glossary-nav">
                     <li><button type="button" class="glossary-nav-link glossary-nav-active" aria-current="page" onclick="showSection('planets', this)">01 Planetas</button></li>
                     <li><button type="button" class="glossary-nav-link" onclick="showSection('signs', this)">02 Signos</button></li>
                     <li><button type="button" class="glossary-nav-link" onclick="showSection('combinations', this)">03 Planeta + Signo</button></li>
                     <li><button type="button" class="glossary-nav-link" onclick="showSection('aspects', this)">04 Aspectos</button></li>
-                    <li><button type="button" class="glossary-nav-link" onclick="showSection('kabbalah', this)">05 Cabala & Sephiroth</button></li>
-                    <li><button type="button" class="glossary-nav-link" onclick="showSection('tarot', this)">06 Tarot Hermético</button></li>
-                    <li><button type="button" class="glossary-nav-link" onclick="showSection('angels', this)">07 72 Anjos</button></li>
-                    <li><button type="button" class="glossary-nav-link" onclick="showSection('agathadaimon', this)">08 Agathadaimon</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('aspect_combinations', this)">05 Planeta + Aspecto</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('kabbalah', this)">06 Cabala & Sephiroth</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('tarot', this)">07 Tarot Hermético</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('angels', this)">08 72 Anjos</button></li>
+                    <li><button type="button" class="glossary-nav-link" onclick="showSection('agathadaimon', this)">09 Agathadaimon</button></li>
                 </ul>
             </aside>
             <div class="library-content-wrap"><div id="glossary-search-status" class="sr-only" aria-live="polite"></div><div id="glossary-content"></div></div>

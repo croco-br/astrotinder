@@ -6,10 +6,10 @@ must be preserved across the Bulma → Tailwind refactor.
 
 
 class TestGlossaryStructure:
-    def test_sidebar_nav_has_eight_sections(self, page, live_server):
+    def test_sidebar_nav_has_nine_sections(self, page, live_server):
         page.goto(live_server + "/glossary")
         links = page.locator("#glossary-nav button")
-        assert links.count() == 8
+        assert links.count() == 9
 
     def test_search_input_and_clear_present(self, page, live_server):
         page.goto(live_server + "/glossary")

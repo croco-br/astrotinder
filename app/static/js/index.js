@@ -156,10 +156,10 @@ function renderVisual(data, container, method) {
                 <div class="reading-panel">
                     <h3>Primeiras leituras</h3>
                     <div id="highlights-container"></div>
-                    <button type="button" class="details-toggle" aria-expanded="false" aria-controls="details-container" onclick="toggleSection('details-container', this, 'Ver detalhes técnicos', 'Ocultar detalhes técnicos')">Ver detalhes técnicos</button>
-                    <div id="details-container" class="details-container"></div>
                     <button type="button" class="details-toggle" aria-expanded="false" aria-controls="interpretation-container" onclick="toggleSection('interpretation-container', this, 'Ler interpretação completa', 'Ocultar interpretação completa')">Ler interpretação completa</button>
                     <div id="interpretation-container" class="interpretation-container"></div>
+                    <button type="button" class="details-toggle" aria-expanded="false" aria-controls="details-container" onclick="toggleSection('details-container', this, 'Ver detalhes técnicos', 'Ocultar detalhes técnicos')">Ver detalhes técnicos</button>
+                    <div id="details-container" class="details-container"></div>
                 </div>
             </div>
             ${methodModal(method)}`;
@@ -169,7 +169,7 @@ function renderVisual(data, container, method) {
 
         if (method === 'traditional') {
             const { aspects } = renderWheel(chart, wheelContainer);
-            renderDetails(chart, detailsContainer, aspects);
+            renderDetails(chart, detailsContainer, aspects, data.interpretation?.aspects);
             renderHighlights(chart, method, document.getElementById('highlights-container'), aspects);
         } else if (method === 'hermetic') {
             renderHermeticWheel(chart, wheelContainer);
@@ -344,10 +344,10 @@ const METHOD_INFO = {
             <p>Os <strong>72 Anjos do Shem HaMephorash</strong> são as
             expressões do Nome Divino na Cabala. São <strong>6 anjos por
             signo</strong>, um por cada bin de 5°: [0,5), [5,10), [10,15),
-            [15,20), [20,25), [25,30]. Cada anjo rege um sector de 5° do
+            [15,20), [20,25), [25,30]. Cada anjo rege um setor de 5° do
             zodíaco.</p>
-            <p>Os planetas natais são colocados pelo grau e caem no sector do
-            seu <strong>anjo regente</strong> — esses sectors são destacados na
+            <p>Os planetas natais são colocados pelo grau e caem no setor do
+            seu <strong>anjo regente</strong> — esses setores são destacados na
             roda. A tabela de detalhes mostra qual anjo rege cada ponto.</p>`,
     },
     agathadaimon: {
@@ -355,7 +355,7 @@ const METHOD_INFO = {
         body: `
             <p>O <strong>Agathadaimon</strong> (ou <em>Agathos Daimon</em>) é o
             "Bom Demônio" da tradição hermética e helenística — o espírito
-            guardião pessoal, equivalente ao <em>nous</em> ou génio de cada
+            guardião pessoal, equivalente ao <em>nous</em> ou gênio de cada
             indivíduo.</p>
             <p>Este método constrói o <strong>nome do anjo da guarda</strong> a
             partir de três letras hebraicas derivadas dos graus do <strong>Sol</strong>,
@@ -366,7 +366,7 @@ const METHOD_INFO = {
             <em>El</em> para nascimentos diurnos (06h–18h) e <em>Iah</em> para
             nascimentos noturnos.</p>
             <p>Cada letra hebraica possui um conjunto de correspondências
-            tradicionais (género, forma e caráter) que ajudam a interpretar a
+            tradicionais (gênero, forma e caráter) que ajudam a interpretar a
             natureza do espírito guardião.</p>`,
     },
     sephiroth: {
@@ -477,37 +477,40 @@ function pointInterpCard(p) {
     const signMeta = [p.sign_element, p.sign_quality, 'Regente: ' + p.sign_ruler]
         .filter(Boolean).join(' · ');
 
+    const readingLayer = (label, text) => text ? `
+        <div class="reading-layer">
+            <p class="reading-layer-name">${label}</p>
+            <p>${escapeHtml(text)}</p>
+        </div>` : '';
+
     let methodBlock = '';
     if (p.method_label) {
         methodBlock = `
-            <div class="text-center">
-                <span class="tag tag-primary">${escapeHtml(p.method_label)}</span>
-                <p class="text-xs mt-1">${p.method_text}</p>
+            <div class="reading-layer">
+                <p class="reading-layer-name">${escapeHtml(p.method_label)}</p>
+                <p>${p.method_text}</p>
             </div>`;
     }
 
     return `
         <div class="interpretation-card">
             <h3>${header}</h3>
+            <p class="mt-1 muted" style="font-size:.86rem">${escapeHtml(p.title)} — ${escapeHtml(signMeta)}</p>
             <hr class="divider">
-            <div class="interp-grid">
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide muted">O Planeta</p>
-                    <p class="mt-1 font-semibold text-stone-800">${escapeHtml(p.title)}</p>
-                    <p class="mt-1 text-xs">${p.planet_description}</p>
-                </div>
-                <div>
-                    <p class="text-xs font-semibold uppercase tracking-wide muted">O Signo</p>
-                    <p class="mt-1 font-semibold text-stone-800">${escapeHtml(p.sign_name)}</p>
-                    <p class="mt-1 text-xs muted">${escapeHtml(signMeta)}</p>
-                    <p class="mt-1 text-xs">${p.sign_description}</p>
-                </div>
+            <div class="prose-body">${p.planet_description ? `<p>${escapeHtml(p.planet_description)}</p>` : ''}${p.sign_description ? `<p class="mt-2">${escapeHtml(p.sign_description)}</p>` : ''}</div>
+            <div class="interp-layers">
+                ${readingLayer('Luz do planeta', p.planet_light)}
+                ${readingLayer('Sombra do planeta', p.planet_shadow)}
+                ${readingLayer('Integração do planeta', p.planet_integration)}
+                ${readingLayer('Luz do signo', p.sign_light)}
+                ${readingLayer('Sombra do signo', p.sign_shadow)}
+                ${readingLayer('Integração do signo', p.sign_integration)}
             </div>
-            <div class="mt-3">
-                <p class="tag tag-warn">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
-                <p class="mt-2 text-sm">${formatCombination(p.combination)}</p>
+            <div class="interp-combination">
+                <p class="reading-layer-name">Combinação ${escapeHtml(p.name)} + ${escapeHtml(p.sign_name)}</p>
+                <p>${formatCombination(p.combination)}</p>
             </div>
-            ${methodBlock ? '<hr class="divider">' + methodBlock : ''}
+            ${methodBlock}
         </div>`;
 }
 

@@ -157,7 +157,9 @@ class TestMethodRendering:
             "#interpretation-container"
         ).inner_text()
         assert page.locator("#combination-picker button").count() == 1
-        assert "Combinação Sol + Áries" in page.locator("#selected-combination").inner_text()
+        # The layer label renders in all-small-caps, so inner_text uppercases it.
+        label = page.locator("#selected-combination").inner_text().lower()
+        assert "combinação sol + áries" in label
         assert "Aspectos do Mapa" not in page.locator("#interpretation-container").inner_text()
 
     def test_house_labels_render_as_numbers(self, page, live_server):

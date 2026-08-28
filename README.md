@@ -18,6 +18,17 @@ Os dados de nascimento só existem no formulário e no pedido de cálculo atual.
 
 Todos os métodos retornam também um bloco `interpretation` (narrativa composta a partir do glossário).
 
+### Glossário
+
+O glossário (`app/glossary.py`) é a fonte única de verdade do conteúdo narrativo, em
+português brasileiro. Cada planeta, signo e aspecto traz uma descrição estruturada em
+três camadas — **Luz** (potencial), **Sombra** (desvio) e **Integração** (caminho
+consciente). As combinações planeta + aspecto + planeta (11 × 10 × 5 = 550 pares
+ordenados, geradas por template) descrevem a relação pelos olhos de cada planeta.
+A página `/glossary` inclui, além das seções clássicas, um explorador dessas 550
+combinações. A tabela de aspectos dos detalhes técnicos (tradicional) exibe a
+descrição completa de cada aspecto detectado no mapa.
+
 ### API
 
 **Endpoint único**: `POST /calculate`

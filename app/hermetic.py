@@ -14,7 +14,7 @@ from app.schema import Chart
 # sign -> Portuguese tarot title, for the early degrees (pos <= 5).
 _EARLY = {
     "Ari": "Rainha de Bastões",
-    "Tau": "Principe de Moedas",
+    "Tau": "Príncipe de Moedas",
     "Gem": "Rei de Espadas",
     "Can": "Rainha de Taças",
     "Leo": "Príncipe de Bastões",
@@ -29,7 +29,7 @@ _EARLY = {
 
 # sign -> Portuguese tarot title, for the late degrees (pos >= 25).
 _LATE = {
-    "Ari": "Principe de Moedas",
+    "Ari": "Príncipe de Moedas",
     "Tau": "Rei de Espadas",
     "Gem": "Rainha de Taças",
     "Can": "Príncipe de Bastões",

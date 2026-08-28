@@ -2,10 +2,11 @@
 
 Fonte única de verdade para o glossário da aplicação. Cobertura:
 
-- Planetas (11) + significado individual
-- Signos (12) + elemento, qualidade, regente
+- Planetas (11) + significado individual (luz, sombra, integração)
+- Signos (12) + elemento, qualidade, regente (luz, sombra, integração)
 - Combinações planeta+signo (11 × 12 = 132) — todas redigidas à parte
-- Aspectos (5)
+- Aspectos (5) com descrição estruturada (luz, sombra, integração)
+- Combinações planeta+aspecto (11 × 5 = 55) — como cada planeta vive cada aspecto
 - Cabala + cada sephirah (10 + Da'ath)
 - Tarot hermético: naipes, cartas de corte, 24 setores, regra cuspial
 - 72 Anjos do Shem HaMephorash
@@ -29,6 +30,27 @@ PLANETS = {
             "do mapa: aquilo que se busca tornar e irradiar. Governa o ego, "
             "a criatividade espontânea e o princípio paterno."
         ),
+        "light": (
+            "Vontade clara e generosidade natural: a pessoa sabe quem é, "
+            "irradia confiança sem precisar diminuir ninguém e cria com "
+            "espontaneidade. O Sol em luz dá constância de propósito — a "
+            "coragem de ocupar o próprio lugar e de iluminar também o "
+            "caminho dos outros."
+        ),
+        "shadow": (
+            "Vaidade, orgulho ferido e necessidade de ser o centro. O Sol "
+            "em sombra busca aplauso para se sentir existir, confunde "
+            "admiração com valor pessoal e trata críticas como ataques. "
+            "Pode virar autoritarismo ou, no extremo oposto, esconder-se "
+            "para não falhar em público."
+        ),
+        "integration": (
+            "Separar o próprio valor do reconhecimento recebido: brilhar "
+            "por ser, não por parecer. Praticar a generosidade que não "
+            "cobra retorno e aceitar que críticas honestas são espelhos, "
+            "não ameaças. O Sol integrado serve de farol em vez de querer "
+            "ser o único astro do céu."
+        ),
     },
     "moon": {
         "name": "Lua",
@@ -39,6 +61,24 @@ PLANETS = {
             "inconsciente. É a necessidade de acolhimento, o humor, a "
             "receptividade e o princípio materno. Indica como se reage "
             "automaticamente e de que se necessita para sentir segurança."
+        ),
+        "light": (
+            "Empatia fina e memória afetiva: a pessoa percebe o que os "
+            "outros sentem antes das palavras, acolhe sem julgamento e "
+            "cuida com instinto certeiro. A Lua em luz dá fluxo emocional "
+            "saudável — sentir, nomear e deixar a emoção passar."
+        ),
+        "shadow": (
+            "Mudanças de humor que arrastam quem está perto, defensividade "
+            "e apego ao passado. A Lua em sombra absorve emoções alheias "
+            "como se fossem suas, guarda mágoas como recordações quentes e "
+            "exige do outro a segurança que só o interior pode dar."
+        ),
+        "integration": (
+            "Aprender a ser o próprio porto seguro: nomear o que sente "
+            "antes de reagir, criar rituais de cuidado que não dependam de "
+            "ninguém e deixar que o passado ensine sem comandar. A Lua "
+            "integrada nutre sem se esvaziar."
         ),
     },
     "mercury": {
@@ -51,6 +91,26 @@ PLANETS = {
             "transmite e conecta ideias. Governa também a destreza, os "
             "deslocamentos curtos e o discernimento analítico."
         ),
+        "light": (
+            "Mente viva e elástica: aprende rápido, faz pontes entre "
+            "pessoas e ideias, explica o complexo em palavras simples. "
+            "Mercúrio em luz é o bom intermediário — ouve de verdade, "
+            "pergunta com curiosidade e traduz mundos diferentes um para "
+            "o outro."
+        ),
+        "shadow": (
+            "Verborreia que atropela, sarcasmo, dispersão e racionalização "
+            "de tudo — inclusive do que deveria ser sentido. Mercúrio em "
+            "sombra escuta para responder, não para entender, e usa a "
+            "inteligência como arma de defesa: o outro nunca é rápido ou "
+            "lógico o suficiente."
+        ),
+        "integration": (
+            "Devolver à mente a função de servir, não de comandar: "
+            "praticar a escuta completa, admitir 'não sei' e escolher "
+            "menos estímulos com mais profundidade. Mercúrio integrado "
+            "fala para construir pontes, não muros."
+        ),
     },
     "venus": {
         "name": "Vênus",
@@ -61,6 +121,24 @@ PLANETS = {
             "de valores. Indica o que se aprecia, como se relaciona e de "
             "que forma se busca a harmonia e a afinidade. Governa a "
             "estética, o afeto e a sensualidade."
+        ),
+        "light": (
+            "Capacidade rara de valorizar: a pessoa vê beleza no comum, "
+            "demonstra afeto com gestos concretos e cria relações onde os "
+            "dois lados ganham. Vênus em luz equilibra dar e receber, e "
+            "transforma prazer em vínculo, não em consumo."
+        ),
+        "shadow": (
+            "Agradar a qualquer custo, dependência afetiva e valor medido "
+            "em aparência. Vênus em sombra evita conflito até se perder de "
+            "si, confunde possessão com amor e usa o encanto como moeda de "
+            "troca — a harmonia exterior esconde o desequilíbrio interior."
+        ),
+        "integration": (
+            "Descobrir o que se valoriza quando ninguém está olhando: "
+            "praticar o 'não' sem culpa, escolher vínculos por afinidade "
+            "real e não por medo da perda. Vênus integrada ama da própria "
+            "plenitude, não da carência."
         ),
     },
     "mars": {
@@ -73,6 +151,24 @@ PLANETS = {
             "que se quer, como se luta, se defende e se afirma. É a "
             "vontade em movimento."
         ),
+        "light": (
+            "Coragem de começar: a pessoa entra em campo primeiro, defende "
+            "quem precisa de proteção e converte raiva em ação útil. "
+            "Marte em luz é direto sem ser cruel, competitivo sem "
+            "humilhar, e sabe esperar o momento de golpear."
+        ),
+        "shadow": (
+            "Impulsividade, impaciência e agressividade que machuca — "
+            "física ou verbalmente. Marte em sombra confunde velocidade "
+            "com eficiência, vira raiva contra o mundo ou contra si, e "
+            "cria inimigos onde poderia criar aliados."
+        ),
+        "integration": (
+            "Dar à energia um alvo digno: exercício regular, projetos com "
+            "prazo, assertividade treinada. Aprender a pausa entre o "
+            "estímulo e a resposta — ali nasce a força de verdade. Marte "
+            "integrado é o fogo que aquece, não o que queima."
+        ),
     },
     "jupiter": {
         "name": "Júpiter",
@@ -84,6 +180,24 @@ PLANETS = {
             "oportunidade e otimismo, e como se atribui significado à "
             "vida. Governa a filosofia, a religião e a generosidade."
         ),
+        "light": (
+            "Otimismo contagiante com raízes reais: a pessoa enxerga o "
+            "quadro grande, abre portas para si e para os outros e crê "
+            "que o esforço vale a pena. Júpiter em luz ensina e aprende "
+            "ao mesmo tempo, e transforma sorte em gratidão."
+        ),
+        "shadow": (
+            "Exagero, promessas gigantes e arrogância de quem se acha "
+            "dono da verdade. Júpiter em sombra aposta alto para não "
+            "sentir vazio, confunde quantidade com qualidade e faz sermões "
+            "em vez de diálogos."
+        ),
+        "integration": (
+            "Casar a visão com o chão: grandes sonhos em pequenos passos "
+            "verificáveis, fé que se prova em ação, humildade de saber "
+            "que o mapa nunca é o território. Júpiter integrado expande "
+            "sem estourar os limites da realidade."
+        ),
     },
     "saturn": {
         "name": "Saturno",
@@ -94,6 +208,25 @@ PLANETS = {
             "o limite e a estrutura. Mostra onde se é provado, onde se "
             "deve amadurecer e construir com paciência. É o mestre "
             "rigoroso que transforma esforço em realização duradoura."
+        ),
+        "light": (
+            "Mestria conquistada: a pessoa entrega no prazo, sustenta "
+            "compromissos quando todos desistem e vira referência pelo "
+            "que construiu tijolo a tijolo. Saturno em luz respeita o "
+            "tempo — o próprio e o dos outros — e dá autoridade sem "
+            "precisar de cargo."
+        ),
+        "shadow": (
+            "Rigidez, pessimismo e autocrítica que paralisa. Saturno em "
+            "sombra impõe a si o que impõe aos outros, confunde sofrimento "
+            "com mérito e adia a vida 'para quando estiver pronto' — dia "
+            "que nunca chega."
+        ),
+        "integration": (
+            "Trocar punição por padrão: exigir excelência com gentileza, "
+            "celebrar marcos intermediários e aceitar que limites são "
+            "espinha dorsal, não jaula. Saturno integrado vira o "
+            "arquiteto sereno da própria vida."
         ),
     },
     "uranus": {
@@ -107,6 +240,24 @@ PLANETS = {
             "individualidade, a intuição elétrica e a ruptura com o "
             "passado."
         ),
+        "light": (
+            "Genialidade prática: a pessoa vê soluções onde todos vêem "
+            "muro, atualiza o que estava ultrapassado e defende a "
+            "liberdade — a própria e a dos outros. Urano em luz rompe "
+            "padrões porque enxerga além deles, não por rebeldia vazia."
+        ),
+        "shadow": (
+            "Rebeldia automática, agitação sem direção e medo de "
+            "compromisso. Urano em sombra rompe por romper, troca tudo "
+            "toda hora para não se encontrar em nada e considera "
+            "constância uma prisão."
+        ),
+        "integration": (
+            "Escolher quais normas vale a pena quebrar: liberdade com "
+            "raízes, inovação a serviço de algo duradouro. Permitir-se "
+            "ser diferente sem precisar provar isso a cada instante. "
+            "Urano integrado é o trovão que fertiliza a terra."
+        ),
     },
     "neptune": {
         "name": "Netuno",
@@ -117,6 +268,24 @@ PLANETS = {
             "a dissolução dos limites. É o princípio da transcendência: "
             "a unificação, a inspiração artística e espiritual, mas "
             "também a ilusão e a névoa."
+        ),
+        "light": (
+            "Compaixão sem fronteiras e imaginação que cria mundos: a "
+            "pessoa sintoniza o invisível, inspira coletivos inteiros e "
+            "vê o divino no cotidiano. Netuno em luz é o artista, o "
+            "místico e o curador que dissolve separações com ternura."
+        ),
+        "shadow": (
+            "Fuga, idealização e vítimismo. Netuno em sombra confunde "
+            "sonho com realidade, bebe (literal ou figuradamente) para "
+            "não sentir, salva os outros para não se olhar e transforma "
+            "empatia em esponja que encharca."
+        ),
+        "integration": (
+            "Ancorar a visão: práticas espirituais com disciplina, arte "
+            "com técnica, compaixão com limites claros. Verificar os "
+            "fatos antes de se apaixonar pela história. Netuno integrado "
+            "é o oceano que sabe ser também praia."
         ),
     },
     "pluto": {
@@ -129,6 +298,24 @@ PLANETS = {
             "deve morrer para renascer, onde reside o poder oculto e a "
             "profundidade incontrolável."
         ),
+        "light": (
+            "Fênix em pessoa: a pessoa atravessa crises e sai mais "
+            "inteira, enxerga o que está por trás das máscaras e usa o "
+            "poder para regenerar — o próprio e o coletivo. Plutão em "
+            "luz não teme o escuro porque conhece os tesouros dele."
+        ),
+        "shadow": (
+            "Controle, manipulação e obsessão. Plutão em sombra testa "
+            "lealdades, guarda segredos como armas e prefere destruir a "
+            "perder o controle — o próprio medo de vulnerabilidade "
+            "transforma-se em tirania."
+        ),
+        "integration": (
+            "Render-se ao processo: deixar morrer o que já acabou, "
+            "praticar a confiança radical, usar o poder de enxergar o "
+            "oculto para curar e não para subjugar. Plutão integrado é o "
+            "rio subterrâneo que irriga em vez de inundar."
+        ),
     },
     "asc": {
         "name": "Ascendente",
@@ -139,6 +326,24 @@ PLANETS = {
             "nascimento. Representa a persona, a primeira impressão, o "
             "corpo físico e como o mundo é abordado. É a máscara que se "
             "usa e o filtro através do qual o mapa se expressa."
+        ),
+        "light": (
+            "Presença autêntica: a persona se tornou aliada, não "
+            "prisioneira. A pessoa entra em salas com o corpo e a "
+            "postura comunicando quem realmente é, inicia situações com "
+            "naturalidade e sabe se apresentar sem se esconder."
+        ),
+        "shadow": (
+            "Identidade confundida com personagem: vive-se para a imagem "
+            "e não para o ser. O Ascendente em sombra vira armadura "
+            "soldada no rosto — ninguém, nem a própria pessoa, sabe quem "
+            "está por trás."
+        ),
+        "integration": (
+            "Usar a máscara conscientemente: saber quando vestir e "
+            "quando tirar, alinhar a aparência aos valores profundos e "
+            "deixar a intimidade ver além do horizonte. O Ascendente "
+            "integrado é a porta, não a casa."
         ),
     },
 }
@@ -153,6 +358,24 @@ SIGNS = {
             "Representa o surgimento da individualidade e a vontade de "
             "agir agora."
         ),
+        "light": (
+            "Coragem de primeiro: a energia ariana entra onde ninguém "
+            "entrou, decide com clareza em meio à confusão e inspira "
+            "pela simplicidade do 'vamos fazer'. O melhor de Áries é a "
+            "honestidade do fogo que nasce — sem segundas intenções."
+        ),
+        "shadow": (
+            "Impulsividade que quebra, egocentrismo de quem confunde "
+            "velocidade com importância e impaciência com quem pensa "
+            "devagar. Áries em sombra começa tudo e termina quase nada, "
+            "e trata hesitação alheia como covardia."
+        ),
+        "integration": (
+            "Transformar impulso em direção: escolher batalhas que valem "
+            "a vitória, ouvir até o fim antes de agir e celebrar também "
+            "o passo dos outros. O fogo ariano integrado acende o "
+            "caminho sem queimar quem caminha junto."
+        ),
     },
     "Tau": {
         "name": "Touro", "glyph": "♉", "element": "Terra", "quality": "Fixo",
@@ -161,6 +384,24 @@ SIGNS = {
             "Signo de Terra Fixo, regido por Vênus. Estabilidade, "
             "paciência, sensualidade e apego aos valores materiais. "
             "Representa a construção lenta e a fruição do que é sólido."
+        ),
+        "light": (
+            "Rocha em que se apoia: a energia taurina sustenta projetos "
+            "longos, produz beleza tangível e dá segurança a quem está "
+            "por perto. O melhor de Touro é a paciência fértil — o tempo "
+            "como aliado, o corpo como instrumento de prazer honesto."
+        ),
+        "shadow": (
+            "Teimosia que vira muro, apego que confunde posse com amor e "
+            "resistência automática a qualquer mudança, mesmo a que "
+            "salva. Touro em sombra confunde conforto com vida e "
+            "acumula por medo de faltar."
+        ),
+        "integration": (
+            "Praticar o soltar: revisar o que já cumpriu sua função, "
+            "arriscar o novo em pequenas doses e lembrar que segurança "
+            "morre dentro de si, não no armário. A terra taurina "
+            "integrada é jardim, não cofre."
         ),
     },
     "Gem": {
@@ -171,6 +412,24 @@ SIGNS = {
             "versatilidade, comunicação e movimento mental. Representa o "
             "intercâmbio, a multiplicidade e o aprender."
         ),
+        "light": (
+            "Vivacidade mental que contagia: a energia geminiana conecta "
+            "pessoas e ideias, aprende qualquer assunto com prazer e "
+            "traz leveza aos pesados. O melhor de Gêmeos é a curiosidade "
+            "sem preconceito — o mundo como pátio de escola infinita."
+        ),
+        "shadow": (
+            "Dispersão que não conclui, fala que atropela e superficialidade "
+            "que fere quando disfarça de piada. Gêmeos em sombra muda de "
+            "tema para não sentir, e de pessoa para não se aprofundar."
+        ),
+        "integration": (
+            "Dar profundidade à largura: concluir um projeto antes de "
+            "abrir três, escolher onde a curiosidade vale investimento e "
+            "usar a palavra para aproximar, não para seduzir e fugir. O "
+            "ar geminiano integrado é vento que move moinhos, não "
+            "ciclone."
+        ),
     },
     "Can": {
         "name": "Câncer", "glyph": "♋", "element": "Água", "quality": "Cardinal",
@@ -179,6 +438,25 @@ SIGNS = {
             "Signo de Água Cardinal, regido pela Lua. Emoção, nutrimento, "
             "lar, memória e proteção. Representa o acolhimento e o "
             "vínculo afetivo e familiar."
+        ),
+        "light": (
+            "Refúgio humano: a energia canceriana percebe a dor não "
+            "dita, cria lares onde quer que esteja e protege com uma "
+            "fidelidade que atravessa anos. O melhor de Câncer é a "
+            "memória do coração — ninguém fica esquecido nem faminto "
+            "por perto."
+        ),
+        "shadow": (
+            "Mágoa guardada como herança, manipulação pela culpa e "
+            "carapaça que impede o próprio abraço. Câncer em sombra "
+            "protege tanto que sufoca, e recolhe-se ferido sem avisar "
+            "o que doeu."
+        ),
+        "integration": (
+            "Dizer a necessidade antes do silêncio: transformar mágoa "
+            "em conversa, cuidar sem controlar e proteger também a si "
+            "mesmo da própria maré. A água canceriana integrada é o "
+            "portão do lar sempre aberto para quem respeita a casa."
         ),
     },
     "Leo": {
@@ -189,6 +467,25 @@ SIGNS = {
             "generosidade e necessidade de brilhar. Representa a "
             "expressão radiante do eu e o reconhecimento."
         ),
+        "light": (
+            "Coração real: a energia leonina anima pelo simples prazer "
+            "de ver o outro feliz, cria com paixão que inspira e "
+            "defende os seus com nobreza. O melhor de Leão é a "
+            "generosidade radiante — aplaude o brilho alheio sem se "
+            "sentir diminuído."
+        ),
+        "shadow": (
+            "Vaidade que exige palco, orgulho que não pede desculpas e "
+            "drama quando falta admiração. Leão em sombra confunde ser "
+            "amado com ser aplaudido, e some afeto quando o público "
+            "olha para outro."
+        ),
+        "integration": (
+            "Brilhar pelo fazer, não pelo aplauso: separar autoestima "
+            "de plateia, usar a liderança para criar outros líderes e "
+            "aceitar que o coração vale tanto no anonimato. O fogo "
+            "leonino integrado é sol que ilumina sem cobrar sombra."
+        ),
     },
     "Vir": {
         "name": "Virgem", "glyph": "♍", "element": "Terra", "quality": "Mutável",
@@ -197,6 +494,26 @@ SIGNS = {
             "Signo de Terra Mutável, regido por Mercúrio. Análise, "
             "serviço, precisão, discernimento e humildade. Representa o "
             "aperfeiçoamento e o trabalho útil e detalhado."
+        ),
+        "light": (
+            "Santidade do detalhe: a energia virginiana enxerga o que "
+            "todos deixam passar, melhora o que já era bom e serve "
+            "com competência discreta. O melhor de Virgem é o cuidado "
+            "como oração — o mundo funciona melhor porque alguém "
+            "observou de perto."
+        ),
+        "shadow": (
+            "Crítica que machuca, perfeccionismo que paralisia e "
+            "ansiedade de controle disfarçada de organização. Virgem em "
+            "sombra aponta o cisco no olho alheio e o mastro no próprio, "
+            "e nunca se acha boa o suficiente."
+        ),
+        "integration": (
+            "Trocar julgamento por serviço: oferecer correção só quando "
+            "pedida, celebrar o 'bom o suficiente' e dirigir a precisão "
+            "para dentro em forma de autocuidado, não de autocobrança. "
+            "A terra virginiana integrada é oficina onde se conserta "
+            "com afeto."
         ),
     },
     "Lib": {
@@ -207,6 +524,26 @@ SIGNS = {
             "harmonia, parceria e estética. Representa a relação com o "
             "outro e a busca da justiça e da beleza."
         ),
+        "light": (
+            "Diplomacia que transforma: a energia libriana ouve todos os "
+            "lados, costura acordos onde havia guerra e traz beleza e "
+            "justiça aos espaços. O melhor de Libra é o senso de "
+            "equidade — a balança pesa o direito do outro com o mesmo "
+            "cuidado."
+        ),
+        "shadow": (
+            "Indecisão que transfere o custo, conciliação que trai a si "
+            "mesma e charme que evita o conflito necessário. Libra em "
+            "sombra cede em silêncio, cobra em segredo e posterga a "
+            "escolha até que ela se faça sozinha — pior."
+        ),
+        "integration": (
+            "Se equilibrar como critério: nomear as próprias "
+            "preferências antes de negociar, aceitar que desagradar "
+            "faz parte da honestidade e decidir com prazos. O ar "
+            "libriano integrado é a balança que se sustenta com o "
+            "próprio peso."
+        ),
     },
     "Sco": {
         "name": "Escorpião", "glyph": "♏", "element": "Água", "quality": "Fixo",
@@ -215,6 +552,25 @@ SIGNS = {
             "Signo de Água Fixo, regido por Plutão (Marte na tradição). "
             "Intensidade, profundidade, transformação, segredo e poder. "
             "Representa o mergulho nas profundezas e a regeneração."
+        ),
+        "light": (
+            "Fidelidade absoluta ao real: a energia escorpiana não se "
+            "contenta com máscaras, sustenta os outros nas piores horas "
+            "e renasce de cada crise mais forte. O melhor de Escorpião "
+            "é a lealdade profunda — quem prova de merecer, ganha uma "
+            "fortaleza de afeto."
+        ),
+        "shadow": (
+            "Ciúme que vigia, rancor que não expira e controle que "
+            "testa quem ama. Escorpião em sombra prefere a dor de "
+            "destruir à vulnerabilidade de confiar, e usa o que sabe "
+            "do outro como arma."
+        ),
+        "integration": (
+            "Escolher confiança como ato de coragem: falhar em voz alta, "
+            "perdoar sem esquecer a lição e usar o poder de ver o oculto "
+            "para proteger, não para ferir. A água escorpiana integrada "
+            "é o poço que dá de beber sem exigir afogamento."
         ),
     },
     "Sag": {
@@ -225,6 +581,26 @@ SIGNS = {
             "filosofia, viagem, sentido e otimismo. Representa a "
             "expansão e a busca da verdade e do horizonte."
         ),
+        "light": (
+            "Flecha que aponta o alto: a energia sagitariana enxerga "
+            "sentido onde há só rotina, ensina com entusiasmo "
+            "contagiante e abre horizontes reais — geográficos e "
+            "espirituais. O melhor de Sagitário é a fé otimista que "
+            "move montanhas em passo de festa."
+        ),
+        "shadow": (
+            "Franqueza que fere sem necessidade, promessas gigantes sem "
+            "perna e dogmatismo do novo convertido. Sagitário em sombra "
+            "confunde liberdade com impossibilidade de compromisso e "
+            "sermão com sabedoria."
+        ),
+        "integration": (
+            "Casar visão com verbo: pensar antes de falar 'é só "
+            "franqueza', transformar horizonte em itinerário com datas "
+            "e honrar compromissos como parte da liberdade. O fogo "
+            "sagitário integrado é a flecha que escolhe o alvo antes "
+            "de voar."
+        ),
     },
     "Cap": {
         "name": "Capricórnio", "glyph": "♑", "element": "Terra", "quality": "Cardinal",
@@ -233,6 +609,26 @@ SIGNS = {
             "Signo de Terra Cardinal, regido por Saturno. Ambição, "
             "disciplina, estrutura, mestria e responsabilidade. "
             "Representa a escalada e a realização duradoura."
+        ),
+        "light": (
+            "Mestria do tempo longo: a energia capricorniana assume o "
+            "que ninguém quer, constrói em cima de pedra e entrega "
+            "obras que atravessam gerações. O melhor de Capricórnio é a "
+            "autoridade serena de quem venceu a própria montanha — e "
+            "estende a mão a quem sobe."
+        ),
+        "shadow": (
+            "Frieza que confunde controle com comando, vício de trabalho que "
+            "adia a vida e desprezo pelo próprio descanso. Capricórnio "
+            "em sombra mede o valor só pelo topo da montanha e chega "
+            "lá sozinho, com o coração congelado."
+        ),
+        "integration": (
+            "Reconhecer o preço: celebrar marcos com quem ajudou, "
+            "agendar o prazer com a mesma disciplina do trabalho e "
+            "aceitar vulnerabilidade como parte da autoridade. A terra "
+            "capricorniana integrada é a montanha com fontes de água "
+            "no caminho."
         ),
     },
     "Aqu": {
@@ -243,6 +639,25 @@ SIGNS = {
             "Originalidade, comunidade, ideais, rebeldia e visão de "
             "futuro. Representa o indivíduo no coletivo."
         ),
+        "light": (
+            "Visão a serviço do coletivo: a energia aquariana enxerga "
+            "o futuro antes dos outros, acolhe os excluídos do padrão "
+            "e transforma ideais em projetos concretos. O melhor de "
+            "Aquário é a amizade sem hierarquia — ama a humanidade em "
+            "cada indivíduo."
+        ),
+        "shadow": (
+            "Distância emocional que machuca, contrariedade por "
+            "princípio e fuga do íntimo para o abstrato. Aquário em "
+            "sombra ama a humanidade de longe mas não sabe abraçar "
+            "quem está perto, e usa a originalidade como muro."
+        ),
+        "integration": (
+            "Descer do conceito para o abraço: praticar a presença "
+            "afetiva com quem não concorda, aceitar que pertencer não "
+            "escraviza e deixar o coração participar das decisões. O "
+            "ar aquariano integrado é a rede que sustenta sem aprisionar."
+        ),
     },
     "Pis": {
         "name": "Peixes", "glyph": "♓", "element": "Água", "quality": "Mutável",
@@ -251,6 +666,26 @@ SIGNS = {
             "Signo de Água Mutável, regido por Netuno (Júpiter na "
             "tradição). Compaixão, mística, sonho, dissolução e "
             "entrega. Representa a unificação e o retorno à fonte."
+        ),
+        "light": (
+            "Compaixão que dissolve fronteiras: a energia pisciana "
+            "perdoa o imperdoável, cria beleza do invisível e acolhe "
+            "os que não têm mais para onde ir. O melhor de Peixes é a "
+            "entrega mística — a certeza silenciosa de que tudo está "
+            "conectado."
+        ),
+        "shadow": (
+            "Fuga da realidade, vitimismo que paralisa e absorção das "
+            "doenças alheias como se fossem próprias. Peixes em sombra "
+            "espera ser salvo em vez de nadar, e confunde sacrifício "
+            "com amor."
+        ),
+        "integration": (
+            "Ancorar a sensibilidade: limites claros como ato de "
+            "amor, práticas que dão corpo ao sonho (arte, ritual, "
+            "serviço) e discriminação entre ajuda e mártir. A água "
+            "pisciana integrada é o rio que corre para o mar sem "
+            "transbordar a margem."
         ),
     },
 }
@@ -383,6 +818,148 @@ COMBINATIONS = {
     for planet in PLANETS
 }
 
+# 11 × 10 × 5 = 550 combinações planeta+aspecto+planeta (pares ordenados,
+# sem auto-par). Cada texto descreve como a função do planeta A vive o
+# dinamismo do aspecto com o planeta B. Geradas por template a partir de:
+#   - _PLANET_ASPECT_FUNCTIONS: função psíquica, desvio e dom de cada planeta
+#   - _ASPECT_PAIR_DYNAMICS: dinâmica da relação por aspecto
+_PLANET_ASPECT_FUNCTIONS = {
+    "sun": {"func": "a identidade e a vontade de ser", "strain": "impor o próprio brilho", "gift": "a presença que inspira"},
+    "moon": {"func": "as necessidades emocionais", "strain": "reagir defensivamente", "gift": "a sensibilidade que acolhe"},
+    "mercury": {"func": "o pensamento e a comunicação", "strain": "racionalizar o que deveria sentir", "gift": "a mente que conecta"},
+    "venus": {"func": "o afeto e os valores", "strain": "ceder para agradar", "gift": "o encanto que harmoniza"},
+    "mars": {"func": "o desejo e a iniciativa", "strain": "agir por impulso", "gift": "a coragem que move"},
+    "jupiter": {"func": "a expansão e a busca de sentido", "strain": "prometer além do possível", "gift": "a fé que abre portas"},
+    "saturn": {"func": "a estrutura e o compromisso", "strain": "endurecer os limites", "gift": "a disciplina que sustenta"},
+    "uranus": {"func": "a liberdade e a originalidade", "strain": "romper sem avisar", "gift": "a visão que renova"},
+    "neptune": {"func": "a imaginação e a sensibilidade", "strain": "se perder na névoa", "gift": "a empatia que dissolve fronteiras"},
+    "pluto": {"func": "a intensidade e o poder de transformar", "strain": "tentar controlar o cenário", "gift": "a profundidade que regenera"},
+    "asc": {"func": "a presença e a primeira impressão", "strain": "esconder-se atrás da imagem", "gift": "a porta aberta para o mundo"},
+}
+
+_ASPECT_PAIR_DYNAMICS = {
+    "conjunction": {
+        "name": "conjunção",
+        "open": "se fundem numa só força",
+        "perspective": (
+            "{a} expressa {fa} através de {fb}: as duas vozes soam juntas, "
+            "e é isso que dá ao par sua marca registrada."
+        ),
+        "daily": (
+            "No cotidiano, onde uma função aparece, a outra está logo ao "
+            "lado — {fa} nunca falam sozinhas."
+        ),
+        "shadow": (
+            "Sob pressão, uma função pode afogar a outra: há risco de "
+            "{a_strain} ou de {b_strain} em nome da fusão."
+        ),
+        "integration": (
+            "O caminho é dar a cada função seu momento de brilho: "
+            "{a_gift} e {b_gift} se reforçam quando as duas vozes são "
+            "ouvidas."
+        ),
+    },
+    "sextile": {
+        "name": "sextil",
+        "open": "dialogam com fluidez e criam oportunidades",
+        "perspective": (
+            "{a} encontra em {fb} apoio leve e receptivo: portas se abrem "
+            "sempre que {fa} tomam a iniciativa de tocá-las."
+        ),
+        "daily": (
+            "No cotidiano, convites, contatos e ideias conectam as duas "
+            "funções na hora certa — basta aceitar."
+        ),
+        "shadow": (
+            "O risco é a porta aberta e ninguém entrando: pode vir "
+            "{a_strain} por comodidade ou o potencial ficar em 'um dia eu'."
+        ),
+        "integration": (
+            "O caminho é transformar oportunidade em projeto: {a_gift} e "
+            "{b_gift} rendem quando há escolha consciente."
+        ),
+    },
+    "square": {
+        "name": "quadratura",
+        "open": "puxam em direções que se atritam",
+        "perspective": (
+            "Quando {fa} tentam avançar, esbarram no contrapeso de {fb} — "
+            "a fricção é desconfortável, mas gera energia de crescimento."
+        ),
+        "daily": (
+            "No cotidiano, os mesmos conflitos voltam em cenários "
+            "diferentes: as duas funções disputam espaço e nenhuma "
+            "desiste."
+        ),
+        "shadow": (
+            "Sob pressão, uma função bloqueia a outra em loop: há risco de "
+            "{a_strain} ou de culpar {b} pelo impasse."
+        ),
+        "integration": (
+            "O caminho é transformar fricção em músculo: {a_gift} e "
+            "{b_gift} convivem quando as duas funções ganham método e vez."
+        ),
+    },
+    "trine": {
+        "name": "trígono",
+        "open": "fluem juntas com naturalidade",
+        "perspective": (
+            "{a} encontra em {fb} a mesma língua: as duas funções cooperam "
+            "sem esforço, e o talento parece inato."
+        ),
+        "daily": (
+            "No cotidiano, tudo desliza — {fa} e {fb} se apoiam com tanta "
+            "facilidade que a pessoa pode nem notar o dom."
+        ),
+        "shadow": (
+            "O risco é a acomodação dourada: há chance de {a_strain} por "
+            "falta de desafio ou de deixar o talento adormecido."
+        ),
+        "integration": (
+            "O caminho é investir no dom com disciplina: {a_gift} e "
+            "{b_gift} viram mestria quando a vontade cobra o que a sorte "
+            "não cobra."
+        ),
+    },
+    "opposition": {
+        "name": "oposição",
+        "open": "formam um eixo de polaridades a equilibrar",
+        "perspective": (
+            "{a} vive um polo e encontra o outro fora de si: {fb} aparecem "
+            "com força justamente nas pessoas e situações que provocam."
+        ),
+        "daily": (
+            "No cotidiano, o pêndulo alterna — ora {fa} mandam, ora {fb} "
+            "cobram, e o ponto médio parece sempre adiável."
+        ),
+        "shadow": (
+            "Sob pressão, projeta no outro o que pertence a si: há risco "
+            "de {a_strain} ou de exigir de {b} o que só a integração dá."
+        ),
+        "integration": (
+            "O caminho é reconhecer os dois polos como partes de si: "
+            "{a_gift} e {b_gift} se completam quando a alternância vira "
+            "consciência."
+        ),
+    },
+}
+
+
+def _aspect_pair_description(aspect: str, a: str, b: str) -> str:
+    """Return the five-line reading of planet A in aspect with planet B."""
+    dyn = _ASPECT_PAIR_DYNAMICS[aspect]
+    fa = _PLANET_ASPECT_FUNCTIONS[a]
+    fb = _PLANET_ASPECT_FUNCTIONS[b]
+    a_name, b_name = PLANETS[a]["name"], PLANETS[b]["name"]
+    return "\n".join([
+        f"{a_name} em {dyn['name']} com {b_name}: {fa['func']} e {fb['func']} {dyn['open']}.",
+        dyn["perspective"].format(a=a_name, fa=fa["func"], fb=fb["func"]),
+        dyn["daily"].format(fa=fa["func"], fb=fb["func"]),
+        dyn["shadow"].format(a_strain=fa["strain"], b_strain=fb["strain"], b=b_name),
+        dyn["integration"].format(a_gift=fa["gift"], b_gift=fb["gift"]),
+    ])
+
+
 ASPECTS = {
     "conjunction": {
         "name": "Conjunção", "glyph": "☌", "angle": 0, "orb": 8,
@@ -393,14 +970,53 @@ ASPECTS = {
             "construtiva ou disruptiva conforme a natureza dos planetas "
             "envolvidos."
         ),
+        "light": (
+            "Fusão poderosa: os dois planetas funcionam como um só, "
+            "concentrando a energia num único ponto de foco. Quando os "
+            "princípios envolvidos colaboram, a conjunção dá "
+            "espontaneidade, força de realização e um talento evidente — "
+            "a pessoa nem percebe que aquilo é especial, tão natural lhe "
+            "parece."
+        ),
+        "shadow": (
+            "Fusão cega: quando os princípios se contradizem, a "
+            "conjunção vira pressão constante — um planeta afoga o outro "
+            "e nenhum se expressa limpo. A pessoa não consegue separar "
+            "as duas funções da vida e reage às duas ao mesmo tempo."
+        ),
+        "integration": (
+            "Conhecer o par: identificar qual planeta fala primeiro e "
+            "dar a cada função seu momento de brilho. A conjunção "
+            "integrada é um casamento bem-sucedido — identidade comum "
+            "sem perder as vozes individuais."
+        ),
     },
     "sextile": {
         "name": "Sextil", "glyph": "⚹", "angle": 60, "orb": 5,
-        "harmony": "harmónico",
+        "harmony": "harmônico",
         "description": (
             "Sextil (60°, orbe 5°). Aspecto harmonioso de oportunidade e "
             "fluxo suave entre elementos compatíveis. Indica facilidade e "
             "potencial, mas requer esforço consciente para ser aproveitado."
+        ),
+        "light": (
+            "Porta entreaberta: o sextil liga elementos que se "
+            "compreendem (Fogo–Ar ou Terra–Água) e cria oportunidades "
+            "que aparecem com naturalidade — convites, contatos, ideias "
+            "que chegam na hora certa. É o aspecto da comunicação "
+            "frutífera e do talento social."
+        ),
+        "shadow": (
+            "Oportunidade desperdiçada: por ser suave, o sextil não "
+            "cobra nada — e a pessoa pode atravessar a vida inteira com "
+            "as portas abertas sem nunca entrar. O potencial fica em "
+            "'um dia eu...'."
+        ),
+        "integration": (
+            "Tratar o sextil como trampolim, não como poltrona: dizer "
+            "sim aos convites que ele traz e transformar cada "
+            "oportunidade em projeto concreto. O sextil integrado é o "
+            "networking que vira amizade e obra."
         ),
     },
     "square": {
@@ -411,14 +1027,56 @@ ASPECTS = {
             "fricção entre elementos incompatíveis. Gera desafio e crise, "
             "mas também motivação, força e crescimento por superação."
         ),
+        "light": (
+            "Motor de crescimento: a fricção da quadratura gera energia "
+            "que não deixa a pessoa parar. Quem trabalha a quadratura "
+            "constrói músculo psicológico — resolve problemas que "
+            "outros fogem, cria estruturas novas sob pressão e alcança "
+            "maturidade antes dos pares. Grande parte das biografias "
+            "notáveis é sustentada por quadraturas bem usadas."
+        ),
+        "shadow": (
+            "Ciclo de crise: as duas funções se bloqueiam "
+            "alternadamente — ora uma vence à força, ora a outra "
+            "sabota. A pessoa vive os mesmos conflitos repetidos com "
+            "pessoas e cenários diferentes, sempre com a sensação de "
+            "bater de frente com o mundo."
+        ),
+        "integration": (
+            "Nomear o padrão para sair do loop: as duas funções têm "
+            "direito de existir, mas não ao mesmo tempo e do mesmo "
+            "jeito. A quadratura integrada é o atleta que transforma "
+            "resistência em força — o peso do halter é o que "
+            "constrói o músculo."
+        ),
     },
     "trine": {
         "name": "Trígono", "glyph": "△", "angle": 120, "orb": 7,
-        "harmony": "harmónico",
+        "harmony": "harmônico",
         "description": (
             "Trígono (120°, orbe 7°). Aspecto harmonioso de fluxo natural "
             "entre elementos do mesmo elemento. Indica talento, apoio e "
             "facilidade inata; pode, porém, gerar acomodação."
+        ),
+        "light": (
+            "Dom flui: os dois planetas falam a mesma língua "
+            "(mesmo elemento) e cooperam sem esforço — é o talento que "
+            "parece inato, a sorte que acompanha, a facilidade que "
+            "outros invejam. O trígono dá regeneração e um caminho onde "
+            "tudo desliza."
+        ),
+        "shadow": (
+            "Acomodação dourada: como nada exige esforço, nada é "
+            "desenvolvido até a mestria. O talento vira potencial "
+            "adormecido, e a pessoa pode chegar aos 40 sem ter "
+            "transformado o dom em obra — afinal, nunca precisou lutar "
+            "por ele."
+        ),
+        "integration": (
+            "Escolher conscientemente onde investir o dom: o trígono "
+            "não cobra, então quem cobra é a própria vontade. "
+            "Disciplina aplicada ao talento natural é a diferença "
+            "entre o 'era bom nisso' e o 'foi mestre nisso'."
         ),
     },
     "opposition": {
@@ -430,7 +1088,38 @@ ASPECTS = {
             "consciência e a necessidade de integrar e equilibrar os "
             "opostos."
         ),
+        "light": (
+            "Consciência pela polaridade: a oposição é um pêndulo que "
+            "ensina os dois extremos. Quem a integra torna-se "
+            "mediador nato — conhece os dois lados de dentro, alterna "
+            "com consciência e ensina outros a equilibrar. É o aspecto "
+            "do diálogo e do amadurecimento relacional."
+        ),
+        "shadow": (
+            "Projeção e vaivém: a pessoa vive um dos polos e encontra "
+            "o outro 'fora' — em parceiros que encarnam justamente o "
+            "que se recusa a ver. Alternam-se períodos de excesso de um "
+            "lado e depois do outro, sem nunca o ponto de equilíbrio."
+        ),
+        "integration": (
+            "Recolher a projeção: reconhecer no outro o próprio polo "
+            "rejeitado e praticar a alternância consciente — ser os "
+            "dois, em doses medidas. A oposição integrada é a "
+            "culminação: o pleno dia da lua cheia, quando opostos se "
+            "olham e se reconhecem."
+        ),
     },
+}
+
+ASPECT_COMBINATIONS = {
+    aspect: {
+        pa: {
+            pb: _aspect_pair_description(aspect, pa, pb)
+            for pb in PLANETS if pb != pa
+        }
+        for pa in PLANETS
+    }
+    for aspect in ASPECTS
 }
 
 KABBALAH = {
@@ -602,7 +1291,7 @@ TAROT = {
         "Rei": (
             "Expressão madura e ativa (masculina) do elemento: domínio, "
             "autoridade e exteriorização. O Rei encarna o elemento no seu "
-            "auge de controlo e comando."
+            "auge de controle e comando."
         ),
         "Rainha": (
             "Expressão madura e receptiva (feminina) do elemento: "
@@ -624,8 +1313,8 @@ TAROT = {
     # naipe e elemento.
     "sectors": [
         {"sign": "Ari", "half": "1ª metade [0°–15°)", "title": "Rainha de Bastões", "suit": "Bastões", "element": "Fogo"},
-        {"sign": "Ari", "half": "2ª metade [15°–30°]", "title": "Principe de Moedas", "suit": "Moedas", "element": "Terra"},
-        {"sign": "Tau", "half": "1ª metade [0°–15°)", "title": "Principe de Moedas", "suit": "Moedas", "element": "Terra"},
+        {"sign": "Ari", "half": "2ª metade [15°–30°]", "title": "Príncipe de Moedas", "suit": "Moedas", "element": "Terra"},
+        {"sign": "Tau", "half": "1ª metade [0°–15°)", "title": "Príncipe de Moedas", "suit": "Moedas", "element": "Terra"},
         {"sign": "Tau", "half": "2ª metade [15°–30°]", "title": "Rei de Espadas", "suit": "Espadas", "element": "Ar"},
         {"sign": "Gem", "half": "1ª metade [0°–15°)", "title": "Rei de Espadas", "suit": "Espadas", "element": "Ar"},
         {"sign": "Gem", "half": "2ª metade [15°–30°]", "title": "Rainha de Taças", "suit": "Taças", "element": "Água"},
@@ -731,7 +1420,7 @@ AGATHADAIMON = {
     "intro": (
         "O <strong>Agathadaimon</strong> (ou <em>Agathos Daimon</em>) é o "
         "“Bom Demônio” da tradição helenística e hermética — o espírito "
-        "guardião pessoal, equivalente ao <em>nous</em> ou génio de cada "
+        "guardião pessoal, equivalente ao <em>nous</em> ou gênio de cada "
         "indivíduo. Este método constrói o <strong>nome do anjo da "
         "guarda</strong> a partir de três letras hebraicas derivadas dos "
         "graus do <strong>Sol</strong>, da <strong>Lua</strong> e do "
@@ -740,12 +1429,12 @@ AGATHADAIMON = {
         "do zodíaco. Uma quarta letra, o <strong>sufixo</strong>, é "
         "acrescentada: <em>El</em> para nascimentos diurnos (06h–18h) e "
         "<em>Iah</em> para nascimentos noturnos. As correspondências "
-        "tradicionais de cada letra (género, forma e caráter) ajudam a "
+        "tradicionais de cada letra (gênero, forma e caráter) ajudam a "
         "interpretar a natureza do guardião."
     ),
     "suffixes": {
-        "El": "Sufixo diurno (nascimento entre 06h e 18h). «El» é um dos nomes divinos hebraicos, suffix de força e claridade solar.",
-        "Iah": "Sufixo noturno (nascimento fora das 06h–18h). «Iah» é a forma curta de Yahweh, suffix de mistério e receptividade lunar.",
+        "El": "Sufixo diurno (nascimento entre 06h e 18h). «El» é um dos nomes divinos hebraicos, sufixo de força e claridade solar.",
+        "Iah": "Sufixo noturno (nascimento fora das 06h–18h). «Iah» é a forma curta de Yahweh, sufixo de mistério e receptividade lunar.",
     },
     "hebrew_letters": {
         "Aleph": "Andrógina; porém mais masculina do que feminina; espiritual; geralmente com asas; do tipo bem mais magro.",
@@ -788,6 +1477,7 @@ def as_dict() -> dict:
         "signs": SIGNS,
         "combinations": COMBINATIONS,
         "aspects": ASPECTS,
+        "aspect_combinations": ASPECT_COMBINATIONS,
         "kabbalah": KABBALAH,
         "tarot": TAROT,
         "angels": ANGELS,
